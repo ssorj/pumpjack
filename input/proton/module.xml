@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<model name="qpid">
+  <module name="proton.core">
+    <class name="endpoint">
+      Endpoint is a base class for session, connection, and link.
+
+      <constant name="LOCAL_UNINIT" value="1">
+        The local endpoint is uninitialized.
+      </constant>
+
+      <constant name="REMOTE_UNINIT" value="8">
+        The remote endpoint is uninitialized.
+      </constant>
+
+      <constant name="LOCAL_ACTIVE" value="2">
+        The local endpoint is active.
+      </constant>
+
+      <constant name="REMOTE_ACTIVE" value="16">
+        The remote endpoint is active.
+      </constant>
+
+      <constant name="LOCAL_CLOSED" value="4">
+        The local endpoint is closed.
+      </constant>
+
+      <constant name="REMOTE_CLOSED" value="32">
+        The remote endpoint is closed.
+      </constant>
+
+      <!--
+      <constant name="LOCAL_MASK">
+        A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
+      </constant>
+
+      <constant name="REMOTE_MASK">
+        A mask including all REMOTE_ bits (UNINIT, ACTIVE, CLOSED).
+      </constant>
+      -->
+
+      <attribute name="state" type="integer" writeable="false">
+        State is a bit mask of state_bit values.
+
+        A state mask is matched against an endpoint as follows: If the
+        state mask contains both local and remote flags, then an exact
+        match against those flags is performed. If state contains only
+        local or only remote flags, then a match occurs if any of the
+        local or remote flags are set respectively. XXX Huh?
+      </attribute>
+    </class>
+
+    <class name="container"/>
+
+    <class name="connection" type="@endpoint">
+      <method name="open">
+        Opens a connection.
+
+        In more detail, this moves the local state of the connection
+        to the ACTIVE state and triggers an open frame to be sent to
+        the peer. A connection is fully active once both peers have
+        opened it.
+
+        Not complete until on_connection_opened. XXX
+      </method>
+
+      <attribute name="default_session" type="@session"/>
+
+      <method name="create_session" type="@session"/>
+      <method name="create_sender" type="@sender"/>
+      <method name="create_receiver" type="@receiver"/>
+
+      <method name="link_head" type="@link"/>
+      
+      <method name="close"/>
+    </class>
+
+    <class name="session"/>
+    <class name="session-error"/>
+    <class name="link"/>
+    <class name="receiver"/>
+    <class name="sender"/>
+    <class name="terminus"/>
+    <class name="condition"/>
+    <class name="delivery"/>
+    <class name="delivery-state"/>
+    <class name="address"/>
+    <class name="message"/>
+
+    <class name="event"/>
+    <class name="event-type"/>
+    <class name="collector"/>
+    <class name="reactor"/>
+    <class name="acceptor"/>
+    <class name="timer"/>
+    <class name="task"/>
+    <class name="selectable"/>
+    <class name="general-handler"/>
+    <class name="outgoing-message-handler"/>
+    <class name="incoming-message-handler"/>
+    <class name="transaction-handler"/>
+    <class name="transactional-client-handler"/>
+
+    <class name="transport"/>
+    <class name="transport-error"/>
+    <class name="ssl"/>
+    <class name="ssl-domain"/>
+    <class name="ssl-error"/>
+    <class name="sasl"/>
+
+    <class name="proton-error"/>
+    <class name="timeout-error"/>
+
+    <class name="duration"/>
+    <class name="url"/>
+    <class name="url-error"/>
+  </module>
+  <type name="string"/>
+  <type name="boolean"/>
+  <type name="integer"/>
+  <type name="any"/>
+  <type name="class"/>
+</model>
