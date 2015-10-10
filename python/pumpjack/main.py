@@ -17,11 +17,12 @@
 # under the License.
 #
 
-from model import *
 from html import *
 from python import *
-from java import *
-from c import *
+
+import os
+
+from xml.etree.ElementTree import ElementTree
 
 class Pumpjack(object):
     def __init__(self, input_dir):

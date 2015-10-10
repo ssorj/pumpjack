@@ -18,9 +18,11 @@
 # under the License.
 #
 
+from __future__ import print_function
 
-from xml.etree.ElementTree import *
-from util import *
+from format import *
+
+from collections import defaultdict as _defaultdict
 
 class _Node(object):
     def __init__(self, element, parent):
@@ -43,7 +45,7 @@ class _Node(object):
 
         if self.parent:
             if self.name in self.parent.children_by_name:
-                raise Exception("Collision! %s", self.name)
+                raise Exception("Collision! {}".format(self.name))
             
             self.parent.children.append(self)
             self.parent.children_by_name[self.name] = self
@@ -67,7 +69,7 @@ class _Node(object):
 
     def resolve_reference(self, ref):
         if not ref.startswith("@"):
-            raise Exception("'%s' doesn't look like a ref", ref)
+            raise Exception("'{}' doesn't look like a ref".format(ref))
 
         if ref.startswith("@/"):
             path = ref[2:].split("/")[1:]
@@ -81,8 +83,8 @@ class _Node(object):
                 try:
                     node = node.children_by_name[name]
                 except KeyError:
-                    msg = "Cannot find child '%s' on node '%s'"
-                    raise Exception(msg, name, node.name)
+                    msg = "Cannot find child '{}' on node '{}'"
+                    raise Exception(msg.format(name, node.name))
 
             return node
         else:
@@ -99,8 +101,8 @@ class _Node(object):
                 try:
                     return node.children_by_name[name]
                 except KeyError:
-                    msg = "Cannot find child '%s' on node '%s'"
-                    raise Exception(msg, name, node.name)
+                    msg = "Cannot find child '{}' on node '{}'"
+                    raise Exception(msg.format(name, node.name))
 
 class _Module(_Node):
     def __init__(self, element, parent):
@@ -134,16 +136,16 @@ class _Class(_Node):
         self.type = self.element.attrib.get("type")
 
         self.attributes = list()
-        self.attributes_by_group = defaultdict(list)
+        self.attributes_by_group = _defaultdict(list)
 
         self.methods = list()
-        self.methods_by_group = defaultdict(list)
+        self.methods_by_group = _defaultdict(list)
 
         self.constants = list()
-        self.constants_by_group = defaultdict(list)
+        self.constants_by_group = _defaultdict(list)
 
         self.enumerations = list()
-        self.enumerations_by_group = defaultdict(list)
+        self.enumerations_by_group = _defaultdict(list)
 
         self.doc_id = "C%i" % (self.parent.children.index(self) - 1)
 
@@ -183,7 +185,7 @@ class _Enumeration(_Node):
         super(_Enumeration, self).__init__(element, parent)
 
         self.constants = list()
-        self.constants_by_group = defaultdict(list)
+        self.constants_by_group = _defaultdict(list)
 
     def process_children(self):
         for child in self.element.findall("constant"):

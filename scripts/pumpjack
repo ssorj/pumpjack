@@ -10,7 +10,8 @@ import sys
 # sys.path.append(os.path.join(home, "python"))
 
 import argparse
-from pumpjack import *
+
+from pumpjack.main import *
 
 def main():
     parser = argparse.ArgumentParser \

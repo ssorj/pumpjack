@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from renderer import *
+from render import *
 
 class HtmlRenderer(PumpjackRenderer):
     def __init__(self, output_dir):

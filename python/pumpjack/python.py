@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from renderer import *
+from render import *
 
 class PythonRenderer(PumpjackRenderer):
     def __init__(self, output_dir):
@@ -30,7 +30,7 @@ class PythonRenderer(PumpjackRenderer):
         self.type_literals["class"] = "type"
 
     def render_class_name(self, cls):
-        return initcap(studly(cls.name))
+        return init_cap(studly_name(cls.name))
 
     def render_method_name(self, meth):
         return meth.name.replace("-", "_")
@@ -48,7 +48,7 @@ class PythonRenderer(PumpjackRenderer):
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        out.write("# Module %s", module.name)
+        out.write("# Module {}", module.name)
         out.write()
 
         for cls in module.classes:
@@ -63,7 +63,7 @@ class PythonRenderer(PumpjackRenderer):
             self.render_enumeration(out, enum)
             out.write()
 
-        out.write("# End of module %s", module.name)
+        out.write("# End of module {}", module.name)
 
     def render_class(self, out, cls):
         name = self.render_class_name(cls)
@@ -72,14 +72,14 @@ class PythonRenderer(PumpjackRenderer):
         if cls.type is None:
             type = "object"
 
-        out.write("class %s(%s):", name, type)
+        out.write("class {}({}):", name, type)
         out.write("    \"\"\"")
-        out.write("    %s", cls.doc)
+        out.write("    {}", cls.doc)
         out.write()
 
         for group, methods in cls.methods_by_group.iteritems():
             names = [self.render_method_name(x) for x in methods]
-            out.write("    @group %s: %s", group, ", ".join(names))
+            out.write("    @group {}: {}", group, ", ".join(names))
 
         out.write("    \"\"\"")
         out.write()
@@ -105,17 +105,17 @@ class PythonRenderer(PumpjackRenderer):
             self.render_method(out, meth)
             out.write()
 
-        out.write("    # End of class %s", name)
+        out.write("    # End of class {}", name)
 
     def render_constant(self, out, const):
         name = const.name.upper()
         value = const.value
-        out.write("    %s = %s", name, value)
+        out.write("    {} = {}", name, value)
 
     def render_constructor(self, out, ctor):
         inputs = list(("self",))
         inputs.extend([x.name for x in ctor.inputs])
-        out.write("    def __init__(%s):", ", ".join(inputs))
+        out.write("    def __init__({}):", ", ".join(inputs))
 
         self.render_method_body(out, ctor)
 
@@ -130,15 +130,15 @@ class PythonRenderer(PumpjackRenderer):
             value = "None"
         elif value.startswith("@"):
             type = self.get_type_literal(attr, value)
-            value = "%s()" % type
+            value = "{}()".format(type)
         else:
             if attr.type == "string":
-                value = "\"%s\"" % value
+                value = "\"{}\"".format(value)
 
             if attr.type == "boolean":
                 value = initcap(value)
 
-        out.write("        self.%s = %s", name, value)
+        out.write("        self.{} = {}", name, value)
 
     def render_method(self, out, meth):
         name = self.render_method_name(meth)
@@ -148,64 +148,63 @@ class PythonRenderer(PumpjackRenderer):
             var = self.render_var_name(input)
 
             if input.nullable:
-                inputs.append("%s=None" % var)
+                inputs.append("{}=None".format(var))
             else:
                 inputs.append(var)
 
-        out.write("    def %s(%s):", name, ", ".join(inputs))
+        out.write("    def {}({}):", name, ", ".join(inputs))
 
         self.render_method_body(out, meth)
 
     def render_method_body(self, out, meth):
         out.write("        \"\"\"")
-        out.write("        %s", meth.doc)
+        out.write("        {}", meth.doc)
         out.write()
 
         for input in meth.inputs:
             name = self.render_var_name(input)
 
             if input.doc:
-                out.write("        @param %s: %s", name, input.doc)
+                out.write("        @param {}: {}", name, input.doc)
 
             literal = self.get_type_literal(meth, input.type)
-            out.write("        @type %s: %s", name, literal)
+            out.write("        @type {}: {}", name, literal)
 
         if meth.outputs:
             output = meth.outputs[0]
             name = self.render_var_name(output)
 
             if output.doc:
-                out.write("        @return: %s", name, output.doc)
+                out.write("        @return: {}", name, output.doc)
 
             literal = self.get_type_literal(meth, output.type)
-            out.write("        @rtype: %s", literal)
+            out.write("        @rtype: {}", literal)
 
         for cond in meth.exception_conditions:
             cls = self.render_class_name(cond.exception)
-            out.write("        @raise %s: %s", cls, cond.doc)
+            out.write("        @raise {}: {}", cls, cond.doc)
 
         out.write("        \"\"\"")
 
     def render_exception(self, out, exc):
-        out.write("class %s(Exception):" % self.render_class_name(exc))
+        out.write("class {}(Exception):", self.render_class_name(exc))
         out.write("    \"\"\"")
-        out.write("    %s" % exc.doc)
+        out.write("    {}", exc.doc)
         out.write("    \"\"\"")
 
     def render_enumeration(self, out, enum):
         name = self.render_class_name(enum)
 
-        out.write("class %s:", name)
+        out.write("class {}:", name)
         out.write("    pass")
         out.write()
 
         for const in enum.constants:
             #prefix = self.render_var_name(enum).upper()
-            #out.write("%s_%s = %s()", prefix, self.render_var_name(const).upper(), name)
-            out.write("%s = %s()", self.render_var_name(const).upper(), name)
+            #out.write("{}_{} = {}()", prefix, self.render_var_name(const).upper(), name)
+            out.write("{} = {}()", self.render_var_name(const).upper(), name)
 
     def render_type(self, out, type):
-        args = type.name, self.type_literals[type.name]
-        out.write("# type %s -> %s" % args)
+        out.write("# type {} -> {}", type.name, self.type_literals[type.name])
 
 add_renderer("python", PythonRenderer)

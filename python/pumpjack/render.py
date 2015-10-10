@@ -17,7 +17,9 @@
 # under the License.
 #
 
-from util import *
+from model import *
+
+import os as _os
 
 renderer_classes_by_name = dict()
 renderer_names_by_class = dict()
@@ -34,9 +36,10 @@ class PumpjackRenderer(object):
 
     def render(self, model):
         output_name = "module.%s" % renderer_names_by_class[self.__class__]
-        output_path = os.path.join(self.output_dir, output_name)
+        output_path = _os.path.join(self.output_dir, output_name)
 
-        makedirs(self.output_dir)
+        if not _os.path.exists(self.output_dir):
+            _os.makedirs(self.output_dir)
         
         file = open(output_path, "w")
         writer = PumpjackWriter(file)

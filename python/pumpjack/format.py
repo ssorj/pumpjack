@@ -17,15 +17,7 @@
 # under the License.
 #
 
-import os
-import re
-import sys
-import errno
-
-from collections import defaultdict
-from xml.etree.ElementTree import ElementTree
-
-def studly(name):
+def studly_name(name):
     assert name
 
     chars = list()
@@ -45,7 +37,7 @@ def studly(name):
 
     return "".join(chars)
 
-def initcap(s):
+def init_cap(s):
     return s[0].upper() + s[1:]
 
 def first_sentence(text):
@@ -54,7 +46,7 @@ def first_sentence(text):
 
     return re.split('\.\s+', text, 1)[0]
 
-def fmt_lines(text, max_length):
+def format_lines(text, max_length):
     assert text
 
     text = text.strip()
@@ -83,9 +75,10 @@ def fmt_lines(text, max_length):
 
     return lines
 
-def fmt_comment(text, prefix):
-    lines = fmt_lines(text, 66 - len(prefix))
+def format_comment(text, prefix):
+    lines = format_lines(text, 66 - len(prefix))
     lines = [prefix + x for x in lines]
+
     return "\n".join(lines)
 
 class PumpjackWriter(object):
@@ -94,13 +87,6 @@ class PumpjackWriter(object):
 
     def write(self, s=None, *args):
         if s is not None:
-            self.out.write(s % args)
+            self.out.write(s.format(*args))
 
         self.out.write("\n")
-
-def makedirs(path):
-    try:
-        os.makedirs(path)
-    except OSError, e:
-        if e.errno != errno.EEXIST:
-            raise
