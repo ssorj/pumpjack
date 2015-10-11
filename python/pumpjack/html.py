@@ -53,6 +53,8 @@ class HtmlRenderer(PumpjackRenderer):
             self.render_model(out, model)
     
     def render_model(self, out, model):
+        print("Rendering {}".format(model))
+
         out.write(html_h(init_cap(model.name)))
         out.write(html_text(model.text))
 
@@ -84,6 +86,8 @@ class HtmlRenderer(PumpjackRenderer):
             self.render_module(out, module)
 
     def render_module(self, out, module):
+        print("Rendering {}".format(module))
+        
         output_dir = _os.path.join(self.output_dir, module.name)
         output_path = _os.path.join(output_dir, "index.html.in")
 
@@ -101,24 +105,36 @@ class HtmlRenderer(PumpjackRenderer):
             out.write(html_text(module.text))
             #out.write(self.include_file("module.html"))
 
-            if module.classes:
-                out.write(html_section_open("Classes"))
-                
-                for cls in module.classes:
+            for group in module.groups:
+                self.render_module_group(out, group)
+
+            for group in module.groups:
+                for cls in group.classes:
                     self.render_class(out, cls)
 
-                out.write(html_section_close())
+    def render_module_group(self, out, group):
+        print("Rendering {}".format(group))
 
-            if module.errors:
-                out.write(html_section_open("Errors"))
-                
-                for error in module.errors:
-                    self.render_error(out, error)
+        out.write(html_open("section"))
+        out.write(html_h(group.title))
 
-                out.write(html_section_close())
+        items = list()
+        items.append(("Class", "Summary"))
+                        
+        for cls in group.classes:
+            link = html_a(cls.name, "{}.html".format(cls.name))
+            summary = first_sentence(cls.text)
+
+            items.append((link, summary))
+
+        out.write(html_table(items))
+
+        out.write(html_close("section"))
 
     def render_class(self, out, cls):
-        output_dir = _os.path.join(self.output_dir, cls.parent.name)
+        print("Rendering {}".format(cls))
+
+        output_dir = _os.path.join(self.output_dir, cls.module.name)
         output_name = "{}.html.in".format(cls.name)
         output_path = _os.path.join(output_dir, output_name)
 
@@ -128,39 +144,31 @@ class HtmlRenderer(PumpjackRenderer):
         with open(output_path, "w") as f:
             out = PumpjackWriter(f)
         
-            title = "{}. {}".format(cls.doc_id, cls.name)
-            
-            out.write(html_section_open(title, "class", toggle_visibility=True))
+            out.write(html_open("section"))
+            out.write(html_h(init_cap(cls.name)))
             out.write(html_text(cls.text))
-            out.write(self.include_file("{}.class.html".format(cls.name)))
+
+            #out.write(self.include_file("{}.class.html".format(cls.name)))
 
             if cls.attributes:
-                out.write(html_section_open("Attributes", "attributes"))
+                out.write(html_open("section"))
+                out.write(html_h("Attributes"))
 
                 for attr in cls.attributes:
                     self.render_attribute(out, attr)
 
-                out.write(html_section_close())
+                out.write(html_close("section"))
 
-            methods = [x for x in cls.methods if not x.private]
+            if cls.methods:
+                out.write(html_open("section"))
+                out.write(html_h("Methods"))
 
-            if methods:
-                out.write(html_section_open("Methods", "methods"))
-
-                for meth in methods:
+                for meth in cls.methods:
                     self.render_method(out, meth)
 
-                out.write(html_section_close())
+                out.write(html_close("section"))
 
-            out.write(html_section_close())
-
-    def render_error(self, out, error):
-        title = "{}. {}".format(error.doc_id, error.name)
-
-        out.write(html_section_open(title, "error", toggle_visibility=True))
-        out.write(html_text(error.text))
-        out.write(self.include_file("{}.error.html", error.name))
-        out.write(html_section_close())
+            out.write(html_close("section"))
 
     def render_attribute(self, out, attr):
         value = ""
@@ -170,9 +178,8 @@ class HtmlRenderer(PumpjackRenderer):
             value = "= {}".format(value)
             value = html_span(value, class_="signature")
 
-        title = "{} {}".format(attr.name, value)
-
-        out.write(html_section_open(title, "attribute", toggle_visibility=True))
+        out.write(html_open("section"))
+        out.write(html_h(init_cap(attr.name)))
 
         items = (
             ("Type", attr.type),
@@ -181,10 +188,9 @@ class HtmlRenderer(PumpjackRenderer):
         )
 
         out.write(html_table(items, False, True, class_="props"))
-
         out.write(html_text(attr.text))
-        out.write(self.include_file("{}.attribute.html".format(attr.name)))
-        out.write(html_section_close())
+        #out.write(self.include_file("{}.attribute.html".format(attr.name)))
+        out.write(html_close("section"))
 
     def render_method(self, out, meth):
         signature = ", ".join([x.name for x in meth.inputs])
@@ -198,13 +204,14 @@ class HtmlRenderer(PumpjackRenderer):
 
         title = "{} {}".format(meth.name, signature)
 
-        out.write(html_section_open(title, "method", toggle_visibility=True))
+        out.write(html_open("section"))
+        out.write(html_h(init_cap(meth.name)))
 
         self.render_method_params(out, meth)
 
         out.write(html_text(meth.text))
-        out.write(self.include_file("{}.method.html".format(meth.name)))
-        out.write(html_section_close())
+        #out.write(self.include_file("{}.method.html".format(meth.name)))
+        out.write(html_close("section"))
 
     def render_method_params(self, out, meth):
         items = list()
@@ -251,44 +258,6 @@ def html_text(text):
     text = _re.sub("\s*\n\s*\n\s*", " </p>\n\n<p>", text)
 
     return "<p>{}</p>".format(text)
-
-section_sequence = 0 # XXX Wha?
-
-def html_section_open(heading_text=None,
-                      html_class=None,
-                      toggle_visibility=False):
-    global section_sequence
-    section_sequence += 1
-
-    lines = list()
-
-    if heading_text:
-        if toggle_visibility:
-            attrs = dict()
-            attrs["class_"] = "visibility-toggle"
-            attrs["target-id"] = str(section_sequence)
-
-            args = heading_text, html_a("&#187", "", **attrs)
-            heading_text = "{} {}".format(*args)
-
-        lines.append(html_h(heading_text))
-
-    attrs = list()
-
-    attrs.append("id=\"{}\"".format(section_sequence))
-
-    if html_class:
-        attrs.append("class=\"{}\"".format(html_class))
-
-    lines.append("<section {}>".format(" ".join(attrs)))
-
-    return "\n".join(lines)
-
-def html_section_close():
-    return "</section>"
-
-def html_prop_table_entry(name, value):
-    return "<tr><th>{}</th><td>{}</td></tr>".format(name, value)
 
 def format_node_value(node):
     value = node.value

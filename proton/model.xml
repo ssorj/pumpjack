@@ -19,118 +19,146 @@
 
     <annotation name="requires">proton/amqp</annotation>
 
-    <class name="endpoint">
-      Endpoint is a base class for session, connection, and link.
+    <group name="model" title="AMQP model entities">
+      <class name="endpoint">
+        The base class for session, connection, and link
 
-      <constant name="LOCAL-UNINIT" value="1">
-        The local endpoint is uninitialized.
-      </constant>
+        <constant name="LOCAL-UNINIT" value="1">
+          The local endpoint is uninitialized.
+        </constant>
 
-      <constant name="REMOTE-UNINIT" value="8">
-        The remote endpoint is uninitialized.
-      </constant>
+        <constant name="REMOTE-UNINIT" value="8">
+          The remote endpoint is uninitialized.
+        </constant>
 
-      <constant name="LOCAL-ACTIVE" value="2">
-        The local endpoint is active.
-      </constant>
+        <constant name="LOCAL-ACTIVE" value="2">
+          The local endpoint is active.
+        </constant>
 
-      <constant name="REMOTE-ACTIVE" value="16">
-        The remote endpoint is active.
-      </constant>
+        <constant name="REMOTE-ACTIVE" value="16">
+          The remote endpoint is active.
+        </constant>
 
-      <constant name="LOCAL-CLOSED" value="4">
-        The local endpoint is closed.
-      </constant>
+        <constant name="LOCAL-CLOSED" value="4">
+          The local endpoint is closed.
+        </constant>
 
-      <constant name="REMOTE-CLOSED" value="32">
-        The remote endpoint is closed.
-      </constant>
+        <constant name="REMOTE-CLOSED" value="32">
+          The remote endpoint is closed.
+        </constant>
 
-      <!--
-      <constant name="LOCAL-MASK">
-        A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
-      </constant>
+        <!--
+        <constant name="LOCAL-MASK">
+          A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
+        </constant>
 
-      <constant name="REMOTE-MASK">
-        A mask including all REMOTE_ bits (UNINIT, ACTIVE, CLOSED).
-      </constant>
-      -->
+        <constant name="REMOTE-MASK">
+          A mask including all REMOTE_ bits (UNINIT, ACTIVE, CLOSED).
+        </constant>
+        -->
 
-      <attribute name="state" type="integer" writeable="false">
-        State is a bit mask of state_bit values.
+        <attribute name="state" type="integer" writeable="false">
+          State is a bit mask of state_bit values.
 
-        A state mask is matched against an endpoint as follows: If the
-        state mask contains both local and remote flags, then an exact
-        match against those flags is performed. If state contains only
-        local or only remote flags, then a match occurs if any of the
-        local or remote flags are set respectively. XXX Huh?
-      </attribute>
-    </class>
+          A state mask is matched against an endpoint as follows: If the
+          state mask contains both local and remote flags, then an exact
+          match against those flags is performed. If state contains only
+          local or only remote flags, then a match occurs if any of the
+          local or remote flags are set respectively. XXX Huh?
+        </attribute>
+      </class>
 
-    <class name="container"/>
+      <class name="container"/>
 
-    <class name="connection" type="@endpoint">
-      <method name="open">
-        Opens a connection.
+      <class name="connection" type="@endpoint">
+        <attribute name="default-session" type="@session"/>
 
-        In more detail, this moves the local state of the connection
-        to the ACTIVE state and triggers an open frame to be sent to
-        the peer. A connection is fully active once both peers have
-        opened it.
+        <method name="open">
+          Opens a connection.
 
-        Not complete until on-connection-opened. XXX
-      </method>
+          In more detail, this moves the local state of the connection
+          to the ACTIVE state and triggers an open frame to be sent to
+          the peer. A connection is fully active once both peers have
+          opened it.
 
-      <attribute name="default-session" type="@session"/>
+          Not complete until on-connection-opened. XXX
+        </method>
 
-      <method name="create-session" type="@session"/>
-      <method name="create-sender" type="@sender"/>
-      <method name="create-receiver" type="@receiver"/>
+        <method name="close"/>
 
-      <method name="link-head" type="@link"/>
+        <method name="create-session" type="@session"/>
+        <method name="create-sender" type="@sender"/>
+        <method name="create-receiver" type="@receiver"/>
+
+        <!-- <method name="link-head" type="@link"/> -->
+      </class>
+
+      <class name="session">
+        A session is a collection of links.  XXX need to talk about
+        one sequential conversation
+        
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
+        
+        <attribute name="connection" type="@connection"/>
+        <attribute name="incoming-bytes" type="integer"/>
+        <attribute name="incoming-capacity" type="integer"/>
+        <attribute name="outgoing-bytes" type="integer"/>
+        <attribute name="outgoing-window" type="integer"/>
+
+        <method name="open"/>
+        <method name="close"/>
+        
+        <method name="create-receiver" type="@receiver"/>
+        <method name="create-sender" type="@sender"/>
+      </class>
       
-      <method name="close"/>
-    </class>
+      <class name="session-error"/>
+      <class name="link"/>
+      <class name="receiver"/>
+      <class name="sender"/>
+      <class name="terminus"/>
+      <class name="condition"/>
+      <class name="delivery"/>
+      <class name="delivery-state"/>
+      <class name="address"/>
+      <class name="message"/>
+    </group>
 
-    <class name="session"/>
-    <class name="session-error"/>
-    <class name="link"/>
-    <class name="receiver"/>
-    <class name="sender"/>
-    <class name="terminus"/>
-    <class name="condition"/>
-    <class name="delivery"/>
-    <class name="delivery-state"/>
-    <class name="address"/>
-    <class name="message"/>
+    <group name="events" title="Event processing">
+      <class name="event"/>
+      <class name="event-type"/>
+      <class name="collector"/>
+      <class name="reactor"/>
+      <class name="acceptor"/>
+      <class name="timer"/>
+      <class name="task"/>
+      <class name="selectable"/>
+      <class name="general-handler"/>
+      <class name="outgoing-message-handler"/>
+      <class name="incoming-message-handler"/>
+      <class name="transaction-handler"/>
+      <class name="transactional-client-handler"/>
+    </group>
 
-    <class name="event"/>
-    <class name="event-type"/>
-    <class name="collector"/>
-    <class name="reactor"/>
-    <class name="acceptor"/>
-    <class name="timer"/>
-    <class name="task"/>
-    <class name="selectable"/>
-    <class name="general-handler"/>
-    <class name="outgoing-message-handler"/>
-    <class name="incoming-message-handler"/>
-    <class name="transaction-handler"/>
-    <class name="transactional-client-handler"/>
+    <group name="transport" title="Transport entities">
+      <class name="transport"/>
+      <class name="transport-error"/>
+      <class name="ssl"/>
+      <class name="ssl-domain"/>
+      <class name="ssl-error"/>
+      <class name="sasl"/>
+    </group>
 
-    <class name="transport"/>
-    <class name="transport-error"/>
-    <class name="ssl"/>
-    <class name="ssl-domain"/>
-    <class name="ssl-error"/>
-    <class name="sasl"/>
+    <group name="errors" title="Error handling">
+      <class name="proton-error"/>
+      <class name="timeout-error"/>
+    </group>
 
-    <class name="proton-error"/>
-    <class name="timeout-error"/>
-
-    <class name="duration"/>
-    <class name="url"/>
-    <class name="url-error"/>
+    <group name="utilities" title="Important utilities">
+      <class name="duration"/>
+      <class name="url"/>
+      <class name="url-error"/>
+    </group>
   </module>
 
   <module name="amqp">

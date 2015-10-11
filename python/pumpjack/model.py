@@ -28,13 +28,9 @@ class _Node(object):
     def __init__(self, element, parent):
         self.element = element
 
-        #args = self.__class__.__name__, self.name
-        #print "Creating %s(%s)" % args
-
         self.name = self.element.attrib["name"]
         
-        self.group = None
-        self.private = None
+        self.title = None
         self.text = None
         self.links = list()
         self.annotations = dict()
@@ -74,8 +70,7 @@ class _Node(object):
             child.process()
         
     def process_attributes(self):
-        self.group = self.element.attrib.get("group")
-        self.private = self.element.attrib.get("private", False)
+        self.title = self.element.attrib.get("title")
         
     def process_text(self):
         self.text = self.element.text
@@ -138,15 +133,25 @@ class _Module(_Node):
     def __init__(self, element, parent):
         super(_Module, self).__init__(element, parent)
 
+        self.model = parent
+
+        self.groups = list()
+
+    def process(self):
+        for child in self.element.findall("group"):
+            group = _ModuleGroup(child, self)
+            self.groups.append(group)
+
+        super(_Module, self).process()
+
+class _ModuleGroup(_Node):
+    def __init__(self, element, parent):
+        super(_ModuleGroup, self).__init__(element, parent)
+
         self.classes = list()
-        self.errors = list()
         self.enumerations = list()
 
     def process(self):
-        for child in self.element.findall("error"):
-            error = _Error(child, self)
-            self.errors.append(error)
-
         for child in self.element.findall("class"):
             cls = _Class(child, self)
             self.classes.append(cls)
@@ -155,64 +160,55 @@ class _Module(_Node):
             enum = _Enumeration(child, self)
             self.enumerations.append(enum)
 
-        super(_Module, self).process()
+        super(_ModuleGroup, self).process()
 
 class _Class(_Node):
     def __init__(self, element, parent):
         super(_Class, self).__init__(element, parent)
+
+        self.module = parent.parent
 
         self.constructor = None
 
         self.type = self.element.attrib.get("type")
 
         self.attributes = list()
-        self.attributes_by_group = _defaultdict(list)
-
         self.methods = list()
-        self.methods_by_group = _defaultdict(list)
-
         self.constants = list()
-        self.constants_by_group = _defaultdict(list)
-
         self.enumerations = list()
-        self.enumerations_by_group = _defaultdict(list)
 
-        self.doc_id = "C%i" % (self.parent.children.index(self) + 1)
+        self.html_id = "C{}".format(self.parent.children.index(self) + 1)
 
     def process(self):
         for child in self.element.findall("attribute"):
             attr = _Attribute(child, self)
             self.attributes.append(attr)
-            self.attributes_by_group[attr.group].append(attr)
 
         child = self.element.find("constructor")
 
         if child is not None:
             self.constructor = _Method(child, self)
             self.methods.append(self.constructor)
-            self.methods_by_group[self.constructor.group].append \
-                (self.constructor)
 
         for child in self.element.findall("method"):
             meth = _Method(child, self)
             self.methods.append(meth)
-            self.methods_by_group[meth.group].append(meth)
 
         for child in self.element.findall("constant"):
             const = _Constant(child, self)
             self.constants.append(const)
-            self.constants_by_group[const.group].append(const)
 
         for child in self.element.findall("enumeration"):
             enum = _Enumeration(child, self)
             self.enumerations.append(enum)
-            self.enumerations_by_group[enum.group].append(enum)
 
         super(_Class, self).process()
         
 class _Enumeration(_Node):
     def __init__(self, element, parent):
         super(_Enumeration, self).__init__(element, parent)
+
+        self.module = parent.parent
 
         self.constants = list()
         self.constants_by_group = _defaultdict(list)
@@ -253,8 +249,8 @@ class _Attribute(_Parameter):
         if readable == "false":
             self.readable = False
 
-        args = self.parent.doc_id, self.parent.children.index(self) + 1
-        self.doc_id = "{}.{}".format(*args)
+        args = self.parent.html_id, self.parent.children.index(self) + 1
+        self.html_id = "{}.{}".format(*args)
 
 class _Method(_Node):
     def __init__(self, element, parent):
@@ -264,8 +260,8 @@ class _Method(_Node):
         self.outputs = list()
         self.error_conditions = list()
 
-        args = self.parent.doc_id, self.parent.children.index(self)
-        self.doc_id = "{}.{}".format(*args)
+        args = self.parent.html_id, self.parent.children.index(self)
+        self.html_id = "{}.{}".format(*args)
 
     def process(self):
         for child in self.element.findall("input"):
@@ -297,7 +293,7 @@ class _Error(_Node):
     def __init__(self, element, parent):
         super(_Error, self).__init__(element, parent)
 
-        self.doc_id = "E%i" % self.parent.children.index(self)
+        self.html_id = "E{}".format(self.parent.children.index(self))
 
 class _Type(_Node):
     def __init__(self, element, parent):
