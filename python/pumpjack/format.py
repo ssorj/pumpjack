@@ -17,6 +17,8 @@
 # under the License.
 #
 
+from pencil import *
+
 def studly_name(name):
     assert name
 
@@ -36,15 +38,6 @@ def studly_name(name):
         prev = curr
 
     return "".join(chars)
-
-def init_cap(s):
-    return s[0].upper() + s[1:]
-
-def first_sentence(text):
-    if not text:
-        return ""
-
-    return re.split('\.\s+', text, 1)[0]
 
 def format_lines(text, max_length):
     assert text

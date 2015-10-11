@@ -35,19 +35,16 @@ class PumpjackRenderer(object):
         self.type_literals = dict()
 
     def render(self, model):
-        output_name = "module.%s" % renderer_names_by_class[self.__class__]
+        renderer_name = renderer_names_by_class[self.__class__]
+        output_name = "model.{}.in".format(renderer_name)
         output_path = _os.path.join(self.output_dir, output_name)
 
         if not _os.path.exists(self.output_dir):
             _os.makedirs(self.output_dir)
         
-        file = open(output_path, "w")
-        writer = PumpjackWriter(file)
-
-        try:
-            self.render_model(writer, model)
-        finally:
-            file.close()
+        with open(output_path, "w") as f:
+            out = PumpjackWriter(f)
+            self.render_model(out, model)
 
     def get_type_literal(self, node, ref):
         # XXX

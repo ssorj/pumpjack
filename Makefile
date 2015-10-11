@@ -1,47 +1,42 @@
-.PHONY: help generate prepare clean test
+.PHONY: help generate clean
 
 tmpdir := $(shell mktemp -d)
 pygments_style := monokai
 
-generate:
-	scripts/pumpjack -r python -i input/proton -o output/proton
-	mv output/proton/module.python output/proton/module.py
-	scripts/colorize output/proton/module.py output/proton/module.py.html
-
-prepare: clean
-#	mkdir -p output/peer/examples
-#	mkdir -p output/peer/resources
-#	cp -a input/peer/resources/* output/peer/resources
+generate: clean
+	scripts/pumpjack -r html -i proton -o input
+	transom input output
 
 help:
-	@echo "generate, clean, test"
+	@echo "generate, clean"
 
 clean:
 	find python -type f -name \*.pyc -delete
+	rm -rf input
 	rm -rf output
 
-test: generate
-	python output/peer/module.py
+# test: generate
+# 	python output/peer/module.py
 
-	javac output/peer/module.java
+# 	javac output/peer/module.java
 
-	echo 'int main(int argc, char ** argv) {}' > ${tmpdir}/test.c
-	gcc -std=c99 -pedantic -include output/peer/module.c -o ${tmpdir}/test.o ${tmpdir}/test.c
+# 	echo 'int main(int argc, char ** argv) {}' > ${tmpdir}/test.c
+# 	gcc -std=c99 -pedantic -include output/peer/module.c -o ${tmpdir}/test.o ${tmpdir}/test.c
 
-output/%: input/%
-	scripts/pumpjack -r c -i $< -o $@
-	scripts/pumpjack -r java -i $< -o $@
-	scripts/pumpjack -r python -i $< -o $@
-	cp $</module.xml $@/module.xml
+# output/%: input/%
+# 	scripts/pumpjack -r c -i $< -o $@
+# 	scripts/pumpjack -r java -i $< -o $@
+# 	scripts/pumpjack -r python -i $< -o $@
+# 	cp $</module.xml $@/module.xml
 
-	mv output/$*/module.python output/$*/module.py
+# 	mv output/$*/module.python output/$*/module.py
 
-	scripts/colorize output/$*/module.c output/$*/module.c.html 
-	scripts/colorize output/$*/module.java output/$*/module.java.html 
-	scripts/colorize output/$*/module.py output/$*/module.py.html 
-	scripts/colorize output/$*/module.xml output/$*/module.xml.html
+# 	scripts/colorize output/$*/module.c output/$*/module.c.html 
+# 	scripts/colorize output/$*/module.java output/$*/module.java.html 
+# 	scripts/colorize output/$*/module.py output/$*/module.py.html 
+# 	scripts/colorize output/$*/module.xml output/$*/module.xml.html
 
-	scripts/pumpjack -r html -i $< -o $@
+# 	scripts/pumpjack -r html -i $< -o $@
 
 # output/peer/examples/%: input/peer/examples/%
 # 	cp $< $@
@@ -51,3 +46,13 @@ output/%: input/%
 
 # epydoc: output/peer/module.python
 # 	PYTHONPATH=output epydoc --output output/peer/epydoc peer.module
+
+# scripts/pumpjack -r python -i input/proton -o output/proton
+# mv output/proton/module.python output/proton/module.py
+# scripts/colorize output/proton/module.py output/proton/module.py.html
+
+#prepare: clean
+#	mkdir -p output/peer/examples
+#	mkdir -p output/peer/resources
+#	cp -a input/peer/resources/* output/peer/resources
+

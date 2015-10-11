@@ -19,6 +19,9 @@
 
 from render import *
 
+import os as _os
+import re as _re
+
 class HtmlRenderer(PumpjackRenderer):
     def __init__(self, output_dir):
         super(HtmlRenderer, self).__init__(output_dir)
@@ -26,9 +29,9 @@ class HtmlRenderer(PumpjackRenderer):
     def include_file(self, path):
         #return "" # XXX
 
-        path = os.path.join(self.output_dir, path)
+        path = _os.path.join(self.output_dir, path)
 
-        if not os.path.exists(path):
+        if not _os.path.exists(path):
             return ""
 
         with open(path, "r") as file:
@@ -39,184 +42,217 @@ class HtmlRenderer(PumpjackRenderer):
 
         return out
 
+    def render(self, model):
+        output_path = _os.path.join(self.output_dir, "index.html.in")
+
+        if not _os.path.exists(self.output_dir):
+            _os.makedirs(self.output_dir)
+
+        with open(output_path, "w") as f:
+            out = PumpjackWriter(f)
+            self.render_model(out, model)
+    
     def render_model(self, out, model):
+        out.write(html_h(init_cap(model.name)))
+        out.write(html_text(model.text))
+
+        items = list()
+        
+        for link in model.links:
+            items.append(html_a(link[0], link[1]))
+
+        out.write(html_ul(items, class_="links two-column"))
+
+        out.write(html_open("section"))
+        out.write(html_h("Modules"))
+
+        items = list()
+        items.append(("Module", "Content", "Depends on"))
+
+        for module in model.modules:
+            name = "{} {}".format(init_cap(module.parent.name), init_cap(module.name))
+            link = html_a(name, "{}/index.html".format(module.name))
+            summary = first_sentence(module.text)
+            requires = module.annotations.get("requires")
+
+            items.append((link, summary, requires))
+
+        out.write(html_table(items))
+        out.write(html_close("section"))
+        
         for module in model.modules:
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        args = initcap(module.model.name), initcap(module.name)
-        title = "%s %s" % args
+        output_dir = _os.path.join(self.output_dir, module.name)
+        output_path = _os.path.join(output_dir, "index.html.in")
 
-        out.write(html_section_open(title, "module"))
-        out.write(html_text(module.doc))
-        out.write(self.include_file("module.html"))
+        if not _os.path.exists(output_dir):
+            _os.makedirs(output_dir)
+        
+        with open(output_path, "w") as f:
+            out = PumpjackWriter(f)
 
-        if module.classes:
-            out.write(html_section_open("Classes"))
+            args = init_cap(module.model.name), init_cap(module.name)
+            title = "{} {}".format(*args)
+
+            out.write(html_h(title))
             
-            for cls in module.classes:
-                self.render_class(out, cls)
+            out.write(html_text(module.text))
+            #out.write(self.include_file("module.html"))
 
-            out.write(html_section_close())
+            if module.classes:
+                out.write(html_section_open("Classes"))
+                
+                for cls in module.classes:
+                    self.render_class(out, cls)
 
-        if module.exceptions:
-            out.write(html_section_open("Exceptions"))
-            
-            for exc in module.exceptions:
-                self.render_exception(out, exc)
+                out.write(html_section_close())
 
-            out.write(html_section_close())
+            if module.errors:
+                out.write(html_section_open("Errors"))
+                
+                for error in module.errors:
+                    self.render_error(out, error)
 
-        out.write(html_section_close())
+                out.write(html_section_close())
 
     def render_class(self, out, cls):
-        args = cls.doc_id, cls.name
-        title = "%s. %s" % args
+        output_dir = _os.path.join(self.output_dir, cls.parent.name)
+        output_name = "{}.html.in".format(cls.name)
+        output_path = _os.path.join(output_dir, output_name)
+
+        if not _os.path.exists(output_dir):
+            _os.makedirs(output_dir)
         
-        out.write(html_section_open(title, "class", toggle_visibility=True))
-        out.write(html_text(cls.doc))
-        out.write(self.include_file("%s.class.html" % cls.name))
+        with open(output_path, "w") as f:
+            out = PumpjackWriter(f)
+        
+            title = "{}. {}".format(cls.doc_id, cls.name)
+            
+            out.write(html_section_open(title, "class", toggle_visibility=True))
+            out.write(html_text(cls.text))
+            out.write(self.include_file("{}.class.html".format(cls.name)))
 
-        if cls.attributes:
-            out.write(html_section_open("Attributes", "attributes"))
+            if cls.attributes:
+                out.write(html_section_open("Attributes", "attributes"))
 
-            for attr in cls.attributes:
-                self.render_attribute(out, attr)
+                for attr in cls.attributes:
+                    self.render_attribute(out, attr)
+
+                out.write(html_section_close())
+
+            methods = [x for x in cls.methods if not x.private]
+
+            if methods:
+                out.write(html_section_open("Methods", "methods"))
+
+                for meth in methods:
+                    self.render_method(out, meth)
+
+                out.write(html_section_close())
 
             out.write(html_section_close())
 
-        methods = [x for x in cls.methods if not x.private]
+    def render_error(self, out, error):
+        title = "{}. {}".format(error.doc_id, error.name)
 
-        if methods:
-            out.write(html_section_open("Methods", "methods"))
-
-            for meth in methods:
-                self.render_method(out, meth)
-
-            out.write(html_section_close())
-
-        out.write(html_section_close())
-
-    def render_exception(self, out, exc):
-        args = exc.doc_id, exc.name
-        title = "%s. %s" % args
-
-        out.write(html_section_open(title, "exception", toggle_visibility=True))
-        out.write(html_text(exc.doc))
-        out.write(self.include_file("%s.exception.html" % exc.name))
+        out.write(html_section_open(title, "error", toggle_visibility=True))
+        out.write(html_text(error.text))
+        out.write(self.include_file("{}.error.html", error.name))
         out.write(html_section_close())
 
     def render_attribute(self, out, attr):
         value = ""
 
         if attr.value is not None:
-            value = fmt_node_value(attr)
-            value = "= %s" % value
-            value = html_span(value, "signature")
+            value = format_node_value(attr)
+            value = "= {}".format(value)
+            value = html_span(value, class_="signature")
 
-        args = attr.name, value
-        title = "%s %s" % args
+        title = "{} {}".format(attr.name, value)
 
         out.write(html_section_open(title, "attribute", toggle_visibility=True))
 
-        out.write(html_table_open("props"))
-        out.write(html_prop_table_entry("Type", attr.type))
-        out.write(html_prop_table_entry("Initial value", attr.value))
-        out.write(html_prop_table_entry("Nullable?", str(attr.nullable)))
-        out.write(html_table_close())
+        items = (
+            ("Type", attr.type),
+            ("Initial value", attr.value),
+            ("Nullable", attr.nullable),
+        )
 
-        out.write(html_text(attr.doc))
-        out.write(self.include_file("%s.attribute.html" % attr.name))
+        out.write(html_table(items, False, True, class_="props"))
+
+        out.write(html_text(attr.text))
+        out.write(self.include_file("{}.attribute.html".format(attr.name)))
         out.write(html_section_close())
 
     def render_method(self, out, meth):
         signature = ", ".join([x.name for x in meth.inputs])
-        signature = "(%s)" % signature
+        signature = "({})".format(signature)
 
         if meth.outputs:
             output = meth.outputs[0]
-            args = signature, fmt_node_value(output)
-            signature = "%s = %s" % args
+            signature = "{} = {}".format(signature, format_node_value(output))
 
-        signature = html_span(signature, "signature")
+        signature = html_span(signature, class_="signature")
 
-        args = meth.name, signature
-        title = "%s %s" % args
+        title = "{} {}".format(meth.name, signature)
 
         out.write(html_section_open(title, "method", toggle_visibility=True))
 
         self.render_method_params(out, meth)
 
-        out.write(html_text(meth.doc))
-        out.write(self.include_file("%s.method.html" % meth.name))
+        out.write(html_text(meth.text))
+        out.write(self.include_file("{}.method.html".format(meth.name)))
         out.write(html_section_close())
 
     def render_method_params(self, out, meth):
-        out.write(html_table_open("params"))
-
+        items = list()
+        
         for input in meth.inputs:
-            args = input.name, input.type, str(input.nullable)
-            out.write("<tr><td>%s</td><td>%s</td><td>%s</td></tr>" % args)
+            items.append((input.name, input.type, str(input.nullable)))
 
-        out.write(html_table_close())
+        if not items:
+            return
+
+        out.write(html_table(items, class_="params"))
 
     def render_toc(self, out, nodes):
         if not nodes:
             return
 
-        out.write("<table class=\"toc\"><tbody>")
+        out.write(html_open("table", class_="toc"))
+        out.write(html_open("tbody"))
 
-        for node in nodes:
-            args = node.name, first_sentence(node.doc)
-            out.write("<tr><th>%s</th><td>%s</td></tr>" % args)
+        items = list()
         
-        out.write("</tbody></table>")
+        for node in nodes:
+            items.append((node.name, first_sentence(node.text)))
+
+        out.write(html_table(items, False, True, class_="props"))
 
     def render_properties(self, out, node, names):
-        out.write("<table class=\"props\"><tbody>")
-
-        for name in names:
-            args = initcap(name), node.attrib[name]
-            out.write("<tr><th>%s</th><td>%s</td></tr>" % args)
+        items = list()
         
-        out.write("</tbody></table>")
+        for name in names:
+            items.append((init_cap(name), node.attrib[name]))
+
+        out.write(html_table(items, False, True, class_="props"))
 
 add_renderer("html", HtmlRenderer)
-
-def html_heading(text, attrs=()):
-    attrs_string = " ".join(attrs)
-    args = attrs_string, text, attrs_string
-    return "<h1 %s>%s</h1 %s>" % args
-
-def html_link(text, href=None, attrs=None):
-    if attrs is None:
-        attrs = list()
-
-    if href is not None:
-        attrs.append("href=\"%s\"" % href)
-
-    args = " ".join(attrs), text
-    return "<a %s>%s</a>" % args
-
-def html_para(text):
-    return "<p>%s</p>" % text
 
 def html_text(text):
     if not text:
         return ""
 
-    text = re.sub("{", "<a href=\"\">", text) # XXX
-    text = re.sub("}", "</a>", text)
+    text = _re.sub("{", "<a href=\"\">", text) # XXX
+    text = _re.sub("}", "</a>", text)
 
-    text = re.sub("\s*\n\s*\n\s*", " </p>\n\n<p>", text)
+    text = _re.sub("\s*\n\s*\n\s*", " </p>\n\n<p>", text)
 
-    return "<p>%s</p>" % text
+    return "<p>{}</p>".format(text)
 
-def html_span(text, html_class):
-    args = html_class, text
-    return "<span class=\"%s\">%s</span>" % args
-
-section_sequence = 0
+section_sequence = 0 # XXX Wha?
 
 def html_section_open(heading_text=None,
                       html_class=None,
@@ -228,45 +264,39 @@ def html_section_open(heading_text=None,
 
     if heading_text:
         if toggle_visibility:
-            link_attrs = list()
-            link_attrs.append("class=\"visibility-toggle\"")
-            link_attrs.append("target-id=\"%i\"" % section_sequence)
+            attrs = dict()
+            attrs["class_"] = "visibility-toggle"
+            attrs["target-id"] = str(section_sequence)
 
-            args = heading_text, html_link("&#187", attrs=link_attrs)
-            heading_text = "%s %s" % args
+            args = heading_text, html_a("&#187", "", **attrs)
+            heading_text = "{} {}".format(*args)
 
-        lines.append(html_heading(heading_text))
+        lines.append(html_h(heading_text))
 
     attrs = list()
 
-    attrs.append("id=\"%s\"" % section_sequence)
+    attrs.append("id=\"{}\"".format(section_sequence))
 
     if html_class:
-        attrs.append("class=\"%s\"" % html_class)
+        attrs.append("class=\"{}\"".format(html_class))
 
-    lines.append("<section %s>" % " ".join(attrs))
+    lines.append("<section {}>".format(" ".join(attrs)))
 
     return "\n".join(lines)
 
 def html_section_close():
     return "</section>"
 
-def html_table_open(html_class):
-    return "<table class=\"%s\"><tbody>" % html_class
-
 def html_prop_table_entry(name, value):
-    args = name, value
-    return "<tr><th>%s</th><td>%s</td></tr>" % args
+    return "<tr><th>{}</th><td>{}</td></tr>".format(name, value)
 
-def html_table_close():
-    return "</tbody></table>"
-
-def fmt_node_value(node):
+def format_node_value(node):
     value = node.value
 
     if node.type == "string":
-        value = "'%s'" % value
-    elif node.type[0] == "@":
-        value = "%s instance" % node.type[1:]
+        return "'{}'".format(value)
+
+    if node.type[0] == "@":
+        return "{} instance".format(node.type[1:])
 
     return value

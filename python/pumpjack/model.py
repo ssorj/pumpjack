@@ -27,19 +27,20 @@ from collections import defaultdict as _defaultdict
 class _Node(object):
     def __init__(self, element, parent):
         self.element = element
-        self.name = element.attrib.get("name")
-        self.group = self.element.attrib.get("group")
-        self.private = self.element.attrib.get("private", False)
 
         #args = self.__class__.__name__, self.name
         #print "Creating %s(%s)" % args
 
-        self.doc = element.text
-
-        if self.doc:
-            self.doc = self.doc.strip()
+        self.name = self.element.attrib["name"]
+        
+        self.group = None
+        self.private = None
+        self.text = None
+        self.links = list()
+        self.annotations = dict()
 
         self.parent = parent
+        self.ancestors = list()
         self.children = list()
         self.children_by_name = dict()
 
@@ -51,7 +52,6 @@ class _Node(object):
             self.parent.children_by_name[self.name] = self
 
         node = self
-        self.ancestors = list()
 
         while node.parent:
             node = node.parent
@@ -59,11 +59,41 @@ class _Node(object):
 
         self.model = node
 
-    def process_children(self):
-        for child in self.children:
-            child.process_children()
+    def __repr__(self):
+        return _format_repr(self, self.name)
+        
+    def process(self):
+        print("Processing {}".format(self))
+        
+        self.process_attributes()
+        self.process_text()
+        self.process_links()
+        self.process_annotations()
 
+        for child in self.children:
+            child.process()
+        
+    def process_attributes(self):
+        self.group = self.element.attrib.get("group")
+        self.private = self.element.attrib.get("private", False)
+        
+    def process_text(self):
+        self.text = self.element.text
+
+        if self.text:
+            self.text = self.text.strip()
+
+    def process_links(self):
+        for child in self.element.findall("link"):
+            self.links.append((child.text, child.attrib["href"]))
+
+    def process_annotations(self):
+        for child in self.element.findall("annotation"):
+            self.annotations[child.attrib["name"]] = child.text
+            
     def process_references(self):
+        print("Processing references for {}".format(self))
+
         for child in self.children:
             child.process_references()
 
@@ -109,13 +139,13 @@ class _Module(_Node):
         super(_Module, self).__init__(element, parent)
 
         self.classes = list()
-        self.exceptions = list()
+        self.errors = list()
         self.enumerations = list()
 
-    def process_children(self):
-        for child in self.element.findall("exception"):
-            exc = _Exception(child, self)
-            self.exceptions.append(exc)
+    def process(self):
+        for child in self.element.findall("error"):
+            error = _Error(child, self)
+            self.errors.append(error)
 
         for child in self.element.findall("class"):
             cls = _Class(child, self)
@@ -125,7 +155,7 @@ class _Module(_Node):
             enum = _Enumeration(child, self)
             self.enumerations.append(enum)
 
-        super(_Module, self).process_children()
+        super(_Module, self).process()
 
 class _Class(_Node):
     def __init__(self, element, parent):
@@ -147,9 +177,9 @@ class _Class(_Node):
         self.enumerations = list()
         self.enumerations_by_group = _defaultdict(list)
 
-        self.doc_id = "C%i" % (self.parent.children.index(self) - 1)
+        self.doc_id = "C%i" % (self.parent.children.index(self) + 1)
 
-    def process_children(self):
+    def process(self):
         for child in self.element.findall("attribute"):
             attr = _Attribute(child, self)
             self.attributes.append(attr)
@@ -178,8 +208,8 @@ class _Class(_Node):
             self.enumerations.append(enum)
             self.enumerations_by_group[enum.group].append(enum)
 
-        super(_Class, self).process_children()
-
+        super(_Class, self).process()
+        
 class _Enumeration(_Node):
     def __init__(self, element, parent):
         super(_Enumeration, self).__init__(element, parent)
@@ -187,13 +217,13 @@ class _Enumeration(_Node):
         self.constants = list()
         self.constants_by_group = _defaultdict(list)
 
-    def process_children(self):
+    def process(self):
         for child in self.element.findall("constant"):
             const = _Constant(child, self)
             self.constants.append(const)
             self.constants_by_group[const.group].append(const)
 
-        super(_Enumeration, self).process_children()
+        super(_Enumeration, self).process()
 
 class _Parameter(_Node):
     def __init__(self, element, parent):
@@ -223,8 +253,8 @@ class _Attribute(_Parameter):
         if readable == "false":
             self.readable = False
 
-        args = self.parent.doc_id, (self.parent.children.index(self) + 1)
-        self.doc_id = "%s.%i" % args
+        args = self.parent.doc_id, self.parent.children.index(self) + 1
+        self.doc_id = "{}.{}".format(*args)
 
 class _Method(_Node):
     def __init__(self, element, parent):
@@ -232,12 +262,12 @@ class _Method(_Node):
 
         self.inputs = list()
         self.outputs = list()
-        self.exception_conditions = list()
+        self.error_conditions = list()
 
         args = self.parent.doc_id, self.parent.children.index(self)
-        self.doc_id = "%s.%i" % args
+        self.doc_id = "{}.{}".format(*args)
 
-    def process_children(self):
+    def process(self):
         for child in self.element.findall("input"):
             input = _Parameter(child, self)
             self.inputs.append(input)
@@ -246,26 +276,26 @@ class _Method(_Node):
             output = _Parameter(child, self)
             self.outputs.append(output)
 
-        for child in self.element.findall("exception-condition"):
-            cond = _ExceptionCondition(child, self)
-            self.exception_conditions.append(cond)
+        for child in self.element.findall("error-condition"):
+            cond = _ErrorCondition(child, self)
+            self.error_conditions.append(cond)
 
-        super(_Method, self).process_children()
+        super(_Method, self).process()
 
-class _ExceptionCondition(_Node):
+class _ErrorCondition(_Node):
     def __init__(self, element, parent):
-        super(_ExceptionCondition, self).__init__(element, parent)
-        self.exception_ref = self.element.attrib["exception"]
-        self.exception = None
+        super(_ErrorCondition, self).__init__(element, parent)
+        self.error_ref = self.element.attrib["error"]
+        self.error = None
 
     def process_references(self):
-        self.exception = self.resolve_reference(self.exception_ref)
+        self.error = self.resolve_reference(self.error_ref)
 
-        super(_ExceptionCondition, self).process_references()
+        super(_ErrorCondition, self).process_references()
 
-class _Exception(_Node):
+class _Error(_Node):
     def __init__(self, element, parent):
-        super(_Exception, self).__init__(element, parent)
+        super(_Error, self).__init__(element, parent)
 
         self.doc_id = "E%i" % self.parent.children.index(self)
 
@@ -273,18 +303,14 @@ class _Type(_Node):
     def __init__(self, element, parent):
         super(_Type, self).__init__(element, parent)
 
-class PumpjackModel(_Node):
+class Model(_Node):
     def __init__(self, element):
-        super(PumpjackModel, self).__init__(element, None)
+        super(Model, self).__init__(element, None)
 
         self.modules = list()
         self.types = list()
 
     def process(self):
-        self.process_children()
-        self.process_references()
-
-    def process_children(self):
         for child in self.element.findall("module"):
             module = _Module(child, self)
             self.modules.append(module)
@@ -293,4 +319,9 @@ class PumpjackModel(_Node):
             type = _Type(child, self)
             self.types.append(type)
 
-        super(PumpjackModel, self).process_children()
+        super(Model, self).process()
+
+def _format_repr(obj, *args):
+    cls = obj.__class__.__name__
+    strings = [str(x) for x in args]
+    return "{}({})".format(cls, ",".join(strings))

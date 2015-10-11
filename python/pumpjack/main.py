@@ -20,7 +20,7 @@
 from html import *
 from python import *
 
-import os
+import os as _os
 
 from xml.etree.ElementTree import ElementTree
 
@@ -31,24 +31,21 @@ class Pumpjack(object):
         self.model = None
 
     def load(self):
-        input_path = os.path.join(self.input_dir, "module.xml")
+        input_path = _os.path.join(self.input_dir, "model.xml")
         tree = ElementTree()
 
-        try:
-            file = open(input_path)
-        except IOError:
-            msg = "Cannot open input path '%s'" % input_path
+        if not _os.path.isfile(input_path):
+            msg = "File '{}' is missing"
             raise PumpjackException(msg)
 
-        try:
-            tree.parse(file)
-        finally:
-            file.close()
+        with open(input_path) as f:
+            tree.parse(f)
 
         elem = tree.getroot()
 
-        self.model = PumpjackModel(elem)
+        self.model = Model(elem)
         self.model.process()
+        self.model.process_references()
 
     def render(self, output_dir, renderer_name):
         assert self.model is not None
