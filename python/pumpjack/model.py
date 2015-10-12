@@ -22,6 +22,8 @@ from __future__ import print_function
 
 from format import *
 
+import os as _os
+
 from collections import defaultdict as _defaultdict
 
 class _Node(object):
@@ -57,7 +59,20 @@ class _Node(object):
 
     def __repr__(self):
         return _format_repr(self, self.name)
-        
+
+    @property
+    def abstract_path(self):
+        raise NotImplementedError()
+    
+    def get_output_path(self, output_dir):
+        path = _os.path.join(output_dir, *self.abstract_path)
+
+        return "{}.in".format(path)
+
+    def get_url(self, site_url="{{{{site_url}}}}"): # XXX why doubled?
+        elems = [site_url] + list(self.abstract_path)
+        return "/".join(elems)
+
     def process(self):
         print("Processing {}".format(self))
         
@@ -133,9 +148,11 @@ class _Module(_Node):
     def __init__(self, element, parent):
         super(_Module, self).__init__(element, parent)
 
-        self.model = parent
-
         self.groups = list()
+
+    @property
+    def abstract_path(self):
+        return (self.name, "index.html")
 
     def process(self):
         for child in self.element.findall("group"):
@@ -148,6 +165,8 @@ class _ModuleGroup(_Node):
     def __init__(self, element, parent):
         super(_ModuleGroup, self).__init__(element, parent)
 
+        self.module = parent
+        
         self.classes = list()
         self.enumerations = list()
 
@@ -166,29 +185,44 @@ class _Class(_Node):
     def __init__(self, element, parent):
         super(_Class, self).__init__(element, parent)
 
-        self.module = parent.parent
+        self.group = parent
+        self.module = self.group.parent
 
-        self.constructor = None
+        self.type = None
+
+        self.groups = list()
+
+    @property
+    def abstract_path(self):
+        return (self.module.name, self.name, "index.html")
+        
+    def process_attributes(self):
+        super(_Class, self).process_attributes()
 
         self.type = self.element.attrib.get("type")
+        
+    def process(self):
+        for child in self.element.findall("group"):
+            group = _ClassGroup(child, self)
+            self.groups.append(group)
+
+        super(_Class, self).process()
+
+class _ClassGroup(_Node):
+    def __init__(self, element, parent):
+        super(_ClassGroup, self).__init__(element, parent)
+
+        self.class_ = parent
 
         self.attributes = list()
         self.methods = list()
         self.constants = list()
         self.enumerations = list()
 
-        self.html_id = "C{}".format(self.parent.children.index(self) + 1)
-
     def process(self):
         for child in self.element.findall("attribute"):
             attr = _Attribute(child, self)
             self.attributes.append(attr)
-
-        child = self.element.find("constructor")
-
-        if child is not None:
-            self.constructor = _Method(child, self)
-            self.methods.append(self.constructor)
 
         for child in self.element.findall("method"):
             meth = _Method(child, self)
@@ -202,13 +236,14 @@ class _Class(_Node):
             enum = _Enumeration(child, self)
             self.enumerations.append(enum)
 
-        super(_Class, self).process()
+        super(_ClassGroup, self).process()
         
 class _Enumeration(_Node):
     def __init__(self, element, parent):
         super(_Enumeration, self).__init__(element, parent)
 
-        self.module = parent.parent
+        self.group = parent
+        self.module = self.group.parent
 
         self.constants = list()
         self.constants_by_group = _defaultdict(list)
@@ -221,7 +256,20 @@ class _Enumeration(_Node):
 
         super(_Enumeration, self).process()
 
-class _Parameter(_Node):
+class _ClassMember(_Node):
+    def __init__(self, element, parent):
+        super(_ClassMember, self).__init__(element, parent)
+
+        self.group = parent
+        self.class_ = self.group.parent
+
+    @property
+    def abstract_path(self):
+        name = "{}.html".format(self.name)
+
+        return (self.class_.module.name, self.class_.name, name)
+
+class _Parameter(_ClassMember):
     def __init__(self, element, parent):
         super(_Parameter, self).__init__(element, parent)
 
@@ -237,31 +285,16 @@ class _Attribute(_Parameter):
     def __init__(self, element, parent):
         super(_Attribute, self).__init__(element, parent)
 
-        self.writeable = True
-        self.readable = True
+        self.getter = self.element.attrib.get("getter", "true") == "true"
+        self.setter = self.element.attrib.get("setter", "false") == "true"
 
-        writeable = self.element.attrib.get("writeable")
-        readable = self.element.attrib.get("readable")
-
-        if writeable == "false":
-            self.writeable = False
-
-        if readable == "false":
-            self.readable = False
-
-        args = self.parent.html_id, self.parent.children.index(self) + 1
-        self.html_id = "{}.{}".format(*args)
-
-class _Method(_Node):
+class _Method(_ClassMember):
     def __init__(self, element, parent):
         super(_Method, self).__init__(element, parent)
 
         self.inputs = list()
         self.outputs = list()
         self.error_conditions = list()
-
-        args = self.parent.html_id, self.parent.children.index(self)
-        self.html_id = "{}.{}".format(*args)
 
     def process(self):
         for child in self.element.findall("input"):
@@ -293,8 +326,6 @@ class _Error(_Node):
     def __init__(self, element, parent):
         super(_Error, self).__init__(element, parent)
 
-        self.html_id = "E{}".format(self.parent.children.index(self))
-
 class _Type(_Node):
     def __init__(self, element, parent):
         super(_Type, self).__init__(element, parent)
@@ -305,6 +336,10 @@ class Model(_Node):
 
         self.modules = list()
         self.types = list()
+
+    @property
+    def abstract_path(self):
+        return ("index.html",)
 
     def process(self):
         for child in self.element.findall("module"):
@@ -320,4 +355,5 @@ class Model(_Node):
 def _format_repr(obj, *args):
     cls = obj.__class__.__name__
     strings = [str(x) for x in args]
+
     return "{}({})".format(cls, ",".join(strings))

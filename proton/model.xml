@@ -17,9 +17,28 @@
     The primary entry point for the event-driven API. Most
     applications will import only this module.
 
-    <annotation name="requires">proton/amqp</annotation>
+    <annotation name="requires">proton.amqp</annotation>
 
     <group name="model" title="AMQP model entities">
+      <class name="container">
+        A top-level container of messaging resources.
+        
+        <group name="basic">
+          <constructor/>
+          <attribute name="container-id" type="string"/>
+          <method name="run"/>
+        </group>
+
+        <group name="related-objects">
+          <method name="connect" type="@connection"/>
+          <method name="listen" type="@acceptor"/>
+          <method name="create-receiver" type="@receiver"/>
+          <method name="create-sender" type="@sender"/>
+          <attribute name="link-prefix" type="string" setter="true"/>
+          <attribute name="reactor" type="@reactor"/>
+        </group>
+      </class>
+
       <class name="endpoint">
         The base class for session, connection, and link
 
@@ -57,7 +76,7 @@
         </constant>
         -->
 
-        <attribute name="state" type="integer" writeable="false">
+        <attribute name="state" type="integer" setter="false">
           State is a bit mask of state_bit values.
 
           A state mask is matched against an endpoint as follows: If the
@@ -68,60 +87,241 @@
         </attribute>
       </class>
 
-      <class name="container"/>
-
       <class name="connection" type="@endpoint">
-        <attribute name="default-session" type="@session"/>
+        The basis for network communication; it contains sessions.
 
-        <method name="open">
-          Opens a connection.
+        XXX typically corresponds to a TCP connection.
+        
+        <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">AMQP definition</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1connection.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
-          In more detail, this moves the local state of the connection
-          to the ACTIVE state and triggers an open frame to be sent to
-          the peer. A connection is fully active once both peers have
-          opened it.
+        <group name="basic">
+          <method name="open">
+            Initiates connection open.
 
-          Not complete until on-connection-opened. XXX
-        </method>
+            This moves the local state of the connection to ACTIVE and
+            triggers an open frame to be sent to the peer. A
+            connection is fully active once both peers have opened it.
 
-        <method name="close"/>
+            Not complete until on-connection-opened. XXX
+          </method>
 
-        <method name="create-session" type="@session"/>
-        <method name="create-sender" type="@sender"/>
-        <method name="create-receiver" type="@receiver"/>
+          <method name="close"/>
+        </group>
+
+        <group name="related-objects">
+          <attribute name="default-session" type="@session"/>
+          <method name="create-session" type="@session"/>
+          <method name="create-sender" type="@sender"/>
+          <method name="create-receiver" type="@receiver"/>
+        </group>
 
         <!-- <method name="link-head" type="@link"/> -->
       </class>
 
-      <class name="session">
-        A session is a collection of links.  XXX need to talk about
-        one sequential conversation
-        
-        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
-        
-        <attribute name="connection" type="@connection"/>
-        <attribute name="incoming-bytes" type="integer"/>
-        <attribute name="incoming-capacity" type="integer"/>
-        <attribute name="outgoing-bytes" type="integer"/>
-        <attribute name="outgoing-window" type="integer"/>
+      <class name="session" type="@endpoint">
+        A container of links
 
-        <method name="open"/>
-        <method name="close"/>
+        <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">AMQP definition</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
         
-        <method name="create-receiver" type="@receiver"/>
-        <method name="create-sender" type="@sender"/>
+        <group name="basic">
+          <method name="open"/>
+          <method name="close"/>
+        </group>
+
+        <group name="related-objects">
+          <attribute name="connection" type="@connection"/>
+          <method name="create-receiver" type="@receiver"/>
+          <method name="create-sender" type="@sender"/>
+        </group>
+
+        <group name="flow-control">
+          <attribute name="incoming-bytes" type="integer"/>
+          <attribute name="incoming-capacity" type="integer"/>
+          <attribute name="outgoing-bytes" type="integer"/>
+          <attribute name="outgoing-window" type="integer"/>
+        </group>
       </class>
       
-      <class name="session-error"/>
-      <class name="link"/>
-      <class name="receiver"/>
-      <class name="sender"/>
-      <class name="terminus"/>
-      <class name="condition"/>
-      <class name="delivery"/>
-      <class name="delivery-state"/>
-      <class name="address"/>
-      <class name="message"/>
+      <class name="link" type="@endpoint">
+        A named channel for sending or receiving messages.
+
+        <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
+
+        <group name="basic">
+          <attribute name="name" type="string"/>
+          <method name="open"/>
+          <method name="close"/>
+        </group>
+
+        <group name="related-objects">
+          <attribute name="connection" type="@connection"/>
+          <attribute name="local-source" type="@terminus"/>
+          <attribute name="local-target" type="@terminus"/>
+          <attribute name="remote-source" type="@terminus"/>
+          <attribute name="remote-target" type="@terminus"/>
+        </group>
+
+        <group name="flow-control">
+          <attribute name="credit" type="integer"/>
+        </group>
+
+        <group name="event-processing">
+          <attribute name="handler" type="@base-handler" setter="True"/>
+        </group>
+      </class>
+
+      <class name="receiver" type="@link">
+        A link for receiving messages
+        
+        <group name="flow-control">
+          <method name="flow">
+            Issue credit on the link.
+          </method>
+        </group>
+      </class>
+      
+      <class name="sender" type="@link">
+        A link for sending messages.
+
+        <group name="basic">
+          <method name="send">
+            Send a message on the link.
+          </method>
+        </group>
+      </class>
+      
+      <class name="terminus">
+        One end of a link, either a source or a target.
+
+        <group name="basic">
+          <attribute name="address" type="string" setter="true"/>
+          <attribute name="dynamic" type="boolean" setter="true"/>
+        </group>
+
+        <group name="other">
+          <attribute name="distribution-mode" setter="true"/>
+          <attribute name="expiry-policy" setter="true"/>
+          <attribute name="type" setter="true"/>
+        </group>
+      </class>
+      
+      <class name="condition">
+        An endpoint error state.
+      </class>
+      
+      <class name="delivery">
+        The state of a message transfer.
+
+        <group name="basic">
+          <attribute name="tag"/>
+        </group>
+
+        <group name="related-objects">
+          <attribute name="link" type="@link"/>
+          <attribute name="session" type="@session"/>
+          <attribute name="connection" type="@connection"/>
+          <attribute name="transport" type="@transport"/>
+        </group>
+
+        <group name="state-changes">
+          <attribute name="local-state" setter="true"/>
+          <attribute name="remote-state"/>
+          <method name="accept"/>
+          <method name="reject"/>
+          <method name="release"/>
+          <method name="modify"/>
+          <method name="update-remote-state"/>
+        </group>
+      </class>
+
+      <class name="message">
+        An application-defined unit of communication.
+
+        XXX a message is a value object
+
+        <link href="">AMQP definition</link>
+
+        <group name="identity-properties">
+          <attribute name="id" setter="true"/>
+          <attribute name="correlation-id" setter="true"/>
+          <attribute name="user-id" type="string" setter="true"/>
+        </group>
+
+        <group name="routing-properties">
+          <attribute name="address" setter="true"/>
+          <attribute name="reply-to" setter="true"/>
+        </group>
+
+        <group name="content-properties">
+          <attribute name="subject" setter="true"/>
+          <attribute name="body" setter="true"/>
+          <attribute name="content-encoding" setter="true"/>
+          <attribute name="content-type" setter="true"/>
+          <attribute name="inferred" setter="true"/>
+          <attribute name="expiry-time" setter="true"/>
+          <attribute name="creation-time" setter="true"/>
+        </group>
+
+        <group name="message-group-properties">
+          <attribute name="group-id" setter="true"/>
+          <attribute name="group-sequence" setter="true"/>
+          <attribute name="reply-to-group-id" setter="true"/>
+        </group>
+
+        <group name="message-transfer-headers">
+          <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-header">AMQP spec</link>
+          
+          <attribute name="durable" value="false" type="boolean" setter="true">
+            A durable message is saved even if an intermediary is
+            unexpectedly terminated and restarted.
+          </attribute>
+
+          <attribute name="priority" setter="true" nullable="true">
+            Relative message priority.  Higher numbers indciate higher
+            priority.  An integer between 0 and 9 inclusive.
+          </attribute>
+
+          <attribute name="ttl" setter="true" type="integer" nullable="true">
+            The time to live.  The message must be discarded after
+            'ttl' milliseconds.
+          </attribute>
+
+          <attribute name="first-acquirer" type="boolean" setter="true" nullable="true"/>
+
+          <attribute name="delivery-count" type="integer" setter="true">
+            The number of prior unsuccessful delivery attempts.
+          </attribute>
+        </group>
+
+        <group name="encoding">
+          <method name="encode"/>
+          <method name="decode"/>
+        </group>
+
+        <group name="delivery-annotations">
+          <method name="get-delivery-annotation"/>
+          <method name="set-delivery-annotation"/>
+        </group>
+
+        <group name="message-annotations">
+          <method name="get-message-annotation"/>
+          <method name="set-message-annotation"/>
+        </group>
+
+        <group name="application-properties">
+          <method name="get-application-property"/>
+          <method name="set-application-property"/>
+        </group>
+      </class>
     </group>
 
     <group name="events" title="Event processing">
@@ -165,7 +365,7 @@
     AMQP data encoding and decoding. For typical Proton-based
     applications, these classes will not be used directly.
 
-    <annotation name="requires">proton/internal</annotation>
+    <annotation name="requires">proton.internal</annotation>
   </module>
   
   <module name="internal">

@@ -43,7 +43,15 @@ def first_sentence(text):
     if not text:
         return ""
 
-    return _re.split('\.\s+', text, 1)[0]
+    match = _re.search(r"(.+?)\.\s+", text, _re.DOTALL)
+
+    if match is None:
+        if text.endswith("."):
+            text = text[:-1]
+        
+        return text
+    
+    return match.group(1)
 
 # HTML functions
 

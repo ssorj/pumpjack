@@ -43,13 +43,11 @@ class HtmlRenderer(PumpjackRenderer):
         return out
 
     def render(self, model):
-        output_path = _os.path.join(self.output_dir, "index.html.in")
-
-        if not _os.path.exists(self.output_dir):
-            _os.makedirs(self.output_dir)
-
-        with open(output_path, "w") as f:
+        output_path = model.get_output_path(self.output_dir)
+        
+        with _open_output(output_path) as f:
             out = PumpjackWriter(f)
+
             self.render_model(out, model)
     
     def render_model(self, out, model):
@@ -63,7 +61,7 @@ class HtmlRenderer(PumpjackRenderer):
         for link in model.links:
             items.append(html_a(link[0], link[1]))
 
-        out.write(html_ul(items, class_="links two-column"))
+        out.write(html_ul(items, class_="links"))
 
         out.write(html_open("section"))
         out.write(html_h("Modules"))
@@ -72,8 +70,8 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Module", "Content", "Depends on"))
 
         for module in model.modules:
-            name = "{} {}".format(init_cap(module.parent.name), init_cap(module.name))
-            link = html_a(name, "{}/index.html".format(module.name))
+            name = "{}.{}".format(module.model.name, module.name)
+            link = html_a(name, module.get_url())
             summary = first_sentence(module.text)
             requires = module.annotations.get("requires")
 
@@ -86,19 +84,14 @@ class HtmlRenderer(PumpjackRenderer):
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        print("Rendering {}".format(module))
+        output_path = module.get_output_path(self.output_dir)
         
-        output_dir = _os.path.join(self.output_dir, module.name)
-        output_path = _os.path.join(output_dir, "index.html.in")
-
-        if not _os.path.exists(output_dir):
-            _os.makedirs(output_dir)
+        print("Rendering {} to {}".format(module, output_path))
         
-        with open(output_path, "w") as f:
+        with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
-            args = init_cap(module.model.name), init_cap(module.name)
-            title = "{} {}".format(*args)
+            title = "Module '{}.{}'".format(module.model.name, module.name)
 
             out.write(html_h(title))
             
@@ -113,8 +106,6 @@ class HtmlRenderer(PumpjackRenderer):
                     self.render_class(out, cls)
 
     def render_module_group(self, out, group):
-        print("Rendering {}".format(group))
-
         out.write(html_open("section"))
         out.write(html_h(group.title))
 
@@ -122,7 +113,7 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Class", "Summary"))
                         
         for cls in group.classes:
-            link = html_a(cls.name, "{}.html".format(cls.name))
+            link = html_a(cls.name, cls.get_url())
             summary = first_sentence(cls.text)
 
             items.append((link, summary))
@@ -132,86 +123,120 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_close("section"))
 
     def render_class(self, out, cls):
-        print("Rendering {}".format(cls))
-
-        output_dir = _os.path.join(self.output_dir, cls.module.name)
-        output_name = "{}.html.in".format(cls.name)
-        output_path = _os.path.join(output_dir, output_name)
-
-        if not _os.path.exists(output_dir):
-            _os.makedirs(output_dir)
+        output_path = cls.get_output_path(self.output_dir)
         
-        with open(output_path, "w") as f:
+        print("Rendering {} to {}".format(cls, output_path))
+
+        with _open_output(output_path) as f:
             out = PumpjackWriter(f)
-        
-            out.write(html_open("section"))
-            out.write(html_h(init_cap(cls.name)))
+
+            title = "Class '{}'".format(cls.name)
+            
+            out.write(html_h(title))
             out.write(html_text(cls.text))
 
+            items = list()
+            
+            for link in cls.links:
+                items.append(html_a(link[0], link[1]))
+
+            out.write(html_ul(items, class_="links"))
+            
             #out.write(self.include_file("{}.class.html".format(cls.name)))
 
-            if cls.attributes:
-                out.write(html_open("section"))
-                out.write(html_h("Attributes"))
+            for group in cls.groups:
+                self.render_class_group(out, group)
 
-                for attr in cls.attributes:
+            for group in cls.groups:
+                for attr in group.attributes:
                     self.render_attribute(out, attr)
 
-                out.write(html_close("section"))
-
-            if cls.methods:
-                out.write(html_open("section"))
-                out.write(html_h("Methods"))
-
-                for meth in cls.methods:
+                for meth in group.methods:
                     self.render_method(out, meth)
 
-                out.write(html_close("section"))
+                # XXX the rest
 
-            out.write(html_close("section"))
+    def render_class_group(self, out, group):
+        out.write(html_open("section"))
+
+        out.write(html_h(group.name))
+
+        items = list()
+                        
+        for attr in group.attributes:
+            link = html_a(attr.name, attr.get_url())
+            summary = first_sentence(attr.text)
+
+            items.append((link, summary))
+
+        out.write(html_table(items, False))
+
+        items = list()
+                        
+        for meth in group.methods:
+            link = html_a(meth.name, meth.get_url())
+            summary = first_sentence(meth.text)
+
+            items.append((link, summary))
+
+        out.write(html_table(items, False))
+
+        out.write(html_close("section"))
 
     def render_attribute(self, out, attr):
-        value = ""
+        output_path = attr.get_output_path(self.output_dir)
+        
+        print("Rendering {} to {}".format(attr, output_path))
 
-        if attr.value is not None:
-            value = format_node_value(attr)
-            value = "= {}".format(value)
-            value = html_span(value, class_="signature")
+        with _open_output(output_path) as f:
+            out = PumpjackWriter(f)
 
-        out.write(html_open("section"))
-        out.write(html_h(init_cap(attr.name)))
+            value = ""
 
-        items = (
-            ("Type", attr.type),
-            ("Initial value", attr.value),
-            ("Nullable", attr.nullable),
-        )
+            if attr.value is not None:
+                value = format_node_value(attr)
+                value = "= {}".format(value)
+                value = html_span(value, class_="signature")
 
-        out.write(html_table(items, False, True, class_="props"))
-        out.write(html_text(attr.text))
-        #out.write(self.include_file("{}.attribute.html".format(attr.name)))
-        out.write(html_close("section"))
+            title = "Attribute '{}'".format(attr.name)
+                
+            out.write(html_h(title))
+
+            items = (
+                ("Type", attr.type),
+                ("Initial value", attr.value),
+                ("Nullable", attr.nullable),
+            )
+
+            out.write(html_table(items, False, True, class_="props"))
+            out.write(html_text(attr.text))
+            #out.write(self.include_file("{}.attribute.html".format(attr.name)))
 
     def render_method(self, out, meth):
-        signature = ", ".join([x.name for x in meth.inputs])
-        signature = "({})".format(signature)
+        output_path = meth.get_output_path(self.output_dir)
+        
+        print("Rendering {} to {}".format(meth, output_path))
 
-        if meth.outputs:
-            output = meth.outputs[0]
-            signature = "{} = {}".format(signature, format_node_value(output))
+        with _open_output(output_path) as f:
+            out = PumpjackWriter(f)
 
-        signature = html_span(signature, class_="signature")
+            # signature = ", ".join([x.name for x in meth.inputs])
+            # signature = "({})".format(signature)
 
-        title = "{} {}".format(meth.name, signature)
+            # if meth.outputs:
+            #     output = meth.outputs[0]
+            #     signature = "{} = {}".format(signature, format_node_value(output))
 
-        out.write(html_open("section"))
-        out.write(html_h(init_cap(meth.name)))
+            # signature = html_span(signature, class_="signature")
 
-        self.render_method_params(out, meth)
+            title = "Method '{}'".format(meth.name)
 
-        out.write(html_text(meth.text))
-        #out.write(self.include_file("{}.method.html".format(meth.name)))
-        out.write(html_close("section"))
+            out.write(html_h(title))
+
+            self.render_method_params(out, meth)
+
+            out.write(html_text(meth.text))
+            #out.write(self.include_file("{}.method.html".format(meth.name)))
 
     def render_method_params(self, out, meth):
         items = list()
@@ -269,3 +294,11 @@ def format_node_value(node):
         return "{} instance".format(node.type[1:])
 
     return value
+
+def _open_output(path):
+    parent, child = _os.path.split(path)
+
+    if not _os.path.exists(parent):
+        _os.makedirs(parent)
+    
+    return open(path, "w")
