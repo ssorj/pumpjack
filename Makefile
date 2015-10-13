@@ -12,7 +12,6 @@ help:
 
 clean:
 	find python -type f -name \*.pyc -delete
-	rm -rf input
 	rm -rf output
 
 # test: generate

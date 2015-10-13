@@ -6,6 +6,7 @@
   internet standard.  The Proton API is available in many popular
   programming languages.
 
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html">AMQP specification</link>
   <link href="https://qpid.apache.org/proton/index.html">Qpid Proton home</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">Qpid Proton C</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">Qpid Proton C++</link>
@@ -139,21 +140,36 @@
           <attribute name="container" type="@container">
             The container which holds this connection.
           </attribute>
-          
+
+          <attribute name="transport" type="@transport">
+            The associated transport.
+          </attribute>
+
           <attribute name="default-session" type="@session">
             The session used by create-sender and create-receiver.
           </attribute>
 
-          <method name="create-session" type="@session">
+          <method name="create-session">
             Create a session on this connection.
+
+            <output name="session" type="@session"/>
           </method>
 
-          <method name="create-sender" type="@sender">
+          <method name="create-sender">
             Create a sender using the default session.
+
+            <input name="address" type="string"/>
+            <input name="handler" type="@handler" nullable="true"/>
+            <output name="sender" type="@sender"/>
           </method>
 
           <method name="create-receiver" type="@receiver">
             Create a receiver using the default session.
+
+            <input name="address" type="string"/>
+            <input name="dynamic" value="false" type="boolean"/>
+            <input name="handler" type="@handler" nullable="true"/>
+            <output name="receiver" type="@receiver"/>
           </method>
         </group>
 
@@ -167,13 +183,24 @@
           <attribute name="condition" type="@condition"/>
           <attribute name="remote-condition"/>
         </group>
-        
+
+        <!--
         <group name="connection-capabilities" title="Connection capabilities">
-          <attribute name="offered-capabilities"/>
-          <attribute name="desired-capabilities"/>
-          <attribute name="remote-offered-capabilities"/>
-          <attribute name="remote-desired-capabilities"/>
+          <attribute name="offered-capabilities" type="list">
+            Extension capabilities the connection initiator supports.
+          </attribute>
+          
+          <attribute name="desired-capabilities" type="list">
+            Extension capabilities the connection initiator can use.
+          </attribute>
+
+          <attribute name="remote-offered-capabilities">
+          </attribute>
+          
+          <attribute name="remote-desired-capabilities">
+          </attribute>
         </group>
+        -->
       </class>
 
       <class name="session" type="@endpoint">
@@ -441,7 +468,7 @@
   </group-definition>
 
   <group-definition name="related-objects" title="Related objects">
-    Attributes for navigating to existing objects and methods for
+    Attributes for navigating to related objects and methods for
     creating new ones.
   </group-definition>
 

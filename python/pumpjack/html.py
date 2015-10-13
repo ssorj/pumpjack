@@ -61,7 +61,7 @@ class HtmlRenderer(PumpjackRenderer):
         for link in model.links:
             items.append(html_a(link[0], link[1]))
 
-        out.write(html_ul(items, class_="links"))
+        out.write(html_ul(items, class_="pumpjack links"))
 
         out.write(html_open("section"))
         out.write(html_h("Modules"))
@@ -118,7 +118,7 @@ class HtmlRenderer(PumpjackRenderer):
 
             items.append((link, summary))
 
-        out.write(html_table(items))
+        out.write(html_table(items, class_="pumpjack classes"))
 
         out.write(html_close("section"))
 
@@ -140,7 +140,7 @@ class HtmlRenderer(PumpjackRenderer):
             for link in cls.links:
                 items.append(html_a(link[0], link[1]))
 
-            out.write(html_ul(items, class_="links"))
+            out.write(html_ul(items, class_="pumpjack links"))
             
             #out.write(self.include_file("{}.class.html".format(cls.name)))
 
@@ -176,7 +176,7 @@ class HtmlRenderer(PumpjackRenderer):
 
                 items.append((link, summary, type, value, mutable, nullable))
 
-            out.write(html_table(items))
+            out.write(html_table(items, class_="pumpjack attributes"))
 
         if group.methods:
             items = list()
@@ -188,9 +188,15 @@ class HtmlRenderer(PumpjackRenderer):
                 inputs = "-"
                 outputs = "-"
 
+                if meth.inputs:
+                    inputs = ", ".join([x.name for x in meth.inputs])
+
+                if meth.outputs:
+                    outputs = ", ".join([x.name for x in meth.outputs])
+
                 items.append((link, summary, inputs, outputs))
 
-            out.write(html_table(items))
+            out.write(html_table(items, class_="pumpjack methods"))
 
         out.write(html_close("section"))
 

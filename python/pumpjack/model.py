@@ -265,23 +265,23 @@ class _ClassMember(_Node):
 
         return (self.class_.module.name, self.class_.name, name)
 
-class _Parameter(_ClassMember):
+class _Parameter(_Node):
     def __init__(self, element, parent):
         super(_Parameter, self).__init__(element, parent)
 
         self.type = self.element.attrib.get("type")
         self.value = self.element.attrib.get("value")
+        self.nullable = self.element.attrib.get("nullable", False)
 
 # class _Constant(_Parameter):
 #     def __init__(self, element, parent):
 #         super(_Constant, self).__init__(element, parent)
 
-class _Attribute(_Parameter):
+class _Attribute(_ClassMember, _Parameter):
     def __init__(self, element, parent):
         super(_Attribute, self).__init__(element, parent)
 
         self.mutable = self.element.attrib.get("mutable", "false") == "true"
-        self.nullable = self.element.attrib.get("nullable", False)
 
 class _Method(_ClassMember):
     def __init__(self, element, parent):
