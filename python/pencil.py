@@ -80,8 +80,8 @@ def _html_elem(tag, content, attrs):
     attrs = _html_attrs(attrs)
 
     if content is None:
-        return "<{}{}/>".format(tag, attrs)
-
+        content = ""
+    
     return "<{}{}>{}</{}>".format(tag, attrs, content, tag)
 
 def _html_attrs(attrs):

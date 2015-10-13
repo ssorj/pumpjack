@@ -24,9 +24,15 @@
         A top-level container of messaging resources.
         
         <group name="basic">
-          <constructor/>
-          <attribute name="container-id" type="string"/>
-          <method name="run"/>
+          <constructor/> <!-- XXX -->
+
+          <attribute name="id" type="string">
+            A unique identifier
+          </attribute>
+
+          <method name="run">
+            Start processing events
+          </method>
         </group>
 
         <group name="related-objects">
@@ -34,63 +40,67 @@
           <method name="listen" type="@acceptor"/>
           <method name="create-receiver" type="@receiver"/>
           <method name="create-sender" type="@sender"/>
-          <attribute name="link-prefix" type="string" setter="true"/>
+          <!-- <attribute name="link-prefix" type="string" mutable="true"/> -->
           <attribute name="reactor" type="@reactor"/>
         </group>
       </class>
 
       <class name="endpoint">
-        The base class for session, connection, and link
+        The base class for session, connection, and link.
 
-        <constant name="LOCAL-UNINIT" value="1">
-          The local endpoint is uninitialized.
-        </constant>
+        <group name="endpoint-state">
+          <attribute name="state" type="integer" setter="false">
+            Local and remote endpoint state.
 
-        <constant name="REMOTE-UNINIT" value="8">
-          The remote endpoint is uninitialized.
-        </constant>
+            State is a bit mask of state bit values.
 
-        <constant name="LOCAL-ACTIVE" value="2">
-          The local endpoint is active.
-        </constant>
+            A state mask is matched against an endpoint as follows: If the
+            state mask contains both local and remote flags, then an exact
+            match against those flags is performed. If state contains only
+            local or only remote flags, then a match occurs if any of the
+            local or remote flags are set respectively. <!-- XXX Huh? -->
+          </attribute>
 
-        <constant name="REMOTE-ACTIVE" value="16">
-          The remote endpoint is active.
-        </constant>
+          <attribute name="LOCAL-UNINIT" value="1" type="integer">
+            The local endpoint is uninitialized.
+          </attribute>
 
-        <constant name="LOCAL-CLOSED" value="4">
-          The local endpoint is closed.
-        </constant>
+          <attribute name="LOCAL-ACTIVE" value="2" type="integer">
+            The local endpoint is active.
+          </attribute>
 
-        <constant name="REMOTE-CLOSED" value="32">
-          The remote endpoint is closed.
-        </constant>
+          <attribute name="LOCAL-CLOSED" value="4" type="integer">
+            The local endpoint is closed.
+          </attribute>
 
-        <!--
-        <constant name="LOCAL-MASK">
-          A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
-        </constant>
+          <attribute name="REMOTE-UNINIT" value="8" type="integer">
+            The remote endpoint is uninitialized.
+          </attribute>
 
-        <constant name="REMOTE-MASK">
-          A mask including all REMOTE_ bits (UNINIT, ACTIVE, CLOSED).
-        </constant>
-        -->
+          <attribute name="REMOTE-ACTIVE" value="16" type="integer">
+            The remote endpoint is active.
+          </attribute>
 
-        <attribute name="state" type="integer" setter="false">
-          State is a bit mask of state_bit values.
+          <attribute name="REMOTE-CLOSED" value="32" type="integer">
+            The remote endpoint is closed.
+          </attribute>
 
-          A state mask is matched against an endpoint as follows: If the
-          state mask contains both local and remote flags, then an exact
-          match against those flags is performed. If state contains only
-          local or only remote flags, then a match occurs if any of the
-          local or remote flags are set respectively. XXX Huh?
-        </attribute>
+          <!--
+          <attribute name="LOCAL-MASK">
+            A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
+          </attribute>
+
+          <attribute name="REMOTE-MASK">
+            A mask including all REMOTE_ bits (UNINIT, ACTIVE, CLOSED).
+          </attribute>
+          -->
+        </group>
       </class>
 
       <class name="connection" type="@endpoint">
         The basis for network communication; it contains sessions.
 
-        XXX typically corresponds to a TCP connection.
+        <!-- XXX typically corresponds to a TCP connection. -->
         
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
@@ -98,27 +108,72 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
         <group name="basic">
+          <attribute name="hostname" type="string" mutable="true">
+            The name of the remote peer.
+          </attribute>
+
+          <attribute name="user" type="string" mutable="true" nullable="true">
+            The user name for authentication.
+          </attribute>
+
+          <attribute name="password" type="string" mutable="true" nullable="true">
+            The password for authentication.
+          </attribute>
+          
           <method name="open">
-            Initiates connection open.
+            Initiate connection open.
 
             This moves the local state of the connection to ACTIVE and
             triggers an open frame to be sent to the peer. A
             connection is fully active once both peers have opened it.
 
-            Not complete until on-connection-opened. XXX
+            Not complete until on-connection-opened. <!-- XXX -->
           </method>
 
-          <method name="close"/>
+          <method name="close">
+            Initiate connection close.
+          </method>
         </group>
 
         <group name="related-objects">
-          <attribute name="default-session" type="@session"/>
-          <method name="create-session" type="@session"/>
-          <method name="create-sender" type="@sender"/>
-          <method name="create-receiver" type="@receiver"/>
+          <attribute name="container" type="@container">
+            The container which holds this connection.
+          </attribute>
+          
+          <attribute name="default-session" type="@session">
+            The session used by create-sender and create-receiver.
+          </attribute>
+
+          <method name="create-session" type="@session">
+            Create a session on this connection.
+          </method>
+
+          <method name="create-sender" type="@sender">
+            Create a sender using the default session.
+          </method>
+
+          <method name="create-receiver" type="@receiver">
+            Create a receiver using the default session.
+          </method>
         </group>
 
-        <!-- <method name="link-head" type="@link"/> -->
+        <group name="endpoint-state">
+          <attribute name="remote-container-id"/>
+          <attribute name="remote-hostname"/>
+          <attribute name="remote-properties"/>
+        </group>
+
+        <group name="error-handling">
+          <attribute name="condition" type="@condition"/>
+          <attribute name="remote-condition"/>
+        </group>
+        
+        <group name="connection-capabilities" title="Connection capabilities">
+          <attribute name="offered-capabilities"/>
+          <attribute name="desired-capabilities"/>
+          <attribute name="remote-offered-capabilities"/>
+          <attribute name="remote-desired-capabilities"/>
+        </group>
       </class>
 
       <class name="session" type="@endpoint">
@@ -175,7 +230,7 @@
         </group>
 
         <group name="event-processing">
-          <attribute name="handler" type="@base-handler" setter="True"/>
+          <attribute name="handler" type="@base-handler" mutable="true"/>
         </group>
       </class>
 
@@ -203,14 +258,14 @@
         One end of a link, either a source or a target.
 
         <group name="basic">
-          <attribute name="address" type="string" setter="true"/>
-          <attribute name="dynamic" type="boolean" setter="true"/>
+          <attribute name="address" type="string" mutable="true"/>
+          <attribute name="dynamic" type="boolean" mutable="true"/>
         </group>
 
         <group name="other">
-          <attribute name="distribution-mode" setter="true"/>
-          <attribute name="expiry-policy" setter="true"/>
-          <attribute name="type" setter="true"/>
+          <attribute name="distribution-mode" mutable="true"/>
+          <attribute name="expiry-policy" mutable="true"/>
+          <attribute name="type" mutable="true"/>
         </group>
       </class>
       
@@ -233,7 +288,7 @@
         </group>
 
         <group name="state-changes">
-          <attribute name="local-state" setter="true"/>
+          <attribute name="local-state" mutable="true"/>
           <attribute name="remote-state"/>
           <method name="accept"/>
           <method name="reject"/>
@@ -246,58 +301,59 @@
       <class name="message">
         An application-defined unit of communication.
 
-        XXX a message is a value object
+        <!-- XXX a message is a value object -->
 
-        <link href="">AMQP definition</link>
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">AMQP definition</link>
 
         <group name="identity-properties">
-          <attribute name="id" setter="true"/>
-          <attribute name="correlation-id" setter="true"/>
-          <attribute name="user-id" type="string" setter="true"/>
+          <attribute name="id" mutable="true"/>
+          <attribute name="correlation-id" mutable="true"/>
+          <attribute name="user-id" type="string" mutable="true"/>
         </group>
 
         <group name="routing-properties">
-          <attribute name="address" setter="true"/>
-          <attribute name="reply-to" setter="true"/>
+          <attribute name="address" mutable="true"/>
+          <attribute name="reply-to" mutable="true"/>
         </group>
 
         <group name="content-properties">
-          <attribute name="subject" setter="true"/>
-          <attribute name="body" setter="true"/>
-          <attribute name="content-encoding" setter="true"/>
-          <attribute name="content-type" setter="true"/>
-          <attribute name="inferred" setter="true"/>
-          <attribute name="expiry-time" setter="true"/>
-          <attribute name="creation-time" setter="true"/>
+          <attribute name="subject" mutable="true"/>
+          <attribute name="body" mutable="true"/>
+          <attribute name="content-encoding" mutable="true"/>
+          <attribute name="content-type" mutable="true"/>
+          <attribute name="inferred" mutable="true"/>
+          <attribute name="expiry-time" mutable="true"/>
+          <attribute name="creation-time" mutable="true"/>
         </group>
 
         <group name="message-group-properties">
-          <attribute name="group-id" setter="true"/>
-          <attribute name="group-sequence" setter="true"/>
-          <attribute name="reply-to-group-id" setter="true"/>
+          <attribute name="group-id" mutable="true"/>
+          <attribute name="group-sequence" mutable="true"/>
+          <attribute name="reply-to-group-id" mutable="true"/>
         </group>
 
-        <group name="message-transfer-headers">
+        <group name="message-transfer-headers" title="Message transfer headers">
           <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-header">AMQP spec</link>
           
-          <attribute name="durable" value="false" type="boolean" setter="true">
-            A durable message is saved even if an intermediary is
-            unexpectedly terminated and restarted.
+          <attribute name="durable" value="false" type="boolean" mutable="true">
+            Durability requirement.  A durable message is saved even
+            if an intermediary is unexpectedly terminated and
+            restarted.
           </attribute>
 
-          <attribute name="priority" setter="true" nullable="true">
+          <attribute name="priority" value="4" mutable="true" type="integer" nullable="true">
             Relative message priority.  Higher numbers indciate higher
-            priority.  An integer between 0 and 9 inclusive.
+            priority.
           </attribute>
 
-          <attribute name="ttl" setter="true" type="integer" nullable="true">
+          <attribute name="ttl" mutable="true" type="integer" nullable="true">
             The time to live.  The message must be discarded after
             'ttl' milliseconds.
           </attribute>
 
-          <attribute name="first-acquirer" type="boolean" setter="true" nullable="true"/>
+          <attribute name="first-acquirer" type="boolean" mutable="true" nullable="true"/>
 
-          <attribute name="delivery-count" type="integer" setter="true">
+          <attribute name="delivery-count" type="integer" mutable="true">
             The number of prior unsuccessful delivery attempts.
           </attribute>
         </group>
@@ -379,4 +435,25 @@
   <type name="integer"/>
   <type name="any"/>
   <type name="class"/>
+
+  <group-definition name="basic" title="Identity and lifecycle">
+    Attributes and methods that determine basic object behaviors.
+  </group-definition>
+
+  <group-definition name="related-objects" title="Related objects">
+    Attributes for navigating to existing objects and methods for
+    creating new ones.
+  </group-definition>
+
+  <group-definition name="endpoint-state" title="Endpoint state">
+  </group-definition>
+
+  <group-definition name="event-processing" title="Event processing">
+  </group-definition>
+
+  <group-definition name="error-handling" title="Error handling">
+  </group-definition>
+
+  <group-definition name="flow-control" title="Flow control">
+  </group-definition>
 </model>

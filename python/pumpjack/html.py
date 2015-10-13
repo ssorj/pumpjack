@@ -159,27 +159,38 @@ class HtmlRenderer(PumpjackRenderer):
     def render_class_group(self, out, group):
         out.write(html_open("section"))
 
-        out.write(html_h(group.name))
+        out.write(html_h(group.title))
+        out.write(html_text(group.text))
 
-        items = list()
-                        
-        for attr in group.attributes:
-            link = html_a(attr.name, attr.get_url())
-            summary = first_sentence(attr.text)
+        if group.attributes:
+            items = list()
+            items.append(("Attribute", "Summary", "Type", "Value", "Mutable", "Nullable"))
 
-            items.append((link, summary))
+            for attr in group.attributes:
+                link = html_a(attr.name, attr.get_url())
+                summary = first_sentence(attr.text)
+                type = attr.type
+                value = attr.value
+                mutable = "true" if attr.mutable else "false"
+                nullable = "true" if attr.nullable else "false"
 
-        out.write(html_table(items, False))
+                items.append((link, summary, type, value, mutable, nullable))
 
-        items = list()
-                        
-        for meth in group.methods:
-            link = html_a(meth.name, meth.get_url())
-            summary = first_sentence(meth.text)
+            out.write(html_table(items))
 
-            items.append((link, summary))
+        if group.methods:
+            items = list()
+            items.append(("Method", "Summary", "Inputs", "Outputs"))
+                            
+            for meth in group.methods:
+                link = html_a(meth.name, meth.get_url())
+                summary = first_sentence(meth.text)
+                inputs = "-"
+                outputs = "-"
 
-        out.write(html_table(items, False))
+                items.append((link, summary, inputs, outputs))
+
+            out.write(html_table(items))
 
         out.write(html_close("section"))
 

@@ -88,10 +88,13 @@ class _Node(object):
         self.title = self.element.attrib.get("title")
         
     def process_text(self):
-        self.text = self.element.text
+        text = self.element.text
 
-        if self.text:
-            self.text = self.text.strip()
+        if text:
+            text = text.strip()
+
+        if text != "":
+            self.text = text
 
     def process_links(self):
         for child in self.element.findall("link"):
@@ -143,6 +146,9 @@ class _Node(object):
                 except KeyError:
                     msg = "Cannot find child '{}' on node '{}'"
                     raise Exception(msg.format(name, node.name))
+
+class _GroupDefinition(_Node):
+    pass
 
 class _Module(_Node):
     def __init__(self, element, parent):
@@ -217,8 +223,20 @@ class _ClassGroup(_Node):
         self.attributes = list()
         self.methods = list()
         self.constants = list()
-        self.enumerations = list()
 
+    def process_references(self):
+        super(_ClassGroup, self).process_references()
+
+        if self.name in self.model.group_definitions_by_name:
+            definition = self.model.group_definitions_by_name[self.name]
+        
+            if self.title is None:
+                self.title = definition.title
+
+            if self.text is None:
+                print(111, definition.text)
+                self.text = definition.text
+        
     def process(self):
         for child in self.element.findall("attribute"):
             attr = _Attribute(child, self)
@@ -232,30 +250,8 @@ class _ClassGroup(_Node):
             const = _Constant(child, self)
             self.constants.append(const)
 
-        for child in self.element.findall("enumeration"):
-            enum = _Enumeration(child, self)
-            self.enumerations.append(enum)
-
         super(_ClassGroup, self).process()
         
-class _Enumeration(_Node):
-    def __init__(self, element, parent):
-        super(_Enumeration, self).__init__(element, parent)
-
-        self.group = parent
-        self.module = self.group.parent
-
-        self.constants = list()
-        self.constants_by_group = _defaultdict(list)
-
-    def process(self):
-        for child in self.element.findall("constant"):
-            const = _Constant(child, self)
-            self.constants.append(const)
-            self.constants_by_group[const.group].append(const)
-
-        super(_Enumeration, self).process()
-
 class _ClassMember(_Node):
     def __init__(self, element, parent):
         super(_ClassMember, self).__init__(element, parent)
@@ -275,18 +271,17 @@ class _Parameter(_ClassMember):
 
         self.type = self.element.attrib.get("type")
         self.value = self.element.attrib.get("value")
-        self.nullable = self.element.attrib.get("nullable", False)
 
-class _Constant(_Parameter):
-    def __init__(self, element, parent):
-        super(_Constant, self).__init__(element, parent)
+# class _Constant(_Parameter):
+#     def __init__(self, element, parent):
+#         super(_Constant, self).__init__(element, parent)
 
 class _Attribute(_Parameter):
     def __init__(self, element, parent):
         super(_Attribute, self).__init__(element, parent)
 
-        self.getter = self.element.attrib.get("getter", "true") == "true"
-        self.setter = self.element.attrib.get("setter", "false") == "true"
+        self.mutable = self.element.attrib.get("mutable", "false") == "true"
+        self.nullable = self.element.attrib.get("nullable", False)
 
 class _Method(_ClassMember):
     def __init__(self, element, parent):
@@ -336,6 +331,7 @@ class Model(_Node):
 
         self.modules = list()
         self.types = list()
+        self.group_definitions_by_name = dict()
 
     @property
     def abstract_path(self):
@@ -349,6 +345,10 @@ class Model(_Node):
         for child in self.element.findall("type"):
             type = _Type(child, self)
             self.types.append(type)
+
+        for child in self.element.findall("group-definition"):
+            definition = _GroupDefinition(child, self)
+            self.group_definitions_by_name[definition.name] = definition
 
         super(Model, self).process()
 
