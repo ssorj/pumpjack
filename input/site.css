@@ -1,0 +1,51 @@
+@import url(transom/site.css);
+
+ul.pumpjack.links {
+    padding-left: 0;
+}
+
+ul.pumpjack.links li {
+    display: inline;
+}
+
+ul.pumpjack.links li:after {
+    content: ", ";
+}
+
+ul.pumpjack.links li:last-child:after {
+    content: none;
+}
+
+table.pumpjack {
+    width: 100%;
+}
+
+table.pumpjack th,
+table.pumpjack td {
+    max-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table.pumpjack.classes td:nth-child(1) {
+    width: 30%;
+}
+
+table.pumpjack.attributes td:nth-child(1),
+table.pumpjack.methods td:nth-child(1) {
+    width: 20%;
+}
+
+table.pumpjack.attributes td:nth-child(2),
+table.pumpjack.methods td:nth-child(2) {
+    width: 40%;
+}
+
+table.pumpjack.attributes td {
+    width: 10%;
+}
+
+table.pumpjack.methods td {
+    width: 20%;
+}
