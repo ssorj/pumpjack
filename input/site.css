@@ -18,34 +18,54 @@ ul.pumpjack.links li:last-child:after {
 
 table.pumpjack {
     width: 100%;
+    table-layout: fixed;
+}
+
+table.pumpjack th {
+    font-size: 0.9em;
 }
 
 table.pumpjack th,
 table.pumpjack td {
-    max-width: 0;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
 }
 
-table.pumpjack.classes td:nth-child(1) {
+table.pumpjack.classes th:nth-child(1) {
     width: 30%;
 }
 
-table.pumpjack.attributes td:nth-child(1),
-table.pumpjack.methods td:nth-child(1) {
+table.pumpjack.attributes th:nth-child(1) {
     width: 20%;
 }
 
-table.pumpjack.attributes td:nth-child(2),
-table.pumpjack.methods td:nth-child(2) {
+table.pumpjack.attributes th:nth-child(2) {
     width: 40%;
 }
 
-table.pumpjack.attributes td {
-    width: 10%;
+table.pumpjack.attributes th:nth-child(3),
+table.pumpjack.attributes th:nth-child(4) {
+    width: 12.5%;
 }
 
-table.pumpjack.methods td {
+table.pumpjack.attributes th:nth-child(5),
+table.pumpjack.attributes th:nth-child(6) {
+    width: 7.5%;
+}
+
+table.pumpjack.methods th:nth-child(1) {
     width: 20%;
+}
+
+table.pumpjack.methods th:nth-child(2) {
+    width: 40%;
+}
+
+table.pumpjack.methods th:nth-child(3) {
+    width: 25%;
+}
+
+table.pumpjack.methods th:nth-child(4) {
+    width: 15%;
 }

@@ -7,12 +7,11 @@
   programming languages.
 
   <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html">AMQP specification</link>
-  <link href="https://qpid.apache.org/proton/index.html">Qpid Proton home</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">Qpid Proton C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">Qpid Proton C++</link>
-  <link href="https://github.com/apache/qpid-proton/tree/master/proton-c/bindings/go">Qpid Proton Go</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Qpid Proton Java</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Qpid Proton Python</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++</link>
+  <link href="https://github.com/apache/qpid-proton/tree/master/proton-c/bindings/go">Go</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python</link>
   
   <module name="core">
     The primary entry point for the event-driven API. Most
@@ -23,33 +22,89 @@
     <group name="model" title="AMQP model entities">
       <class name="container">
         A top-level container of messaging resources.
+
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">AMQP definition</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/container_8h.html">C</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1container.html">C++</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.reactor.Container-class.html">Python</link>
         
-        <group name="basic">
+        <group name="core-group">
           <constructor/> <!-- XXX -->
 
-          <attribute name="id" type="string">
-            A unique identifier
+          <attribute name="id" value="[generated]" type="string" mutable="true">
+            A globally unique container identifier.
           </attribute>
 
+          <method name="create">
+            Create a new container.
+            
+            <input name="event-handler" type="@event-handler" nullable="true"/>
+            <output name="container" type="@container"/>
+          </method>
+
           <method name="run">
-            Start processing events
+            Start processing events.
           </method>
         </group>
 
         <group name="related-objects">
-          <method name="connect" type="@connection"/>
-          <method name="listen" type="@acceptor"/>
-          <method name="create-receiver" type="@receiver"/>
-          <method name="create-sender" type="@sender"/>
-          <!-- <attribute name="link-prefix" type="string" mutable="true"/> -->
-          <attribute name="reactor" type="@reactor"/>
+          <attribute name="reactor" value="object" type="@reactor">
+            The reactor associated with this container.
+          </attribute>
+
+          <method name="connect">
+            <input name="url" type="@url"/>
+            <output name="connection" type="@connection"/>
+          </method>
+          
+          <method name="listen">
+            <input name="url" type="@url"/>
+            <output name="acceptor" type="@acceptor"/>
+          </method>
+
+          <method name="create-receiver">
+            <input name="url" type="@url"/>
+            <output name="receiver" type="@receiver"/>
+          </method>
+
+          <method name="create-sender">
+            <input name="url" type="@url"/>
+            <output name="sender" type="@sender"/>
+          </method>
         </group>
       </class>
 
       <class name="endpoint">
         The base class for session, connection, and link.
 
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">AMQP definition</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1endpoint.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Endpoint.html">Java</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
+        
         <group name="endpoint-state">
+          <attribute name="local-state" type="@endpoint-state" setter="false">
+            Local endpoint state
+          </attribute>
+
+          <attribute name="remote-state" type="@endpoint-state" setter="false">
+            Remote endpoint state
+          </attribute>
+
+          <attribute name="UNINITIALIZED" type="@endpoint-state">
+            The endpoint is uninitialized.
+          </attribute>
+
+          <attribute name="ACTIVE" type="@endpoint-state">
+            The endpoint is active.
+          </attribute>
+
+          <attribute name="CLOSED" type="@endpoint-state">
+            The endpoint is closed.
+          </attribute>
+
+          <!--
           <attribute name="state" type="integer" setter="false">
             Local and remote endpoint state.
 
@@ -59,7 +114,7 @@
             state mask contains both local and remote flags, then an exact
             match against those flags is performed. If state contains only
             local or only remote flags, then a match occurs if any of the
-            local or remote flags are set respectively. <!-- XXX Huh? -->
+            local or remote flags are set respectively. XXX Huh?
           </attribute>
 
           <attribute name="LOCAL-UNINIT" value="1" type="integer">
@@ -86,7 +141,6 @@
             The remote endpoint is closed.
           </attribute>
 
-          <!--
           <attribute name="LOCAL-MASK">
             A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
           </attribute>
@@ -108,7 +162,7 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1connection.html">C++</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
-        <group name="basic">
+        <group name="core-group">
           <attribute name="hostname" type="string" mutable="true">
             The name of the remote peer.
           </attribute>
@@ -159,7 +213,7 @@
             Create a sender using the default session.
 
             <input name="address" type="string"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="event-handler" type="@event-handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
 
@@ -168,7 +222,7 @@
 
             <input name="address" type="string"/>
             <input name="dynamic" value="false" type="boolean"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="event-handler" type="@event-handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
         </group>
@@ -211,7 +265,7 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
         
-        <group name="basic">
+        <group name="core-group">
           <method name="open"/>
           <method name="close"/>
         </group>
@@ -238,7 +292,7 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
 
-        <group name="basic">
+        <group name="core-group">
           <attribute name="name" type="string"/>
           <method name="open"/>
           <method name="close"/>
@@ -257,7 +311,7 @@
         </group>
 
         <group name="event-processing">
-          <attribute name="handler" type="@base-handler" mutable="true"/>
+          <attribute name="event-handler" type="@event-handler" mutable="true"/>
         </group>
       </class>
 
@@ -274,7 +328,7 @@
       <class name="sender" type="@link">
         A link for sending messages.
 
-        <group name="basic">
+        <group name="core-group">
           <method name="send">
             Send a message on the link.
           </method>
@@ -284,7 +338,7 @@
       <class name="terminus">
         One end of a link, either a source or a target.
 
-        <group name="basic">
+        <group name="core-group">
           <attribute name="address" type="string" mutable="true"/>
           <attribute name="dynamic" type="boolean" mutable="true"/>
         </group>
@@ -303,7 +357,7 @@
       <class name="delivery">
         The state of a message transfer.
 
-        <group name="basic">
+        <group name="core-group">
           <attribute name="tag"/>
         </group>
 
@@ -326,24 +380,55 @@
       </class>
 
       <class name="message">
-        An application-defined unit of communication.
+        A mutable holder of message content.
 
         <!-- XXX a message is a value object -->
 
-        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">AMQP definition</link>
+        <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">AMQP definition</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/message_8h.html">C</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1message.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/message/Message.html">Java</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
 
-        <group name="identity-properties">
-          <attribute name="id" mutable="true"/>
-          <attribute name="correlation-id" mutable="true"/>
-          <attribute name="user-id" type="string" mutable="true"/>
+        <group name="core-group">
+          <attribute name="id" mutable="true" nullable="true">
+            A globally unique message identifier.
+
+            <!-- XXX used to remove duplicates -->
+          </attribute>
+
+          <attribute name="user-id" type="string" mutable="true" nullable="true">
+            The identity of the user producing the message.
+          </attribute>
+          
+          <method name="create">
+            Create a new message.
+            
+            <output name="message" type="@message"/>
+          </method>
+          <method name="clear">
+            Clear the content of the message.  All fields are reset to
+            their default values.
+          </method>
+          <method name="encode">
+            Encode the message to bytes.
+
+            <output name="data" type="bytes"/>
+          </method>
+          <method name="decode">
+            Decode the message from bytes.
+            
+            <input name="data" type="bytes"/>
+          </method>
         </group>
 
-        <group name="routing-properties">
+        <group name="routing" title="Routing">
           <attribute name="address" mutable="true"/>
           <attribute name="reply-to" mutable="true"/>
+          <attribute name="correlation-id" mutable="true"/>
         </group>
 
-        <group name="content-properties">
+        <group name="content" title="Content">
           <attribute name="subject" mutable="true"/>
           <attribute name="body" mutable="true"/>
           <attribute name="content-encoding" mutable="true"/>
@@ -353,19 +438,15 @@
           <attribute name="creation-time" mutable="true"/>
         </group>
 
-        <group name="message-group-properties">
-          <attribute name="group-id" mutable="true"/>
-          <attribute name="group-sequence" mutable="true"/>
-          <attribute name="reply-to-group-id" mutable="true"/>
-        </group>
-
-        <group name="message-transfer-headers" title="Message transfer headers">
+        <group name="transfer-headers" title="Transfer headers">
           <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-header">AMQP spec</link>
           
           <attribute name="durable" value="false" type="boolean" mutable="true">
-            Durability requirement.  A durable message is saved even
-            if an intermediary is unexpectedly terminated and
-            restarted.
+            Durability requirement.  The durable property indicates
+            that the message should be held durably by any
+            intermediaries taking responsibility for the message.  A
+            durable message is saved even if the intermediary is
+            unexpectedly terminated and restarted.
           </attribute>
 
           <attribute name="priority" value="4" mutable="true" type="integer" nullable="true">
@@ -378,31 +459,26 @@
             'ttl' milliseconds.
           </attribute>
 
-          <attribute name="first-acquirer" type="boolean" mutable="true" nullable="true"/>
+          <attribute name="first-acquirer" type="boolean" mutable="true" nullable="true">
+            True if the recipient is first to acquire the message.
+          </attribute>
 
           <attribute name="delivery-count" type="integer" mutable="true">
             The number of prior unsuccessful delivery attempts.
           </attribute>
         </group>
 
-        <group name="encoding">
-          <method name="encode"/>
-          <method name="decode"/>
+        <group name="message-groups" title="Message groups">
+          <attribute name="group-id" mutable="true"/>
+          <attribute name="group-sequence" mutable="true"/>
+          <attribute name="reply-to-group-id" mutable="true"/>
         </group>
 
-        <group name="delivery-annotations">
-          <method name="get-delivery-annotation"/>
-          <method name="set-delivery-annotation"/>
-        </group>
-
-        <group name="message-annotations">
-          <method name="get-message-annotation"/>
-          <method name="set-message-annotation"/>
-        </group>
-
-        <group name="application-properties">
-          <method name="get-application-property"/>
-          <method name="set-application-property"/>
+        <group name="" title="Extended attributes">
+          <attribute name="application-properties" type="map"/>
+          <attribute name="delivery-annotations" type="map"/>
+          <attribute name="message-annotations" type="map"/>
+          <attribute name="footer" type="map"/>
         </group>
       </class>
     </group>
@@ -410,17 +486,17 @@
     <group name="events" title="Event processing">
       <class name="event"/>
       <class name="event-type"/>
-      <class name="collector"/>
-      <class name="reactor"/>
-      <class name="acceptor"/>
-      <class name="timer"/>
-      <class name="task"/>
-      <class name="selectable"/>
+      <class name="event-handler"/>
       <class name="general-handler"/>
       <class name="outgoing-message-handler"/>
       <class name="incoming-message-handler"/>
       <class name="transaction-handler"/>
       <class name="transactional-client-handler"/>
+      <class name="reactor"/>
+      <class name="acceptor"/>
+      <class name="timer"/>
+      <class name="task"/>
+      <class name="selectable"/>
     </group>
 
     <group name="transport" title="Transport entities">
@@ -463,8 +539,8 @@
   <type name="any"/>
   <type name="class"/>
 
-  <group-definition name="basic" title="Identity and lifecycle">
-    Attributes and methods that determine basic object behaviors.
+  <group-definition name="core-group" title="Identity and lifecycle">
+    Attributes and methods that determine core object behaviors.
   </group-definition>
 
   <group-definition name="related-objects" title="Related objects">
