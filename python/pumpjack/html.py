@@ -19,6 +19,7 @@
 
 from render import *
 
+import collections as _collections
 import os as _os
 import re as _re
 
@@ -128,15 +129,17 @@ class HtmlRenderer(PumpjackRenderer):
         print("Rendering {} to {}".format(cls, output_path))
 
         classes = _get_classes(cls)
-        group_names = set()
-        groups = list()
+        groups = _collections.OrderedDict()
 
         for c in classes:
             for group in c.groups:
-                if group.name not in group_names:
-                    group_names.add(group.name)
-                    groups.append(group)
+                groups[group.name] = group
 
+        if "basic" in groups:
+            basic_group = groups["basic"]
+            del groups["basic"]
+            groups = [basic_group] + groups.values()
+                
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
@@ -155,7 +158,7 @@ class HtmlRenderer(PumpjackRenderer):
             #out.write(self.include_file("{}.class.html".format(cls.name)))
 
             for group in groups:
-                self.render_class_group(out, group)
+                self.render_class_group(out, cls, group)
 
             for group in cls.groups:
                 for attr in group.properties:
@@ -166,20 +169,20 @@ class HtmlRenderer(PumpjackRenderer):
 
                 # XXX the rest
 
-    def render_class_group(self, out, group):
+    def render_class_group(self, out, cls, group):
         out.write(html_open("section"))
 
         out.write(html_h(group.title))
         out.write(html_text(group.text))
 
-        classes = _get_classes(group.class_)
+        classes = _get_classes(cls)
         
         properties = list()
         methods = list()
 
-        for cls in reversed(classes):
+        for c in reversed(classes):
             try:
-                group = cls.groups_by_name[group.name]
+                group = c.groups_by_name[group.name]
             except KeyError:
                 continue
             
@@ -197,7 +200,7 @@ class HtmlRenderer(PumpjackRenderer):
                 type = html_ref(prop, prop.type)
                 value = prop.value
                 mutable = html_bool(prop.mutable)
-                nullable = html_bool(prop.mutable)
+                nullable = html_bool(prop.nullable)
 
                 if value and value.startswith("[") and value.endswith("]"):
                     value = html_span(value[1:-1], class_="special")
@@ -339,6 +342,9 @@ def html_ref(node, ref):
         return ref
 
 def html_bool(value):
+    if isinstance(value, basestring):
+        value = value == "true"
+    
     return "&#x2612;" if value else "&#x2610;"    
     
 def html_text(text):
@@ -380,4 +386,3 @@ def _get_classes(cls):
         current = current.type
 
     return classes
-

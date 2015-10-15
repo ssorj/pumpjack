@@ -33,6 +33,10 @@
             A globally unique container identifier.
           </property>
 
+          <property name="reactor" value="[instance]" type="@reactor">
+            The reactor associated with this container.
+          </property>
+
           <method name="create">
             Create a new container.
             
@@ -43,32 +47,53 @@
           <method name="run">
             Start processing events.
           </method>
-        </group>
-
-        <group name="related-objects">
-          <property name="reactor" value="[instance]" type="@reactor">
-            The reactor associated with this container.
-          </property>
 
           <method name="connect">
+            Initiate the establishment of an AMQP connection.
+            
             <input name="url" type="@url"/>
             <output name="connection" type="@connection"/>
           </method>
           
           <method name="listen">
+            Initiate a server socket, accepting incoming AMQP
+            connections.
+            
             <input name="url" type="@url"/>
             <output name="acceptor" type="@acceptor"/>
           </method>
+        </group>
 
+        <group name="link-operations">
           <method name="create-receiver">
+            Create a receiving link.
+            
             <input name="url" type="@url"/>
-            <input name="options" type="list"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
           <method name="create-sender">
+            Create a sending link.
+
+            <input name="url" type="@url"/>
+            <output name="sender" type="@sender"/>
+          </method>
+
+          <method name="open-receiver">
+            Create and initiate opening of a receiving link.
+            
             <input name="url" type="@url"/>
             <input name="options" type="list"/>
+            <input name="handler" type="@handler" nullable="true"/>
+            <output name="receiver" type="@receiver"/>
+          </method>
+
+          <method name="open-sender">
+            Create and initiate opening of a sending link.
+
+            <input name="url" type="@url"/>
+            <input name="options" type="list"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
@@ -82,7 +107,23 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1endpoint.html">C++</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Endpoint.html">Java</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
-        
+
+        <group name="basic">
+          <method name="open">
+            Initiate endpoint open.
+
+            This moves the local state of the endpoint to ACTIVE and
+            triggers an opening frame to be sent to the peer.
+          </method>
+
+          <method name="close">
+            Initiate endpoint close.
+
+            This moves the local state of the endpoint to CLOSED and
+            triggers a closing frame to be sent to the peer.
+          </method>
+        </group>
+
         <group name="endpoint-state">
           <property name="local-state" type="object" value="UNINITIALIZED">
             Local endpoint state.
@@ -150,6 +191,16 @@
           </property>
           -->
         </group>
+
+        <group name="error-handling">
+          <property name="local-condition" type="@condition" value="[instance]">
+            The local error condition.
+          </property>
+          
+          <property name="remote-condition" type="@condition" value="[instance]">
+            The remote error condition.
+          </property>
+        </group>
       </class>
 
       <class name="connection" type="@endpoint">
@@ -174,41 +225,17 @@
           <property name="password" type="string" mutable="true" nullable="true">
             The password for authentication.
           </property>
-          
-          <method name="open">
-            Initiate connection open.
 
-            This moves the local state of the connection to ACTIVE and
-            triggers an open frame to be sent to the peer. A
-            connection is fully active once both peers have opened it.
-
-            Not complete until on-connection-opened. <!-- XXX -->
-          </method>
-
-          <method name="close">
-            Initiate connection close.
-          </method>
-        </group>
-
-        <group name="related-objects">
-          <property name="container" type="@container">
+          <property name="container" type="@container" value="[instance]">
             The container which holds this connection.
           </property>
 
-          <property name="transport" type="@transport">
+          <property name="transport" type="@transport" value="[instance]">
             The associated transport.
           </property>
+        </group>
 
-          <property name="default-session" type="@session">
-            The session used by create-sender and create-receiver.
-          </property>
-
-          <method name="create-session">
-            Create a session on this connection.
-
-            <output name="session" type="@session"/>
-          </method>
-
+        <group name="link-operations">
           <method name="create-sender">
             Create a sender using the default session.
 
@@ -242,15 +269,26 @@
           </method>
         </group>
 
-        <group name="endpoint-state">
-          <property name="remote-container-id"/>
-          <property name="remote-hostname"/>
-          <property name="remote-properties"/>
-        </group>
+        <group name="session-operations" title="Session operations">
+          <property name="default-session" type="@session" value="[instance]">
+            The session used by create-sender and create-receiver.
+          </property>
 
-        <group name="error-handling">
-          <property name="local-condition" type="@condition"/>
-          <property name="remote-condition"/>
+          <method name="create-session">
+            Create a session on this connection.
+
+            <output name="session" type="@session"/>
+          </method>
+        </group>
+        
+        <group name="endpoint-state">
+          <property name="remote-container-id" type="string" value="[discovered]">
+            The unique identity of the remote container.
+          </property>
+          
+          <property name="remote-hostname" type="string" value="[discovered]">
+            The hostname of the remote peer.
+          </property>
         </group>
 
         <!--
@@ -281,14 +319,43 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
         
         <group name="basic">
-          <method name="open"/>
-          <method name="close"/>
+          <property name="connection" type="@connection" value="[instance]">
+            The containing connection
+          </property>
         </group>
 
-        <group name="related-objects">
-          <property name="connection" type="@connection"/>
-          <method name="create-receiver" type="@receiver"/>
-          <method name="create-sender" type="@sender"/>
+        <group name="link-operations">
+          <method name="create-receiver">
+            Create a receiving link.
+            
+            <input name="address" type="string"/>
+            <output name="receiver" type="@receiver"/>
+          </method>
+
+          <method name="create-sender">
+            Create a sending link.
+
+            <input name="address" type="string"/>
+            <output name="sender" type="@sender"/>
+          </method>
+
+          <method name="open-receiver">
+            Create and initiate opening of a receiving link.
+            
+            <input name="address" type="string"/>
+            <input name="options" type="list"/>
+            <input name="handler" type="@handler" nullable="true"/>
+            <output name="receiver" type="@receiver"/>
+          </method>
+
+          <method name="open-sender">
+            Create and initiate opening of a sending link.
+
+            <input name="address" type="string"/>
+            <input name="options" type="list"/>
+            <input name="handler" type="@handler" nullable="true"/>
+            <output name="sender" type="@sender"/>
+          </method>
         </group>
 
         <group name="flow-control">
@@ -308,25 +375,43 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
 
         <group name="basic">
-          <property name="name" type="string"/>
-          <method name="open"/>
-          <method name="close"/>
+          <property name="name" type="string" value="[generated]">
+            The link name.
+          </property>
+
+          <property name="session" type="@session" value="[instance]">
+            The containing session
+          </property>
         </group>
 
-        <group name="related-objects">
-          <property name="connection" type="@connection"/>
-          <property name="local-source" type="@terminus"/>
-          <property name="local-target" type="@terminus"/>
-          <property name="remote-source" type="@terminus"/>
-          <property name="remote-target" type="@terminus"/>
+        <group name="termini" title="Source and target">
+          <property name="local-source" type="@terminus" value="[instance]">
+            The local source terminus.
+          </property>
+
+          <property name="local-target" type="@terminus" value="[instance]">
+            The local target terminus.
+          </property>
+
+          <property name="remote-source" type="@terminus" value="[instance]">
+            The remote source terminus.
+          </property>
+
+          <property name="remote-target" type="@terminus" value="[instance]">
+            The remote target terminus.
+          </property>
         </group>
 
         <group name="flow-control">
-          <property name="credit" type="integer"/>
+          <property name="credit" type="integer" value="[discovered]">
+            The amount of outstanding credit on the link.
+          </property>
         </group>
 
         <group name="event-processing">
-          <property name="handler" type="@handler" mutable="true"/>
+          <property name="handler" type="@handler" mutable="true" nullable="true">
+            XXX Why does only link have this?
+          </property>
         </group>
       </class>
 
@@ -336,6 +421,8 @@
         <group name="flow-control">
           <method name="flow">
             Issue credit on the link.
+
+            <input name="count" type="integer"/>
           </method>
         </group>
       </class>
@@ -346,6 +433,9 @@
         <group name="basic">
           <method name="send">
             Send a message on the link.
+
+            <input name="message" type="@message"/>
+            <input name="delivery" type="@delivery"/>
           </method>
         </group>
       </class>
@@ -373,24 +463,23 @@
         The state of a message transfer.
 
         <group name="basic">
-          <property name="tag"/>
-        </group>
-
-        <group name="related-objects">
+          <property name="tag" type="bytes" value="[generated]"/>
           <property name="link" type="@link"/>
-          <property name="session" type="@session"/>
-          <property name="connection" type="@connection"/>
-          <property name="transport" type="@transport"/>
-        </group>
-
-        <group name="state-changes">
-          <property name="local-state" mutable="true"/>
-          <property name="remote-state"/>
+          <property name="is-settled" type="boolean"/>
           <method name="accept"/>
           <method name="reject"/>
           <method name="release"/>
           <method name="modify"/>
-          <method name="update-remote-state"/>
+        </group>
+
+        <group name="delivery-state" title="Delivery state">
+          <property name="local-state " value="NONE" type="object" mutable="true"/>
+          <property name="remote-state" value="NONE" type="object"/>
+          <property name="NONE" value="[singleton]" type="object"/>
+          <property name="RECEIVED" value="[singleton]" type="object"/>
+          <property name="ACCEPTED" value="[singleton]" type="object"/>
+          <property name="REJECTED" value="[singleton]" type="object"/>
+          <property name="MODIFIED" value="[singleton]" type="object"/>
         </group>
       </class>
 
@@ -428,29 +517,29 @@
           <method name="encode">
             Encode the message to bytes.
 
-            <output name="data" type="bytes"/>
+            <output name="bytes" type="bytes"/>
           </method>
           <method name="decode">
             Decode the message from bytes.
             
-            <input name="data" type="bytes"/>
+            <input name="bytes" type="bytes"/>
           </method>
         </group>
 
         <group name="routing" title="Routing">
           <property name="address" mutable="true"/>
-          <property name="reply-to" mutable="true"/>
-          <property name="correlation-id" mutable="true"/>
+          <property name="reply-to" mutable="true" nullable="true"/>
+          <property name="correlation-id" mutable="true" nullable="true"/>
         </group>
 
         <group name="content" title="Content">
-          <property name="subject" mutable="true"/>
-          <property name="body" mutable="true"/>
-          <property name="content-encoding" mutable="true"/>
-          <property name="content-type" mutable="true"/>
-          <property name="inferred" mutable="true"/>
-          <property name="expiry-time" mutable="true"/>
-          <property name="creation-time" mutable="true"/>
+          <property name="subject" mutable="true" nullable="true"/>
+          <property name="body" mutable="true" nullable="true"/>
+          <property name="content-encoding" mutable="true" nullable="true"/>
+          <property name="content-type" mutable="true" nullable="true"/>
+          <property name="inferred" mutable="true" nullable="true"/>
+          <property name="expiry-time" mutable="true" nullable="true"/>
+          <property name="creation-time" mutable="true" nullable="true"/>
         </group>
 
         <group name="transfer-headers" title="Transfer headers">
@@ -484,12 +573,12 @@
         </group>
 
         <group name="message-groups" title="Message groups">
-          <property name="group-id" mutable="true"/>
-          <property name="group-sequence" mutable="true"/>
-          <property name="reply-to-group-id" mutable="true"/>
+          <property name="group-id" mutable="true" nullable="true"/>
+          <property name="group-sequence" mutable="true" nullable="true"/>
+          <property name="reply-to-group-id" mutable="true" nullable="true"/>
         </group>
 
-        <group name="" title="Extended propertys">
+        <group name="extended-attributes" title="Extended attributes">
           <property name="application-properties" type="map"/>
           <property name="delivery-annotations" type="map"/>
           <property name="message-annotations" type="map"/>
@@ -556,7 +645,10 @@
   <group-definition name="basic" title="Basic properties and methods">
   </group-definition>
 
-  <group-definition name="related-objects" title="Related objects">
+  <group-definition name="link-operations" title="Link operations">
+  </group-definition>
+
+  <group-definition name="object-relations" title="Object relations">
     Properties for navigating to related objects and methods for
     creating new ones.
   </group-definition>
