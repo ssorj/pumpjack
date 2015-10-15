@@ -21,6 +21,10 @@ table.pumpjack {
     table-layout: fixed;
 }
 
+table.pumpjack span.special {
+    font-style: italic;
+}
+
 table.pumpjack th {
     font-size: 0.9em;
 }
@@ -36,21 +40,21 @@ table.pumpjack.classes th:nth-child(1) {
     width: 30%;
 }
 
-table.pumpjack.attributes th:nth-child(1) {
+table.pumpjack.properties th:nth-child(1) {
     width: 20%;
 }
 
-table.pumpjack.attributes th:nth-child(2) {
+table.pumpjack.properties th:nth-child(2) {
     width: 40%;
 }
 
-table.pumpjack.attributes th:nth-child(3),
-table.pumpjack.attributes th:nth-child(4) {
+table.pumpjack.properties th:nth-child(3),
+table.pumpjack.properties th:nth-child(4) {
     width: 12.5%;
 }
 
-table.pumpjack.attributes th:nth-child(5),
-table.pumpjack.attributes th:nth-child(6) {
+table.pumpjack.properties th:nth-child(5),
+table.pumpjack.properties th:nth-child(6) {
     width: 7.5%;
 }
 
@@ -69,3 +73,4 @@ table.pumpjack.methods th:nth-child(3) {
 table.pumpjack.methods th:nth-child(4) {
     width: 15%;
 }
+

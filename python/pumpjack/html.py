@@ -53,7 +53,7 @@ class HtmlRenderer(PumpjackRenderer):
     def render_model(self, out, model):
         print("Rendering {}".format(model))
 
-        out.write(html_h(init_cap(model.name)))
+        out.write(html_h(init_cap(model.title)))
         out.write(html_text(model.text))
 
         items = list()
@@ -127,6 +127,16 @@ class HtmlRenderer(PumpjackRenderer):
         
         print("Rendering {} to {}".format(cls, output_path))
 
+        classes = _get_classes(cls)
+        group_names = set()
+        groups = list()
+
+        for c in classes:
+            for group in c.groups:
+                if group.name not in group_names:
+                    group_names.add(group.name)
+                    groups.append(group)
+
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
@@ -144,12 +154,12 @@ class HtmlRenderer(PumpjackRenderer):
             
             #out.write(self.include_file("{}.class.html".format(cls.name)))
 
-            for group in cls.groups:
+            for group in groups:
                 self.render_class_group(out, group)
 
             for group in cls.groups:
-                for attr in group.attributes:
-                    self.render_attribute(out, attr)
+                for attr in group.properties:
+                    self.render_property(out, attr)
 
                 for meth in group.methods:
                     self.render_method(out, meth)
@@ -162,37 +172,67 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_h(group.title))
         out.write(html_text(group.text))
 
-        if group.attributes:
+        classes = _get_classes(group.class_)
+        
+        properties = list()
+        methods = list()
+
+        for cls in reversed(classes):
+            try:
+                group = cls.groups_by_name[group.name]
+            except KeyError:
+                continue
+            
+            properties.extend(group.properties)
+            methods.extend(group.methods)
+
+        if properties:
             items = list()
-            items.append(("Attribute", "Summary", "Type", "Value", "Mutable", "Nullable"))
+            items.append(("Property", "Summary", "Type", "Initial value",
+                          "Mutable", "Nullable"))
 
-            for attr in group.attributes:
-                link = html_a(attr.name, attr.get_url())
-                summary = first_sentence(attr.text)
-                type = attr.type
-                value = attr.value
-                mutable = "true" if attr.mutable else "false"
-                nullable = "true" if attr.nullable else "false"
+            for prop in properties:
+                link = html_a(prop.name, prop.get_url())
+                summary = first_sentence(prop.text)
+                type = html_ref(prop, prop.type)
+                value = prop.value
+                mutable = html_bool(prop.mutable)
+                nullable = html_bool(prop.mutable)
 
+                if value and value.startswith("[") and value.endswith("]"):
+                    value = html_span(value[1:-1], class_="special")
+                
                 items.append((link, summary, type, value, mutable, nullable))
 
-            out.write(html_table(items, class_="pumpjack attributes"))
+            out.write(html_table(items, class_="pumpjack properties"))
 
-        if group.methods:
+        if methods:
             items = list()
             items.append(("Method", "Summary", "Inputs", "Outputs"))
                             
-            for meth in group.methods:
+            for meth in methods:
                 link = html_a(meth.name, meth.get_url())
                 summary = first_sentence(meth.text)
-                inputs = "-"
-                outputs = "-"
+
+                inputs = list()
+                outputs = list()
 
                 if meth.inputs:
-                    inputs = ", ".join([x.name for x in meth.inputs])
+                    for input in meth.inputs:
+                        if input.type.startswith("@"):
+                            inputs.append(html_ref(input, input.type))
+                        else:
+                            inputs.append(input.name)
 
                 if meth.outputs:
-                    outputs = ", ".join([x.name for x in meth.outputs])
+                    for output in meth.outputs:
+                        if output.type.startswith("@"):
+                            outputs.append(html_ref(output, output.type))
+                        else:
+                            outputs.append(output.name)
+                            
+                inputs = ", ".join(inputs)
+                outputs = ", ".join(outputs)
 
                 items.append((link, summary, inputs, outputs))
 
@@ -200,34 +240,35 @@ class HtmlRenderer(PumpjackRenderer):
 
         out.write(html_close("section"))
 
-    def render_attribute(self, out, attr):
-        output_path = attr.get_output_path(self.output_dir)
+    def render_property(self, out, prop):
+        output_path = prop.get_output_path(self.output_dir)
         
-        print("Rendering {} to {}".format(attr, output_path))
+        print("Rendering {} to {}".format(prop, output_path))
 
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
             value = ""
 
-            if attr.value is not None:
-                value = format_node_value(attr)
+            if prop.value is not None:
+                value = format_node_value(prop)
                 value = "= {}".format(value)
                 value = html_span(value, class_="signature")
 
-            title = "Attribute '{}'".format(attr.name)
+            title = "Property '{}'".format(prop.name)
                 
             out.write(html_h(title))
 
             items = (
-                ("Type", attr.type),
-                ("Initial value", attr.value),
-                ("Nullable", attr.nullable),
+                ("Type", prop.type),
+                ("Initial value", prop.value),
+                ("Mutable", prop.mutable),
+                ("Nullable", prop.nullable),
             )
 
             out.write(html_table(items, False, True, class_="props"))
-            out.write(html_text(attr.text))
-            #out.write(self.include_file("{}.attribute.html".format(attr.name)))
+            out.write(html_text(prop.text))
+            #out.write(self.include_file("{}.property.html".format(prop.name)))
 
     def render_method(self, out, meth):
         output_path = meth.get_output_path(self.output_dir)
@@ -250,46 +291,56 @@ class HtmlRenderer(PumpjackRenderer):
 
             out.write(html_h(title))
 
-            self.render_method_params(out, meth)
-
             out.write(html_text(meth.text))
+
+            if meth.inputs:
+                self.render_method_inputs(out, meth)
+
+            if meth.outputs:
+                self.render_method_outputs(out, meth)
+
             #out.write(self.include_file("{}.method.html".format(meth.name)))
 
-    def render_method_params(self, out, meth):
+    def render_method_inputs(self, out, meth):
         items = list()
+        items.append(("Input", "Type", "Nullable"))
         
         for input in meth.inputs:
-            items.append((input.name, input.type, str(input.nullable)))
+            name = input.name
+            type = html_ref(input, input.type)
+            nullable = html_bool(input.nullable)
+            
+            items.append((name, type, nullable))
 
-        if not items:
-            return
+        out.write(html_table(items, class_="parameters"))
 
-        out.write(html_table(items, class_="params"))
-
-    def render_toc(self, out, nodes):
-        if not nodes:
-            return
-
-        out.write(html_open("table", class_="toc"))
-        out.write(html_open("tbody"))
-
+    def render_method_outputs(self, out, meth):
         items = list()
+        items.append(("Output", "Type", "Nullable"))
         
-        for node in nodes:
-            items.append((node.name, first_sentence(node.text)))
+        for output in meth.outputs:
+            name = output.name
+            type = html_ref(output, output.type)
+            nullable = html_bool(output.nullable)
+            
+            items.append((name, type, nullable))
 
-        out.write(html_table(items, False, True, class_="props"))
-
-    def render_properties(self, out, node, names):
-        items = list()
-        
-        for name in names:
-            items.append((init_cap(name), node.attrib[name]))
-
-        out.write(html_table(items, False, True, class_="props"))
+        out.write(html_table(items, class_="parameters"))
 
 add_renderer("html", HtmlRenderer)
 
+def html_ref(node, ref):
+    if ref is not None and ref.startswith("@"):
+        node = node.resolve_reference(ref)
+
+        if node is not None:
+            return html_a(node.name, node.get_url())
+    else:
+        return ref
+
+def html_bool(value):
+    return "&#x2612;" if value else "&#x2610;"    
+    
 def html_text(text):
     if not text:
         return ""
@@ -319,3 +370,14 @@ def _open_output(path):
         _os.makedirs(parent)
     
     return open(path, "w")
+
+def _get_classes(cls):
+    classes = list()
+    current = cls
+
+    while current is not None:
+        classes.append(current)
+        current = current.type
+
+    return classes
+

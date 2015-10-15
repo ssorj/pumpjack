@@ -76,7 +76,7 @@ class _Node(object):
     def process(self):
         print("Processing {}".format(self))
         
-        self.process_attributes()
+        self.process_properties()
         self.process_text()
         self.process_links()
         self.process_annotations()
@@ -84,7 +84,7 @@ class _Node(object):
         for child in self.children:
             child.process()
         
-    def process_attributes(self):
+    def process_properties(self):
         self.title = self.element.attrib.get("title")
         
     def process_text(self):
@@ -131,21 +131,26 @@ class _Node(object):
 
             return node
         else:
-            node = None
+            module = None
 
             for ancestor in self.ancestors:
                 if isinstance(ancestor, _Module):
-                    node = ancestor
+                    module = ancestor
                     break
 
-            if node:
+            if module:
                 name = ref[1:]
+                node = None
 
-                try:
-                    return node.children_by_name[name]
-                except KeyError:
-                    msg = "Cannot find child '{}' on node '{}'"
-                    raise Exception(msg.format(name, node.name))
+                for group in module.groups:
+                    if name in group.children_by_name:
+                        node = group.children_by_name[name]
+                        break
+                else:
+                    msg = "Cannot find child '{}' on module '{}'"
+                    raise Exception(msg.format(name, module.name))
+
+                return node
 
 class _GroupDefinition(_Node):
     pass
@@ -197,13 +202,14 @@ class _Class(_Node):
         self.type = None
 
         self.groups = list()
+        self.groups_by_name = dict()
 
     @property
     def abstract_path(self):
         return (self.module.name, self.name, "index.html")
         
-    def process_attributes(self):
-        super(_Class, self).process_attributes()
+    def process_properties(self):
+        super(_Class, self).process_properties()
 
         self.type = self.element.attrib.get("type")
         
@@ -211,8 +217,15 @@ class _Class(_Node):
         for child in self.element.findall("group"):
             group = _ClassGroup(child, self)
             self.groups.append(group)
+            self.groups_by_name[group.name] = group
 
         super(_Class, self).process()
+
+    def process_references(self):
+        super(_Class, self).process_references()
+
+        if self.type is not None:
+            self.type = self.resolve_reference(self.type)
 
 class _ClassGroup(_Node):
     def __init__(self, element, parent):
@@ -220,27 +233,14 @@ class _ClassGroup(_Node):
 
         self.class_ = parent
 
-        self.attributes = list()
+        self.properties = list()
         self.methods = list()
         self.constants = list()
 
-    def process_references(self):
-        super(_ClassGroup, self).process_references()
-
-        if self.name in self.model.group_definitions_by_name:
-            definition = self.model.group_definitions_by_name[self.name]
-        
-            if self.title is None:
-                self.title = definition.title
-
-            if self.text is None:
-                print(111, definition.text)
-                self.text = definition.text
-        
     def process(self):
-        for child in self.element.findall("attribute"):
-            attr = _Attribute(child, self)
-            self.attributes.append(attr)
+        for child in self.element.findall("property"):
+            attr = _Property(child, self)
+            self.properties.append(attr)
 
         for child in self.element.findall("method"):
             meth = _Method(child, self)
@@ -251,6 +251,18 @@ class _ClassGroup(_Node):
             self.constants.append(const)
 
         super(_ClassGroup, self).process()
+        
+    def process_references(self):
+        super(_ClassGroup, self).process_references()
+
+        if self.name in self.model.group_definitions_by_name:
+            definition = self.model.group_definitions_by_name[self.name]
+        
+            if self.title is None:
+                self.title = definition.title
+
+            if self.text is None:
+                self.text = definition.text
         
 class _ClassMember(_Node):
     def __init__(self, element, parent):
@@ -277,9 +289,9 @@ class _Parameter(_Node):
 #     def __init__(self, element, parent):
 #         super(_Constant, self).__init__(element, parent)
 
-class _Attribute(_ClassMember, _Parameter):
+class _Property(_ClassMember, _Parameter):
     def __init__(self, element, parent):
-        super(_Attribute, self).__init__(element, parent)
+        super(_Property, self).__init__(element, parent)
 
         self.mutable = self.element.attrib.get("mutable", "false") == "true"
 

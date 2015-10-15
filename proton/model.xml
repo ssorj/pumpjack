@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<model name="proton">
+<model name="proton" title="Qpid Proton">
   Qpid Proton is an event-driven messaging API for building clients,
   brokers, and more.  It uses the AMQP 1.0 wire protocol, so it can
   exchange messages with other components that use the same open
@@ -19,7 +19,7 @@
 
     <annotation name="requires">proton.amqp</annotation>
 
-    <group name="model" title="AMQP model entities">
+    <group name="model" title="AMQP model">
       <class name="container">
         A top-level container of messaging resources.
 
@@ -28,17 +28,15 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1container.html">C++</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.reactor.Container-class.html">Python</link>
         
-        <group name="core-group">
-          <constructor/> <!-- XXX -->
-
-          <attribute name="id" value="[generated]" type="string" mutable="true">
+        <group name="basic">
+          <property name="id" value="[generated]" type="string">
             A globally unique container identifier.
-          </attribute>
+          </property>
 
           <method name="create">
             Create a new container.
             
-            <input name="event-handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="container" type="@container"/>
           </method>
 
@@ -48,9 +46,9 @@
         </group>
 
         <group name="related-objects">
-          <attribute name="reactor" value="object" type="@reactor">
+          <property name="reactor" value="[instance]" type="@reactor">
             The reactor associated with this container.
-          </attribute>
+          </property>
 
           <method name="connect">
             <input name="url" type="@url"/>
@@ -64,11 +62,13 @@
 
           <method name="create-receiver">
             <input name="url" type="@url"/>
+            <input name="options" type="list"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
           <method name="create-sender">
             <input name="url" type="@url"/>
+            <input name="options" type="list"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
@@ -84,28 +84,28 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
         
         <group name="endpoint-state">
-          <attribute name="local-state" type="@endpoint-state" setter="false">
-            Local endpoint state
-          </attribute>
+          <property name="local-state" type="object" value="UNINITIALIZED">
+            Local endpoint state.
+          </property>
 
-          <attribute name="remote-state" type="@endpoint-state" setter="false">
-            Remote endpoint state
-          </attribute>
+          <property name="remote-state" type="object" value="UNINITIALIZED">
+            Remote endpoint state.
+          </property>
 
-          <attribute name="UNINITIALIZED" type="@endpoint-state">
+          <property name="UNINITIALIZED" type="object" value="[singleton]">
             The endpoint is uninitialized.
-          </attribute>
+          </property>
 
-          <attribute name="ACTIVE" type="@endpoint-state">
+          <property name="ACTIVE" type="object" value="[singleton]">
             The endpoint is active.
-          </attribute>
+          </property>
 
-          <attribute name="CLOSED" type="@endpoint-state">
+          <property name="CLOSED" type="object" value="[singleton]">
             The endpoint is closed.
-          </attribute>
+          </property>
 
           <!--
-          <attribute name="state" type="integer" setter="false">
+          <property name="state" type="integer">
             Local and remote endpoint state.
 
             State is a bit mask of state bit values.
@@ -115,39 +115,39 @@
             match against those flags is performed. If state contains only
             local or only remote flags, then a match occurs if any of the
             local or remote flags are set respectively. XXX Huh?
-          </attribute>
+          </property>
 
-          <attribute name="LOCAL-UNINIT" value="1" type="integer">
+          <property name="LOCAL-UNINIT" value="1" type="integer">
             The local endpoint is uninitialized.
-          </attribute>
+          </property>
 
-          <attribute name="LOCAL-ACTIVE" value="2" type="integer">
+          <property name="LOCAL-ACTIVE" value="2" type="integer">
             The local endpoint is active.
-          </attribute>
+          </property>
 
-          <attribute name="LOCAL-CLOSED" value="4" type="integer">
+          <property name="LOCAL-CLOSED" value="4" type="integer">
             The local endpoint is closed.
-          </attribute>
+          </property>
 
-          <attribute name="REMOTE-UNINIT" value="8" type="integer">
+          <property name="REMOTE-UNINIT" value="8" type="integer">
             The remote endpoint is uninitialized.
-          </attribute>
+          </property>
 
-          <attribute name="REMOTE-ACTIVE" value="16" type="integer">
+          <property name="REMOTE-ACTIVE" value="16" type="integer">
             The remote endpoint is active.
-          </attribute>
+          </property>
 
-          <attribute name="REMOTE-CLOSED" value="32" type="integer">
+          <property name="REMOTE-CLOSED" value="32" type="integer">
             The remote endpoint is closed.
-          </attribute>
+          </property>
 
-          <attribute name="LOCAL-MASK">
+          <property name="LOCAL-MASK">
             A mask including all LOCAL_ bits (UNINIT, ACTIVE, CLOSED).
-          </attribute>
+          </property>
 
-          <attribute name="REMOTE-MASK">
+          <property name="REMOTE-MASK">
             A mask including all REMOTE_ bits (UNINIT, ACTIVE, CLOSED).
-          </attribute>
+          </property>
           -->
         </group>
       </class>
@@ -162,18 +162,18 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1connection.html">C++</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
-        <group name="core-group">
-          <attribute name="hostname" type="string" mutable="true">
+        <group name="basic">
+          <property name="hostname" type="string" mutable="true">
             The name of the remote peer.
-          </attribute>
+          </property>
 
-          <attribute name="user" type="string" mutable="true" nullable="true">
+          <property name="user" type="string" mutable="true" nullable="true">
             The user name for authentication.
-          </attribute>
+          </property>
 
-          <attribute name="password" type="string" mutable="true" nullable="true">
+          <property name="password" type="string" mutable="true" nullable="true">
             The password for authentication.
-          </attribute>
+          </property>
           
           <method name="open">
             Initiate connection open.
@@ -191,17 +191,17 @@
         </group>
 
         <group name="related-objects">
-          <attribute name="container" type="@container">
+          <property name="container" type="@container">
             The container which holds this connection.
-          </attribute>
+          </property>
 
-          <attribute name="transport" type="@transport">
+          <property name="transport" type="@transport">
             The associated transport.
-          </attribute>
+          </property>
 
-          <attribute name="default-session" type="@session">
+          <property name="default-session" type="@session">
             The session used by create-sender and create-receiver.
-          </attribute>
+          </property>
 
           <method name="create-session">
             Create a session on this connection.
@@ -213,46 +213,61 @@
             Create a sender using the default session.
 
             <input name="address" type="string"/>
-            <input name="event-handler" type="@event-handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
 
-          <method name="create-receiver" type="@receiver">
+          <method name="create-receiver">
             Create a receiver using the default session.
 
             <input name="address" type="string"/>
-            <input name="dynamic" value="false" type="boolean"/>
-            <input name="event-handler" type="@event-handler" nullable="true"/>
+            <output name="receiver" type="@receiver"/>
+          </method>
+
+          <method name="open-sender">
+            Create and open a sender using the default session.
+
+            <input name="address" type="string"/>
+            <input name="options" type="list" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
+            <output name="sender" type="@sender"/>
+          </method>
+
+          <method name="open-receiver">
+            Create and open a receiver using the default session.
+
+            <input name="address" type="string"/>
+            <input name="options" type="list" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
         </group>
 
         <group name="endpoint-state">
-          <attribute name="remote-container-id"/>
-          <attribute name="remote-hostname"/>
-          <attribute name="remote-properties"/>
+          <property name="remote-container-id"/>
+          <property name="remote-hostname"/>
+          <property name="remote-properties"/>
         </group>
 
         <group name="error-handling">
-          <attribute name="condition" type="@condition"/>
-          <attribute name="remote-condition"/>
+          <property name="local-condition" type="@condition"/>
+          <property name="remote-condition"/>
         </group>
 
         <!--
         <group name="connection-capabilities" title="Connection capabilities">
-          <attribute name="offered-capabilities" type="list">
+          <property name="offered-capabilities" type="list">
             Extension capabilities the connection initiator supports.
-          </attribute>
+          </property>
           
-          <attribute name="desired-capabilities" type="list">
+          <property name="desired-capabilities" type="list">
             Extension capabilities the connection initiator can use.
-          </attribute>
+          </property>
 
-          <attribute name="remote-offered-capabilities">
-          </attribute>
+          <property name="remote-offered-capabilities">
+          </property>
           
-          <attribute name="remote-desired-capabilities">
-          </attribute>
+          <property name="remote-desired-capabilities">
+          </property>
         </group>
         -->
       </class>
@@ -265,22 +280,22 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
         
-        <group name="core-group">
+        <group name="basic">
           <method name="open"/>
           <method name="close"/>
         </group>
 
         <group name="related-objects">
-          <attribute name="connection" type="@connection"/>
+          <property name="connection" type="@connection"/>
           <method name="create-receiver" type="@receiver"/>
           <method name="create-sender" type="@sender"/>
         </group>
 
         <group name="flow-control">
-          <attribute name="incoming-bytes" type="integer"/>
-          <attribute name="incoming-capacity" type="integer"/>
-          <attribute name="outgoing-bytes" type="integer"/>
-          <attribute name="outgoing-window" type="integer"/>
+          <property name="incoming-bytes" type="integer"/>
+          <property name="incoming-capacity" type="integer"/>
+          <property name="outgoing-bytes" type="integer"/>
+          <property name="outgoing-window" type="integer"/>
         </group>
       </class>
       
@@ -292,26 +307,26 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
 
-        <group name="core-group">
-          <attribute name="name" type="string"/>
+        <group name="basic">
+          <property name="name" type="string"/>
           <method name="open"/>
           <method name="close"/>
         </group>
 
         <group name="related-objects">
-          <attribute name="connection" type="@connection"/>
-          <attribute name="local-source" type="@terminus"/>
-          <attribute name="local-target" type="@terminus"/>
-          <attribute name="remote-source" type="@terminus"/>
-          <attribute name="remote-target" type="@terminus"/>
+          <property name="connection" type="@connection"/>
+          <property name="local-source" type="@terminus"/>
+          <property name="local-target" type="@terminus"/>
+          <property name="remote-source" type="@terminus"/>
+          <property name="remote-target" type="@terminus"/>
         </group>
 
         <group name="flow-control">
-          <attribute name="credit" type="integer"/>
+          <property name="credit" type="integer"/>
         </group>
 
         <group name="event-processing">
-          <attribute name="event-handler" type="@event-handler" mutable="true"/>
+          <property name="handler" type="@handler" mutable="true"/>
         </group>
       </class>
 
@@ -328,7 +343,7 @@
       <class name="sender" type="@link">
         A link for sending messages.
 
-        <group name="core-group">
+        <group name="basic">
           <method name="send">
             Send a message on the link.
           </method>
@@ -338,15 +353,15 @@
       <class name="terminus">
         One end of a link, either a source or a target.
 
-        <group name="core-group">
-          <attribute name="address" type="string" mutable="true"/>
-          <attribute name="dynamic" type="boolean" mutable="true"/>
+        <group name="basic">
+          <property name="address" type="string" mutable="true"/>
+          <property name="dynamic" type="boolean" mutable="true"/>
         </group>
 
         <group name="other">
-          <attribute name="distribution-mode" mutable="true"/>
-          <attribute name="expiry-policy" mutable="true"/>
-          <attribute name="type" mutable="true"/>
+          <property name="distribution-mode" mutable="true"/>
+          <property name="expiry-policy" mutable="true"/>
+          <property name="type" mutable="true"/>
         </group>
       </class>
       
@@ -357,20 +372,20 @@
       <class name="delivery">
         The state of a message transfer.
 
-        <group name="core-group">
-          <attribute name="tag"/>
+        <group name="basic">
+          <property name="tag"/>
         </group>
 
         <group name="related-objects">
-          <attribute name="link" type="@link"/>
-          <attribute name="session" type="@session"/>
-          <attribute name="connection" type="@connection"/>
-          <attribute name="transport" type="@transport"/>
+          <property name="link" type="@link"/>
+          <property name="session" type="@session"/>
+          <property name="connection" type="@connection"/>
+          <property name="transport" type="@transport"/>
         </group>
 
         <group name="state-changes">
-          <attribute name="local-state" mutable="true"/>
-          <attribute name="remote-state"/>
+          <property name="local-state" mutable="true"/>
+          <property name="remote-state"/>
           <method name="accept"/>
           <method name="reject"/>
           <method name="release"/>
@@ -390,16 +405,16 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/message/Message.html">Java</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
 
-        <group name="core-group">
-          <attribute name="id" mutable="true" nullable="true">
+        <group name="basic">
+          <property name="id" mutable="true" nullable="true">
             A globally unique message identifier.
 
             <!-- XXX used to remove duplicates -->
-          </attribute>
+          </property>
 
-          <attribute name="user-id" type="string" mutable="true" nullable="true">
+          <property name="user-id" type="string" mutable="true" nullable="true">
             The identity of the user producing the message.
-          </attribute>
+          </property>
           
           <method name="create">
             Create a new message.
@@ -423,62 +438,62 @@
         </group>
 
         <group name="routing" title="Routing">
-          <attribute name="address" mutable="true"/>
-          <attribute name="reply-to" mutable="true"/>
-          <attribute name="correlation-id" mutable="true"/>
+          <property name="address" mutable="true"/>
+          <property name="reply-to" mutable="true"/>
+          <property name="correlation-id" mutable="true"/>
         </group>
 
         <group name="content" title="Content">
-          <attribute name="subject" mutable="true"/>
-          <attribute name="body" mutable="true"/>
-          <attribute name="content-encoding" mutable="true"/>
-          <attribute name="content-type" mutable="true"/>
-          <attribute name="inferred" mutable="true"/>
-          <attribute name="expiry-time" mutable="true"/>
-          <attribute name="creation-time" mutable="true"/>
+          <property name="subject" mutable="true"/>
+          <property name="body" mutable="true"/>
+          <property name="content-encoding" mutable="true"/>
+          <property name="content-type" mutable="true"/>
+          <property name="inferred" mutable="true"/>
+          <property name="expiry-time" mutable="true"/>
+          <property name="creation-time" mutable="true"/>
         </group>
 
         <group name="transfer-headers" title="Transfer headers">
           <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-header">AMQP spec</link>
           
-          <attribute name="durable" value="false" type="boolean" mutable="true">
+          <property name="durable" value="false" type="boolean" mutable="true">
             Durability requirement.  The durable property indicates
             that the message should be held durably by any
             intermediaries taking responsibility for the message.  A
             durable message is saved even if the intermediary is
             unexpectedly terminated and restarted.
-          </attribute>
+          </property>
 
-          <attribute name="priority" value="4" mutable="true" type="integer" nullable="true">
+          <property name="priority" value="4" mutable="true" type="integer" nullable="true">
             Relative message priority.  Higher numbers indciate higher
             priority.
-          </attribute>
+          </property>
 
-          <attribute name="ttl" mutable="true" type="integer" nullable="true">
+          <property name="ttl" mutable="true" type="integer" nullable="true">
             The time to live.  The message must be discarded after
             'ttl' milliseconds.
-          </attribute>
+          </property>
 
-          <attribute name="first-acquirer" type="boolean" mutable="true" nullable="true">
+          <property name="first-acquirer" type="boolean" mutable="true" nullable="true">
             True if the recipient is first to acquire the message.
-          </attribute>
+          </property>
 
-          <attribute name="delivery-count" type="integer" mutable="true">
+          <property name="delivery-count" type="integer" mutable="true">
             The number of prior unsuccessful delivery attempts.
-          </attribute>
+          </property>
         </group>
 
         <group name="message-groups" title="Message groups">
-          <attribute name="group-id" mutable="true"/>
-          <attribute name="group-sequence" mutable="true"/>
-          <attribute name="reply-to-group-id" mutable="true"/>
+          <property name="group-id" mutable="true"/>
+          <property name="group-sequence" mutable="true"/>
+          <property name="reply-to-group-id" mutable="true"/>
         </group>
 
-        <group name="" title="Extended attributes">
-          <attribute name="application-properties" type="map"/>
-          <attribute name="delivery-annotations" type="map"/>
-          <attribute name="message-annotations" type="map"/>
-          <attribute name="footer" type="map"/>
+        <group name="" title="Extended propertys">
+          <property name="application-properties" type="map"/>
+          <property name="delivery-annotations" type="map"/>
+          <property name="message-annotations" type="map"/>
+          <property name="footer" type="map"/>
         </group>
       </class>
     </group>
@@ -486,12 +501,11 @@
     <group name="events" title="Event processing">
       <class name="event"/>
       <class name="event-type"/>
-      <class name="event-handler"/>
-      <class name="general-handler"/>
+      <class name="handler"/>
+      <class name="internal-handler"/>
+      <class name="messaging-handler"/>
       <class name="outgoing-message-handler"/>
       <class name="incoming-message-handler"/>
-      <class name="transaction-handler"/>
-      <class name="transactional-client-handler"/>
       <class name="reactor"/>
       <class name="acceptor"/>
       <class name="timer"/>
@@ -539,12 +553,11 @@
   <type name="any"/>
   <type name="class"/>
 
-  <group-definition name="core-group" title="Identity and lifecycle">
-    Attributes and methods that determine core object behaviors.
+  <group-definition name="basic" title="Basic properties and methods">
   </group-definition>
 
   <group-definition name="related-objects" title="Related objects">
-    Attributes for navigating to related objects and methods for
+    Properties for navigating to related objects and methods for
     creating new ones.
   </group-definition>
 
