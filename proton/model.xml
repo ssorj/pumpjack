@@ -17,7 +17,7 @@
     The primary entry point for the event-driven API. Most
     applications will import only this module.
 
-    <annotation name="requires">proton.amqp</annotation>
+    <annotation name="requires">amqp</annotation>
 
     <group name="model" title="AMQP model">
       <class name="container">
@@ -37,10 +37,10 @@
             The reactor associated with this container.
           </property>
 
-          <method name="create">
+          <method name="[constructor]">
             Create a new container.
             
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="container" type="@container"/>
           </method>
 
@@ -53,6 +53,8 @@
             
             <input name="url" type="@url"/>
             <output name="connection" type="@connection"/>
+            <input name="options" value="[empty list]" type="list" item-type="connection-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
           </method>
           
           <method name="listen">
@@ -60,31 +62,19 @@
             connections.
             
             <input name="url" type="@url"/>
+            <input name="options" value="[empty list]" type="list" item-type="connection-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="acceptor" type="@acceptor"/>
           </method>
         </group>
 
         <group name="link-operations">
-          <method name="create-receiver">
-            Create a receiving link.
-            
-            <input name="url" type="@url"/>
-            <output name="receiver" type="@receiver"/>
-          </method>
-
-          <method name="create-sender">
-            Create a sending link.
-
-            <input name="url" type="@url"/>
-            <output name="sender" type="@sender"/>
-          </method>
-
           <method name="open-receiver">
             Create and initiate opening of a receiving link.
             
             <input name="url" type="@url"/>
-            <input name="options" type="list"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
@@ -92,8 +82,8 @@
             Create and initiate opening of a sending link.
 
             <input name="url" type="@url"/>
-            <input name="options" type="list"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
@@ -125,24 +115,32 @@
         </group>
 
         <group name="endpoint-state">
-          <property name="local-state" type="object" value="UNINITIALIZED">
+          <property name="local-state" type="@endpoint-state" value="UNINITIALIZED">
             Local endpoint state.
           </property>
 
-          <property name="remote-state" type="object" value="UNINITIALIZED">
+          <property name="remote-state" type="@endpoint-state" value="UNINITIALIZED">
             Remote endpoint state.
           </property>
 
-          <property name="UNINITIALIZED" type="object" value="[singleton]">
+          <property name="UNINITIALIZED" type="@endpoint-state" value="[singleton]">
             The endpoint is uninitialized.
           </property>
 
-          <property name="ACTIVE" type="object" value="[singleton]">
+          <property name="ACTIVE" type="@endpoint-state" value="[singleton]">
             The endpoint is active.
           </property>
 
-          <property name="CLOSED" type="object" value="[singleton]">
+          <property name="CLOSED" type="@endpoint-state" value="[singleton]">
             The endpoint is closed.
+          </property>
+
+          <property name="local-condition" type="@condition" value="[instance]">
+            The local error condition.
+          </property>
+          
+          <property name="remote-condition" type="@condition" value="[instance]">
+            The remote error condition.
           </property>
 
           <!--
@@ -191,18 +189,12 @@
           </property>
           -->
         </group>
-
-        <group name="error-handling">
-          <property name="local-condition" type="@condition" value="[instance]">
-            The local error condition.
-          </property>
-          
-          <property name="remote-condition" type="@condition" value="[instance]">
-            The remote error condition.
-          </property>
-        </group>
       </class>
 
+      <class name="endpoint-state">
+        Endpoint state values.
+      </class>
+      
       <class name="connection" type="@endpoint">
         The basis for network communication; it contains sessions.
 
@@ -211,6 +203,7 @@
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1connection.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Connection.html">Java</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
         <group name="basic">
@@ -236,26 +229,12 @@
         </group>
 
         <group name="link-operations">
-          <method name="create-sender">
-            Create a sender using the default session.
-
-            <input name="address" type="string"/>
-            <output name="sender" type="@sender"/>
-          </method>
-
-          <method name="create-receiver">
-            Create a receiver using the default session.
-
-            <input name="address" type="string"/>
-            <output name="receiver" type="@receiver"/>
-          </method>
-
           <method name="open-sender">
             Create and open a sender using the default session.
 
             <input name="address" type="string"/>
-            <input name="options" type="list" nullable="true"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
 
@@ -263,20 +242,22 @@
             Create and open a receiver using the default session.
 
             <input name="address" type="string"/>
-            <input name="options" type="list" nullable="true"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
         </group>
 
         <group name="session-operations" title="Session operations">
           <property name="default-session" type="@session" value="[instance]">
-            The session used by create-sender and create-receiver.
+            The session used by open-sender and open-receiver.
           </property>
 
-          <method name="create-session">
-            Create a session on this connection.
+          <method name="open-session">
+            Create and initiate opening the session.
 
+            <input name="options" value="[empty list]" type="list" item-type="session-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="session" type="@session"/>
           </method>
         </group>
@@ -289,6 +270,30 @@
           <property name="remote-hostname" type="string" value="[discovered]">
             The hostname of the remote peer.
           </property>
+        </group>
+
+        <group name="event-processing">
+          <method name="find-sessions">
+            Find session endpoints in the specified states.
+            
+            <input name="local-states" type="list" item-type="@endpoint-state"/>
+            <input name="remote-states" type="list" item-type="@endpoint-state"/>
+            <output name="iterator" type="iterator"/>
+          </method>
+
+          <method name="find-links">
+            Find link endpoints in the specified states.
+
+            <input name="local-states" type="list" item-type="@endpoint-state"/>
+            <input name="remote-states" type="list" item-type="@endpoint-state"/>
+            <output name="iterator" type="iterator"/>
+          </method>
+
+          <method name="find-unprocessed-deliveries">
+            Find deliveries with unprocessed remote state.
+
+            <output name="iterator" type="iterator"/>
+          </method>
         </group>
 
         <!--
@@ -311,40 +316,27 @@
       </class>
 
       <class name="session" type="@endpoint">
-        A container of links
+        A container of links.
 
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Session.html">Java</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
         
         <group name="basic">
           <property name="connection" type="@connection" value="[instance]">
-            The containing connection
+            The containing connection.
           </property>
         </group>
 
         <group name="link-operations">
-          <method name="create-receiver">
-            Create a receiving link.
-            
-            <input name="address" type="string"/>
-            <output name="receiver" type="@receiver"/>
-          </method>
-
-          <method name="create-sender">
-            Create a sending link.
-
-            <input name="address" type="string"/>
-            <output name="sender" type="@sender"/>
-          </method>
-
           <method name="open-receiver">
             Create and initiate opening of a receiving link.
             
             <input name="address" type="string"/>
-            <input name="options" type="list"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
@@ -352,17 +344,15 @@
             Create and initiate opening of a sending link.
 
             <input name="address" type="string"/>
-            <input name="options" type="list"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
+            <input name="handler" type="@event-handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
 
         <group name="flow-control">
           <property name="incoming-bytes" type="integer"/>
-          <property name="incoming-capacity" type="integer"/>
           <property name="outgoing-bytes" type="integer"/>
-          <property name="outgoing-window" type="integer"/>
         </group>
       </class>
       
@@ -372,11 +362,16 @@
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Link.html">Java</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
 
         <group name="basic">
           <property name="name" type="string" value="[generated]">
             The link name.
+          </property>
+
+          <property name="options" type="list" item-type="@link-option" value="[empty list]">
+            Link options.
           </property>
 
           <property name="session" type="@session" value="[instance]">
@@ -385,32 +380,18 @@
         </group>
 
         <group name="termini" title="Source and target">
-          <property name="local-source" type="@terminus" value="[instance]">
-            The local source terminus.
+          <property name="source" type="@terminus" value="[instance]">
+            The source terminus.
           </property>
 
-          <property name="local-target" type="@terminus" value="[instance]">
-            The local target terminus.
-          </property>
-
-          <property name="remote-source" type="@terminus" value="[instance]">
-            The remote source terminus.
-          </property>
-
-          <property name="remote-target" type="@terminus" value="[instance]">
-            The remote target terminus.
+          <property name="target" type="@terminus" value="[instance]">
+            The target terminus.
           </property>
         </group>
 
         <group name="flow-control">
           <property name="credit" type="integer" value="[discovered]">
             The amount of outstanding credit on the link.
-          </property>
-        </group>
-
-        <group name="event-processing">
-          <property name="handler" type="@handler" mutable="true" nullable="true">
-            XXX Why does only link have this?
           </property>
         </group>
       </class>
@@ -435,7 +416,7 @@
             Send a message on the link.
 
             <input name="message" type="@message"/>
-            <input name="delivery" type="@delivery"/>
+            <output name="delivery" type="@delivery"/>
           </method>
         </group>
       </class>
@@ -443,20 +424,36 @@
       <class name="terminus">
         One end of a link, either a source or a target.
 
+        <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">AMQP definition</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/terminus_8h.html">C</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1terminus.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Terminus-class.html">Python</link>
+        
         <group name="basic">
+          <property name="type" mutable="true"/>
           <property name="address" type="string" mutable="true"/>
-          <property name="dynamic" type="boolean" mutable="true"/>
         </group>
 
         <group name="other">
+          <property name="dynamic" type="boolean" mutable="true"/>
           <property name="distribution-mode" mutable="true"/>
           <property name="expiry-policy" mutable="true"/>
-          <property name="type" mutable="true"/>
+          <property name="durability" mutable="true"/>
+          <property name="filter" mutable="true"/>
         </group>
       </class>
       
       <class name="condition">
         An endpoint error state.
+
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-amqp-error">AMQP definition</link>
+        <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/condition_8h.html">C</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Condition-class.html">Python</link>
+
+        <group name="basic">
+          <property name="name" mutable="true"/>
+          <property name="description" mutable="true"/>
+        </group>
       </class>
       
       <class name="delivery">
@@ -465,7 +462,7 @@
         <group name="basic">
           <property name="tag" type="bytes" value="[generated]"/>
           <property name="link" type="@link"/>
-          <property name="is-settled" type="boolean"/>
+          <property name="settled" type="boolean"/>
           <method name="accept"/>
           <method name="reject"/>
           <method name="release"/>
@@ -587,14 +584,34 @@
       </class>
     </group>
 
+    <group name="link-options" title="Link options">
+      <class name="link-option"/>
+      <class name="at-most-once" type="@link-option"/>
+      <class name="at-least-once" type="@link-option"/>
+      <class name="dynamic-node-properties" type="@link-option"/>
+      <class name="filter" type="@link-option"/>
+      <class name="durable-subscription" type="@link-option"/>
+      <class name="move" type="@link-option"/>
+      <class name="copy" type="@link-option"/>
+      <class name="browse" type="@copy"/>
+    </group>
+
     <group name="events" title="Event processing">
-      <class name="event"/>
+      <class name="event">
+        <property name="container" type="@container" value="[instance]" nullable="true"/>
+        <property name="connection" type="@connection" value="[instance]" nullable="true"/>
+        <property name="session" type="@session" value="[instance]" nullable="true"/>
+        <property name="link" type="@link" value="[instance]" nullable="true"/>
+        <property name="receiver" type="@receiver" value="[instance]" nullable="true"/>
+        <property name="sender" type="@sender" value="[instance]" nullable="true"/>
+        <property name="delivery" type="@delivery" value="[instance]" nullable="true"/>
+        <property name="transport" type="@transport" value="[instance]" nullable="true"/>
+        <property name="" type="" value="[instance]" nullable="true"/>
+      </class>
+      
       <class name="event-type"/>
-      <class name="handler"/>
-      <class name="internal-handler"/>
+      <class name="event-handler"/>
       <class name="messaging-handler"/>
-      <class name="outgoing-message-handler"/>
-      <class name="incoming-message-handler"/>
       <class name="reactor"/>
       <class name="acceptor"/>
       <class name="timer"/>
@@ -627,7 +644,7 @@
     AMQP data encoding and decoding. For typical Proton-based
     applications, these classes will not be used directly.
 
-    <annotation name="requires">proton.internal</annotation>
+    <annotation name="requires">internal</annotation>
   </module>
   
   <module name="internal">

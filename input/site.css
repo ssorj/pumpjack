@@ -1,4 +1,12 @@
-@import url(transom/site.css);
+@import url({{site_url}}/transom/site.css);
+
+h1.pumpjack {
+    font-weight: 300;
+}
+
+h1.pumpjack span.name {
+    font-weight: 400;
+}
 
 ul.pumpjack.links {
     padding-left: 0;
@@ -36,21 +44,25 @@ table.pumpjack td {
     text-overflow: ellipsis;
 }
 
+table.pumpjack.modules th:nth-child(1) {
+    width: 20%;
+}
+
+table.pumpjack.modules th:nth-child(3) {
+    width: 20%;
+}
+
 table.pumpjack.classes th:nth-child(1) {
     width: 30%;
 }
 
 table.pumpjack.properties th:nth-child(1) {
-    width: 20%;
-}
-
-table.pumpjack.properties th:nth-child(2) {
-    width: 40%;
+    width: 17.5%;
 }
 
 table.pumpjack.properties th:nth-child(3),
 table.pumpjack.properties th:nth-child(4) {
-    width: 12.5%;
+    width: 15%;
 }
 
 table.pumpjack.properties th:nth-child(5),
@@ -59,15 +71,11 @@ table.pumpjack.properties th:nth-child(6) {
 }
 
 table.pumpjack.methods th:nth-child(1) {
-    width: 20%;
-}
-
-table.pumpjack.methods th:nth-child(2) {
-    width: 40%;
+    width: 17.5%;
 }
 
 table.pumpjack.methods th:nth-child(3) {
-    width: 25%;
+    width: 30%;
 }
 
 table.pumpjack.methods th:nth-child(4) {

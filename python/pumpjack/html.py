@@ -27,22 +27,6 @@ class HtmlRenderer(PumpjackRenderer):
     def __init__(self, output_dir):
         super(HtmlRenderer, self).__init__(output_dir)
 
-    def include_file(self, path):
-        #return "" # XXX
-
-        path = _os.path.join(self.output_dir, path)
-
-        if not _os.path.exists(path):
-            return ""
-
-        with open(path, "r") as file:
-            out = file.read()
-
-        if out is None:
-            return ""
-
-        return out
-
     def render(self, model):
         output_path = model.get_output_path(self.output_dir)
         
@@ -55,7 +39,7 @@ class HtmlRenderer(PumpjackRenderer):
         print("Rendering {}".format(model))
 
         out.write(html_h(init_cap(model.title)))
-        out.write(html_text(model.text))
+        out.write(_html_text(model.text))
 
         items = list()
         
@@ -71,14 +55,13 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Module", "Content", "Depends on"))
 
         for module in model.modules:
-            name = "{}.{}".format(module.model.name, module.name)
-            link = html_a(name, module.get_url())
-            summary = first_sentence(module.text)
+            link = _html_node_link(module)
+            summary = _html_node_summary(module)
             requires = module.annotations.get("requires")
 
             items.append((link, summary, requires))
 
-        out.write(html_table(items))
+        out.write(html_table(items, class_="pumpjack modules"))
         out.write(html_close("section"))
         
         for module in model.modules:
@@ -92,12 +75,8 @@ class HtmlRenderer(PumpjackRenderer):
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
-            title = "Module '{}.{}'".format(module.model.name, module.name)
-
-            out.write(html_h(title))
-            
-            out.write(html_text(module.text))
-            #out.write(self.include_file("module.html"))
+            out.write(_html_node_title(module))
+            out.write(_html_text(module.text))
 
             for group in module.groups:
                 self.render_module_group(out, group)
@@ -114,7 +93,7 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Class", "Summary"))
                         
         for cls in group.classes:
-            link = html_a(cls.name, cls.get_url())
+            link = _html_node_link(cls)
             summary = first_sentence(cls.text)
 
             items.append((link, summary))
@@ -143,10 +122,8 @@ class HtmlRenderer(PumpjackRenderer):
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
-            title = "Class '{}'".format(cls.name)
-            
-            out.write(html_h(title))
-            out.write(html_text(cls.text))
+            out.write(_html_node_title(cls))
+            out.write(_html_text(cls.text))
 
             items = list()
             
@@ -155,25 +132,21 @@ class HtmlRenderer(PumpjackRenderer):
 
             out.write(html_ul(items, class_="pumpjack links"))
             
-            #out.write(self.include_file("{}.class.html".format(cls.name)))
-
             for group in groups:
                 self.render_class_group(out, cls, group)
 
             for group in cls.groups:
-                for attr in group.properties:
-                    self.render_property(out, attr)
+                for prop in group.properties:
+                    self.render_property(out, prop)
 
                 for meth in group.methods:
                     self.render_method(out, meth)
-
-                # XXX the rest
 
     def render_class_group(self, out, cls, group):
         out.write(html_open("section"))
 
         out.write(html_h(group.title))
-        out.write(html_text(group.text))
+        out.write(_html_text(group.text))
 
         classes = _get_classes(cls)
         
@@ -191,16 +164,16 @@ class HtmlRenderer(PumpjackRenderer):
 
         if properties:
             items = list()
-            items.append(("Property", "Summary", "Type", "Initial value",
+            items.append(("Property", "Summary", "Type", "Default value",
                           "Mutable", "Nullable"))
 
             for prop in properties:
-                link = html_a(prop.name, prop.get_url())
-                summary = first_sentence(prop.text)
-                type = html_ref(prop, prop.type)
-                value = prop.value
-                mutable = html_bool(prop.mutable)
-                nullable = html_bool(prop.nullable)
+                link = _html_node_link(prop)
+                summary = _html_node_summary(prop)
+                type = _html_parameter_type(prop)
+                value = _html_parameter_value(prop)
+                mutable = _html_boolean(prop.mutable)
+                nullable = _html_boolean(prop.nullable)
 
                 if value and value.startswith("[") and value.endswith("]"):
                     value = html_span(value[1:-1], class_="special")
@@ -214,25 +187,19 @@ class HtmlRenderer(PumpjackRenderer):
             items.append(("Method", "Summary", "Inputs", "Outputs"))
                             
             for meth in methods:
-                link = html_a(meth.name, meth.get_url())
-                summary = first_sentence(meth.text)
+                link = _html_node_link(meth)
+                summary = _html_node_summary(meth)
 
                 inputs = list()
                 outputs = list()
 
                 if meth.inputs:
                     for input in meth.inputs:
-                        if input.type.startswith("@"):
-                            inputs.append(html_ref(input, input.type))
-                        else:
-                            inputs.append(input.name)
+                        inputs.append(_html_input(input))
 
                 if meth.outputs:
                     for output in meth.outputs:
-                        if output.type.startswith("@"):
-                            outputs.append(html_ref(output, output.type))
-                        else:
-                            outputs.append(output.name)
+                        outputs.append(_html_parameter_type(output))
                             
                 inputs = ", ".join(inputs)
                 outputs = ", ".join(outputs)
@@ -250,28 +217,18 @@ class HtmlRenderer(PumpjackRenderer):
 
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
-
-            value = ""
-
-            if prop.value is not None:
-                value = format_node_value(prop)
-                value = "= {}".format(value)
-                value = html_span(value, class_="signature")
-
-            title = "Property '{}'".format(prop.name)
                 
-            out.write(html_h(title))
+            out.write(_html_node_title(prop))
+            out.write(_html_text(prop.text))
 
             items = (
-                ("Type", prop.type),
-                ("Initial value", prop.value),
+                ("Type", _html_parameter_type(prop)),
+                ("Default value", _html_parameter_value(prop)),
                 ("Mutable", prop.mutable),
                 ("Nullable", prop.nullable),
             )
 
             out.write(html_table(items, False, True, class_="props"))
-            out.write(html_text(prop.text))
-            #out.write(self.include_file("{}.property.html".format(prop.name)))
 
     def render_method(self, out, meth):
         output_path = meth.get_output_path(self.output_dir)
@@ -281,20 +238,8 @@ class HtmlRenderer(PumpjackRenderer):
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
-            # signature = ", ".join([x.name for x in meth.inputs])
-            # signature = "({})".format(signature)
-
-            # if meth.outputs:
-            #     output = meth.outputs[0]
-            #     signature = "{} = {}".format(signature, format_node_value(output))
-
-            # signature = html_span(signature, class_="signature")
-
-            title = "Method '{}'".format(meth.name)
-
-            out.write(html_h(title))
-
-            out.write(html_text(meth.text))
+            out.write(_html_node_title(meth))
+            out.write(_html_text(meth.text))
 
             if meth.inputs:
                 self.render_method_inputs(out, meth)
@@ -302,18 +247,17 @@ class HtmlRenderer(PumpjackRenderer):
             if meth.outputs:
                 self.render_method_outputs(out, meth)
 
-            #out.write(self.include_file("{}.method.html".format(meth.name)))
-
     def render_method_inputs(self, out, meth):
         items = list()
-        items.append(("Input", "Type", "Nullable"))
+        items.append(("Input", "Type", "Default value", "Nullable"))
         
         for input in meth.inputs:
             name = input.name
-            type = html_ref(input, input.type)
-            nullable = html_bool(input.nullable)
+            type = _html_parameter_type(input)
+            value = _html_parameter_value(input)
+            nullable = _html_boolean(input.nullable)
             
-            items.append((name, type, nullable))
+            items.append((name, type, value, nullable))
 
         out.write(html_table(items, class_="parameters"))
 
@@ -323,8 +267,8 @@ class HtmlRenderer(PumpjackRenderer):
         
         for output in meth.outputs:
             name = output.name
-            type = html_ref(output, output.type)
-            nullable = html_bool(output.nullable)
+            type = _html_parameter_type(output)
+            nullable = _html_boolean(output.nullable)
             
             items.append((name, type, nullable))
 
@@ -332,22 +276,58 @@ class HtmlRenderer(PumpjackRenderer):
 
 add_renderer("html", HtmlRenderer)
 
-def html_ref(node, ref):
+def _html_node_title(node):
+    type = init_cap(node.node_type)
+    name = html_span(node.name, class_="name")
+    title = "{} {}".format(type, name)
+
+    return html_h(title, class_="pumpjack")
+
+def _html_node_link(node):
+    return html_a(_html_special(node.name), node.get_url())
+
+def _html_node_summary(node):
+    return first_sentence(node.text)
+
+def _html_parameter_type(param):
+    type = _html_reference(param, param.type)
+
+    if param.item_type is not None:
+        type = "{} of {}".format(type, _html_reference(param, param.item_type))
+
+    return type
+
+def _html_input(input):
+    if input.type == "list":
+        return input.name
+
+    return _html_parameter_type(input)
+
+def _html_parameter_value(param):
+    return _html_special(param.value)
+
+def _html_reference(node, ref):
     if ref is not None and ref.startswith("@"):
         node = node.resolve_reference(ref)
 
         if node is not None:
             return html_a(node.name, node.get_url())
-    else:
-        return ref
 
-def html_bool(value):
+    return ref
+
+def _html_special(value):
+    if value is not None and value.startswith("[") and value.endswith("]"):
+        value = html_span(value[1:-1], class_="special")
+
+    return value
+
+def _html_boolean(value):
     if isinstance(value, basestring):
         value = value == "true"
     
-    return "&#x2612;" if value else "&#x2610;"    
+    return "&#x2612;" if value else "&#x2610;"
     
-def html_text(text):
+def _html_text(text):
     if not text:
         return ""
 
@@ -357,17 +337,6 @@ def html_text(text):
     text = _re.sub("\s*\n\s*\n\s*", " </p>\n\n<p>", text)
 
     return "<p>{}</p>".format(text)
-
-def format_node_value(node):
-    value = node.value
-
-    if node.type == "string":
-        return "'{}'".format(value)
-
-    if node.type[0] == "@":
-        return "{} instance".format(node.type[1:])
-
-    return value
 
 def _open_output(path):
     parent, child = _os.path.split(path)

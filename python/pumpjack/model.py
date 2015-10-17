@@ -30,6 +30,7 @@ class _Node(object):
     def __init__(self, element, parent):
         self.element = element
 
+        self.node_type = self.element.tag
         self.name = self.element.attrib["name"]
         
         self.title = None
@@ -282,6 +283,7 @@ class _Parameter(_Node):
         super(_Parameter, self).__init__(element, parent)
 
         self.type = self.element.attrib.get("type")
+        self.item_type = self.element.attrib.get("item-type")
         self.value = self.element.attrib.get("value")
         self.nullable = self.element.attrib.get("nullable", False)
 
