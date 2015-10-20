@@ -39,7 +39,8 @@
 
           <method name="[constructor]">
             Create a new container.
-            
+
+            <input name="id" value="[generated]" type="string" nullable="true"/>
             <input name="handler" type="@event-handler" nullable="true"/>
             <output name="container" type="@container"/>
           </method>
@@ -191,7 +192,7 @@
         </group>
       </class>
 
-      <class name="endpoint-state" index="false">
+      <class name="endpoint-state" hidden="true">
         Endpoint state values.
       </class>
       
@@ -291,7 +292,7 @@
             <output name="results" type="iterator"/>
           </method>
 
-          <method name="find-unsettled-deliveries">
+          <method name="find-updated-deliveries">
             Find deliveries with unprocessed remote state.  The
             results are scoped to deliveries on this connection.
 
@@ -368,7 +369,7 @@
             <output name="results" type="iterator"/>
           </method>
 
-          <method name="find-unsettled-deliveries">
+          <method name="find-updated-deliveries">
             Find deliveries with unprocessed remote state.  The
             results are scoped to links on this session.
 
@@ -512,30 +513,41 @@
         </group>
 
         <group name="delivery-state" title="Delivery state">
-          <property name="local-state " value="NONE" type="object" mutable="true">
+          <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">AMQP defintion</link>
+          
+          <property name="local-state " value="NONE [?]" type="@delivery-state" mutable="true">
             The local delivery state.
           </property>
           
-          <property name="remote-state" value="NONE?" type="object">
+          <property name="remote-state" value="NONE [?]" type="@delivery-state">
             The delivery state at the remote peer.
           </property>
           
           <property name="NONE" value="[singleton]" type="@delivery-state">
-            
+            [?] The initial state before the delivery is transferred.
           </property>
           
           <property name="RECEIVED" value="[singleton]" type="@delivery-state"/>
           <property name="ACCEPTED" value="[singleton]" type="@delivery-state"/>
           <property name="REJECTED" value="[singleton]" type="@delivery-state"/>
+          <property name="RELEASED" value="[singleton]" type="@delivery-state"/>
           <property name="MODIFIED" value="[singleton]" type="@delivery-state"/>
 
           <method name="accept">
             Change the delivery state to ACCEPTED.
           </method>
 
-          <method name="reject"/>
-          <method name="release"/>
-          <method name="modify"/>
+          <method name="reject">
+            Change the delivery state to REJECTED.
+          </method>
+
+          <method name="release">
+            Change the delivery state to RELEASED.
+          </method>
+          
+          <method name="modify">
+            Change the delivery state to MODIFIED.
+          </method>
 
           <!-- <method name="send-update" -->
         </group>
@@ -552,7 +564,7 @@
         </group>
       </class>
 
-      <class name="delivery-state" index="false">
+      <class name="delivery-state" hidden="true">
         Delivery state values
       </class>
 
@@ -732,8 +744,9 @@
   <type name="string"/>
   <type name="boolean"/>
   <type name="integer"/>
-  <type name="any"/>
-  <type name="class"/>
+  <type name="object"/>
+  <type name="list"/>
+  <type name="map"/>
 
   <group-definition name="basic" title="Basic properties and methods">
   </group-definition>

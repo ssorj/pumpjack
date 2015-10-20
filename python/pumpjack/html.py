@@ -96,7 +96,7 @@ class HtmlRenderer(PumpjackRenderer):
             link = _html_node_link(cls)
             summary = first_sentence(cls.text)
 
-            if cls.index is False:
+            if cls.hidden:
                 continue
 
             items.append((link, summary))
@@ -301,7 +301,7 @@ def _html_parameter_type(param):
     return type
 
 def _html_input(input):
-    if input.type == "list":
+    if input.type in input.model.type_names:
         return input.name
 
     return _html_parameter_type(input)

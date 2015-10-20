@@ -35,7 +35,7 @@ class _Node(object):
         
         self.title = None
         self.text = None
-        self.index = True
+        self.hidden = False
         self.links = list()
         self.annotations = dict()
 
@@ -88,7 +88,7 @@ class _Node(object):
         
     def process_properties(self):
         self.title = self.element.attrib.get("title")
-        self.index = self.element.attrib.get("index", "true") == "true"
+        self.hidden = self.element.attrib.get("hidden", "false") == "true"
         
     def process_text(self):
         text = self.element.text
@@ -347,7 +347,9 @@ class Model(_Node):
 
         self.modules = list()
         self.types = list()
+
         self.group_definitions_by_name = dict()
+        self.type_names = set()
 
     @property
     def abstract_path(self):
@@ -367,6 +369,11 @@ class Model(_Node):
             self.group_definitions_by_name[definition.name] = definition
 
         super(Model, self).process()
+
+    def process_references(self):
+        super(Model, self).process_references()
+
+        self.type_names.update((x.name for x in self.types))
 
 def _format_repr(obj, *args):
     cls = obj.__class__.__name__
