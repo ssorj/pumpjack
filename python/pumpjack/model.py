@@ -35,6 +35,7 @@ class _Node(object):
         
         self.title = None
         self.text = None
+        self.index = True
         self.links = list()
         self.annotations = dict()
 
@@ -87,6 +88,7 @@ class _Node(object):
         
     def process_properties(self):
         self.title = self.element.attrib.get("title")
+        self.index = self.element.attrib.get("index", "true") == "true"
         
     def process_text(self):
         text = self.element.text

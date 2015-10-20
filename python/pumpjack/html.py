@@ -96,6 +96,9 @@ class HtmlRenderer(PumpjackRenderer):
             link = _html_node_link(cls)
             summary = first_sentence(cls.text)
 
+            if cls.index is False:
+                continue
+
             items.append((link, summary))
 
         out.write(html_table(items, class_="pumpjack classes"))

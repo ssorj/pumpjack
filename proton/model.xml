@@ -191,7 +191,7 @@
         </group>
       </class>
 
-      <class name="endpoint-state">
+      <class name="endpoint-state" index="false">
         Endpoint state values.
       </class>
       
@@ -274,25 +274,28 @@
 
         <group name="event-processing">
           <method name="find-sessions">
-            Find session endpoints in the specified states.
+            Find session endpoints in the specified states.  The
+            results are scoped to sessions on this connection.
             
             <input name="local-states" type="list" item-type="@endpoint-state"/>
             <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="iterator" type="iterator"/>
+            <output name="results" type="iterator"/>
           </method>
 
           <method name="find-links">
-            Find link endpoints in the specified states.
+            Find link endpoints in the specified states.  The results
+            are scoped to links on this connection.
 
             <input name="local-states" type="list" item-type="@endpoint-state"/>
             <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="iterator" type="iterator"/>
+            <output name="results" type="iterator"/>
           </method>
 
-          <method name="find-unprocessed-deliveries">
-            Find deliveries with unprocessed remote state.
+          <method name="find-unsettled-deliveries">
+            Find deliveries with unprocessed remote state.  The
+            results are scoped to deliveries on this connection.
 
-            <output name="iterator" type="iterator"/>
+            <output name="results" type="iterator"/>
           </method>
         </group>
 
@@ -353,6 +356,24 @@
         <group name="flow-control">
           <property name="incoming-bytes" type="integer"/>
           <property name="outgoing-bytes" type="integer"/>
+        </group>
+
+        <group name="event-processing">
+          <method name="find-links">
+            Find link endpoints in the specified states.  The results
+            are scoped to links on this session.
+
+            <input name="local-states" type="list" item-type="@endpoint-state"/>
+            <input name="remote-states" type="list" item-type="@endpoint-state"/>
+            <output name="results" type="iterator"/>
+          </method>
+
+          <method name="find-unsettled-deliveries">
+            Find deliveries with unprocessed remote state.  The
+            results are scoped to links on this session.
+
+            <output name="results" type="iterator"/>
+          </method>
         </group>
       </class>
       
@@ -457,31 +478,86 @@
       </class>
       
       <class name="delivery">
-        The state of a message transfer.
+        A message transfer.
 
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">AMQP definition</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/group__delivery.html">C</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1delivery.html">C++</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Delivery.html">Java</link>
+        <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Delivery-class.html">Python</link>
+        
         <group name="basic">
-          <property name="tag" type="bytes" value="[generated]"/>
-          <property name="link" type="@link"/>
-          <property name="settled" type="boolean"/>
-          <method name="accept"/>
-          <method name="reject"/>
-          <method name="release"/>
-          <method name="modify"/>
+          <property name="id" type="bytes" value="[generated]">
+            The delivery identifier.
+          </property>
+
+          <property name="link" value="[instance]" type="@link">
+            The link on which the delivery was sent or received.
+          </property>
+        </group>
+
+        <group name="settlement" title="Settlement">
+          <property name="local-settled" value="false" type="boolean">
+            True if the delivery has been settled locally.
+          </property>
+          
+          <property name="remote-settled" value="false" type="boolean">
+            True if the delivery has been settled by the remote peer.
+          </property>
+
+          <method name="settle">
+            Mark the delivery settled.  A settled delivery can never
+            be used again.
+          </method>
         </group>
 
         <group name="delivery-state" title="Delivery state">
-          <property name="local-state " value="NONE" type="object" mutable="true"/>
-          <property name="remote-state" value="NONE" type="object"/>
-          <property name="NONE" value="[singleton]" type="object"/>
-          <property name="RECEIVED" value="[singleton]" type="object"/>
-          <property name="ACCEPTED" value="[singleton]" type="object"/>
-          <property name="REJECTED" value="[singleton]" type="object"/>
-          <property name="MODIFIED" value="[singleton]" type="object"/>
+          <property name="local-state " value="NONE" type="object" mutable="true">
+            The local delivery state.
+          </property>
+          
+          <property name="remote-state" value="NONE?" type="object">
+            The delivery state at the remote peer.
+          </property>
+          
+          <property name="NONE" value="[singleton]" type="@delivery-state">
+            
+          </property>
+          
+          <property name="RECEIVED" value="[singleton]" type="@delivery-state"/>
+          <property name="ACCEPTED" value="[singleton]" type="@delivery-state"/>
+          <property name="REJECTED" value="[singleton]" type="@delivery-state"/>
+          <property name="MODIFIED" value="[singleton]" type="@delivery-state"/>
+
+          <method name="accept">
+            Change the delivery state to ACCEPTED.
+          </method>
+
+          <method name="reject"/>
+          <method name="release"/>
+          <method name="modify"/>
+
+          <!-- <method name="send-update" -->
+        </group>
+
+        <group name="event-processing">
+          <property name="updated" type="boolean">
+          </property>
+
+          <property name="readable" type="boolean">
+          </property>
+
+          <property name="writable" type="boolean">
+          </property>
         </group>
       </class>
 
+      <class name="delivery-state" index="false">
+        Delivery state values
+      </class>
+
       <class name="message">
-        A mutable holder of message content.
+        A mutable holder of application content.
 
         <!-- XXX a message is a value object -->
 
