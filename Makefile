@@ -17,6 +17,6 @@ clean:
 publish: temp_dir := $(shell mktemp -d)
 publish:
 	chmod 755 ${temp_dir}
-	transom input ${temp_dir} --site-url "http://people.apache.org/~jross/pumpjack"
+	transom input ${temp_dir} --site-url "/~jross/pumpjack"
 	rsync -av ${temp_dir}/ jross@people.apache.org:public_html/pumpjack
 	rm -rf ${temp_dir}
