@@ -20,6 +20,7 @@
 from render import *
 
 import collections as _collections
+import markdown2 as _markdown2
 import os as _os
 import re as _re
 
@@ -39,15 +40,9 @@ class HtmlRenderer(PumpjackRenderer):
         print("Rendering {}".format(model))
 
         out.write(html_h(init_cap(model.title)))
-        out.write(_html_text(model.text))
-
-        items = list()
+        out.write(_html_node_text(model))
+        out.write(_html_node_links(model))
         
-        for link in model.links:
-            items.append(html_a(link[0], link[1]))
-
-        out.write(html_ul(items, class_="pumpjack links"))
-
         out.write(html_open("section"))
         out.write(html_h("Modules"))
 
@@ -76,7 +71,8 @@ class HtmlRenderer(PumpjackRenderer):
             out = PumpjackWriter(f)
 
             out.write(_html_node_title(module))
-            out.write(_html_text(module.text))
+            out.write(_html_node_text(module))
+            out.write(_html_node_links(module))
 
             for group in module.groups:
                 self.render_module_group(out, group)
@@ -88,6 +84,8 @@ class HtmlRenderer(PumpjackRenderer):
     def render_module_group(self, out, group):
         out.write(html_open("section"))
         out.write(html_h(group.title))
+        out.write(_html_node_text(group))
+        out.write(_html_node_links(group))
 
         items = list()
         items.append(("Class", "Summary"))
@@ -126,15 +124,9 @@ class HtmlRenderer(PumpjackRenderer):
             out = PumpjackWriter(f)
 
             out.write(_html_node_title(cls))
-            out.write(_html_text(cls.text))
+            out.write(_html_node_text(cls))
+            out.write(_html_node_links(cls))
 
-            items = list()
-            
-            for link in cls.links:
-                items.append(html_a(link[0], link[1]))
-
-            out.write(html_ul(items, class_="pumpjack links"))
-            
             for group in groups:
                 self.render_class_group(out, cls, group)
 
@@ -149,7 +141,8 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_open("section"))
 
         out.write(html_h(group.title))
-        out.write(_html_text(group.text))
+        out.write(_html_node_text(group))
+        out.write(_html_node_links(group))
 
         classes = _get_classes(cls)
         
@@ -222,7 +215,7 @@ class HtmlRenderer(PumpjackRenderer):
             out = PumpjackWriter(f)
                 
             out.write(_html_node_title(prop))
-            out.write(_html_text(prop.text))
+            out.write(_html_node_text(prop))
 
             items = (
                 ("Type", _html_parameter_type(prop)),
@@ -242,7 +235,8 @@ class HtmlRenderer(PumpjackRenderer):
             out = PumpjackWriter(f)
 
             out.write(_html_node_title(meth))
-            out.write(_html_text(meth.text))
+            out.write(_html_node_text(meth))
+            out.write(_html_node_links(meth))
 
             if meth.inputs:
                 self.render_method_inputs(out, meth)
@@ -292,6 +286,25 @@ def _html_node_link(node):
 def _html_node_summary(node):
     return first_sentence(node.text)
 
+_markdown_extras = {}
+_markdown = _markdown2.Markdown(extras=_markdown_extras)
+
+def _html_node_text(node):
+    if not node.text:
+        return ""
+
+    text = _dedent_text(node.text)
+    
+    return _markdown.convert(text)
+
+def _html_node_links(node):
+    items = list()
+    
+    for link in node.links:
+        items.append(html_a(link[0], link[1]))
+
+    return html_ul(items, class_="pumpjack links")
+
 def _html_parameter_type(param):
     type = _html_reference(param, param.type)
 
@@ -329,17 +342,32 @@ def _html_boolean(value):
         value = value == "true"
     
     return "&#x2612;" if value else "&#x2610;"
+
+def _dedent_text(text):
+    if text[0] == "\n":
+        text = text[1:]
+
+    lines = text.splitlines(True)
+
+    if len(lines) == 1:
+        return text
+
+    for line in lines[1:]:
+        if line == "\n":
+            continue
+        
+        for i, c in enumerate(line):
+            if not c == ' ':
+                break
+
+        trim_index = i
+
+        break
+
+    out = [lines[0]]
+    out += [l if l == "\n" else l[trim_index:] for l in lines[1:]]
     
-def _html_text(text):
-    if not text:
-        return ""
-
-    text = _re.sub("{", "<a href=\"\">", text) # XXX
-    text = _re.sub("}", "</a>", text)
-
-    text = _re.sub("\s*\n\s*\n\s*", " </p>\n\n<p>", text)
-
-    return "<p>{}</p>".format(text)
+    return "".join(out)
 
 def _open_output(path):
     parent, child = _os.path.split(path)

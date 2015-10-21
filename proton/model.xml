@@ -23,6 +23,15 @@
       <class name="container">
         A top-level container of messaging resources.
 
+        A container gives a unique identity to each communicating
+        peer.  It is often a process-level object.
+
+        It also serves as an API entry point to callback-based event
+        handling.  A container can be supplied with an event handler
+        in order to intercept important messaging events, such as
+        newly received messages or newly issued link credit for
+        sending messages.
+
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">AMQP definition</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/container_8h.html">C</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1container.html">C++</link>
@@ -92,6 +101,17 @@
 
       <class name="endpoint">
         The base class for session, connection, and link.
+
+        Every AMQP endpoint starts out in an uninitialized state and
+        then proceeds linearly to an active and then closed state.
+        This lifecycle occurs at both endpoints involved, and so the
+        state model for an endpoint includes not only the known local
+        state but also the last known state of the remote endpoint.
+
+        The local and remote peers each maintain a set of
+        corresponding local and remote endpoints.  Each peer evaluates
+        and reconciles remote endpoint state changes as they are
+        communicated over the wire.
 
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">AMQP definition</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
@@ -197,9 +217,19 @@
       </class>
       
       <class name="connection" type="@endpoint">
-        The basis for network communication; it contains sessions.
+        The basis for network communication; it contains sessions.  It
+        typically corresponds to a TCP connection.
 
-        <!-- XXX typically corresponds to a TCP connection. -->
+        A connection object contains zero or more session objects,
+        which in turn contain zero or more link objects.  Each link
+        object contains an ordered sequence of delivery objects.
+
+        <!--
+        The connection is the basis for discovering endpoint and
+        delivery state changes.
+        -->
+
+        <!-- What behaviors do you get by default? -->
         
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
@@ -379,7 +409,8 @@
       </class>
       
       <class name="link" type="@endpoint">
-        A named channel for sending or receiving messages.
+        A named channel for sending or receiving messages.  A link can
+        be a sender or a receiver, but never both.
 
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
@@ -479,7 +510,87 @@
       </class>
       
       <class name="delivery">
-        A message transfer.
+        A message transfer.  Every delivery exists within the context
+        of a link.
+
+        The AMQP model for settlement is based on the lifecycle of a
+        delivery at an endpoint. At each end of a link, a delivery is
+        created, it exists for some period of time, and finally it is
+        forgotten, that is "settled".  Note that because this
+        lifecycle happens independently at both the sender and the
+        receiver, there are four events of interest in the combined
+        lifecycle of a given delivery:
+
+         - Created at sender
+         - Created at receiver
+         - Settled at sender
+         - Settled at receiver
+
+        Because the sender and receiver are operating concurrently,
+        these events can occur in various orders, and the order of
+        these events impacts the types of failures that may occur when
+        transferring a delivery.  Eliminating scenarios where the
+        receiver creates the delivery first, we have the following
+        possible sequences of interest.
+
+        ### Sender presettles ("at most once" delivery)
+
+        1. Created at sender
+        2. Settled at sender
+        3. Created at receiver
+        4. Settled at receiver
+
+        In this configuration the sender settles (that is, forgets
+        about) the delivery before it even reaches the receiver, and
+        if anything should happen to the delivery in flight, there is
+        no basis for resending, hence the "at most once" semantics.
+
+        ### Receiver settles first ("at least once" delivery)
+
+        1. Created at sender
+        2. Created at receiver
+        3. Settled at receiver
+        4. Settled at sender
+
+        In this configuration the receiver settles the delivery first,
+        and the sender settles once it sees the receiver has settled.
+        Should anything happen to the delivery in flight, the sender
+        can resend.  The receiver, however, has already forgotten the
+        delivery, and a resend will be interpreted as a new delivery.
+
+        ### Receiver settles second ("exactly once" delivery)
+
+        1. Created at sender
+        2. Created at receiver
+        3. Settled at sender
+        4. Settled at receiver
+
+        In this configuration the receiver settles only once it has
+        seen that the sender has settled. This provides the sender the
+        option to retransmit, and the receiver has the option to
+        recognize (and discard) duplicates, allowing for "exactly
+        once" semantics.
+
+        Note that in the last scenario the sender needs some way to
+        know when it is safe to settle. This is where delivery state
+        comes in.  In addition to these lifecycle related events
+        surrounding deliveries there is also the notion of a delivery
+        state that can change over the lifetime of a delivery.
+
+        For example, it might start out as nothing, transition to
+        RECEIVED, and then transition to ACCEPTED.  In the first two
+        scenarios the delivery state isn't required.  In the last
+        scenario, however, the sender would trigger settlement based
+        on seeing the delivery state transition to a terminal state
+        such as ACCEPTED or REJECTED.
+
+        In practice, settlement is controlled by application policy,
+        so there are more options for settlement behavior.  For
+        example, a sender might not settle strictly based on what has
+        happened at the receiver.  It might also choose to impose some
+        time limit and settle after that period has expired, or it
+        could simply have a sliding window of the last N deliveries
+        and settle the oldest whenever a new one comes along.
 
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/group__delivery.html">C</link>
@@ -498,6 +609,10 @@
         </group>
 
         <group name="settlement" title="Settlement">
+          Settlement state governs how long a message transfer is
+          tracked at the local and remote peers, and when each can
+          safely consider the transfer resolved, that is "settled".
+          
           <property name="local-settled" value="false" type="boolean">
             True if the delivery has been settled locally.
           </property>
@@ -513,6 +628,11 @@
         </group>
 
         <group name="delivery-state" title="Delivery state">
+          Delivery states represent the current status or final
+          outcome of a message transfer. Every delivery contains both
+          a local and a remote delivery state.  The remote state
+          indicates the last known remote state of the delivery.
+          
           <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">AMQP defintion</link>
           
           <property name="local-state " value="NONE [?]" type="@delivery-state" mutable="true">
@@ -524,14 +644,29 @@
           </property>
           
           <property name="NONE" value="[singleton]" type="@delivery-state">
-            [?] The initial state before the delivery is transferred.
+            The initial state before any delivery data is transferred.
           </property>
           
-          <property name="RECEIVED" value="[singleton]" type="@delivery-state"/>
-          <property name="ACCEPTED" value="[singleton]" type="@delivery-state"/>
-          <property name="REJECTED" value="[singleton]" type="@delivery-state"/>
-          <property name="RELEASED" value="[singleton]" type="@delivery-state"/>
-          <property name="MODIFIED" value="[singleton]" type="@delivery-state"/>
+          <property name="RECEIVED" value="[singleton]" type="@delivery-state">
+            A non-terminal state indicating data has been received.
+          </property>
+
+          <property name="ACCEPTED" value="[singleton]" type="@delivery-state">
+            The delivery was successfully processed; terminal.
+          </property>
+
+          <property name="REJECTED" value="[singleton]" type="@delivery-state">
+            The delivery was invalid; terminal.
+          </property>
+
+          <property name="RELEASED" value="[singleton]" type="@delivery-state">
+            The delivery is returned to the sender; terminal.
+          </property>
+
+          <property name="MODIFIED" value="[singleton]" type="@delivery-state">
+            The delivery is returned to the sender for annotation
+            before further delivery attempts; terminal.
+          </property>
 
           <method name="accept">
             Change the delivery state to ACCEPTED.
@@ -672,6 +807,12 @@
       </class>
     </group>
 
+    <group name="connection-options" title="Connection options">
+      <class name="connection-option"/>
+      <class name="reconnect"/>
+      <class name="heartbeats"/>
+    </group>
+    
     <group name="link-options" title="Link options">
       <class name="link-option"/>
       <class name="at-most-once" type="@link-option"/>
