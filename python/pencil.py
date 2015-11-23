@@ -17,17 +17,19 @@
 # under the License.
 #
 
+import os as _os
 import re as _re
+import time as _time
+
+from pprint import pformat as _pformat
+from xml.sax.saxutils import escape as _xml_escape
+from xml.sax.saxutils import unescape as _xml_unescape
 
 # String formatting functions
 
-def shorten(s, max):
-    if len(s) < max:
-        return s
-    else:
-        return s[0:max]
-
 def nvl(value, substitution, template=None):
+    assert substitution is not None
+
     if value is None:
         return substitution
 
@@ -36,11 +38,26 @@ def nvl(value, substitution, template=None):
 
     return value
 
+def shorten(s, max):
+    if s is None:
+        return ""
+
+    assert max is not None
+    assert isinstance(max, int)
+    
+    if len(s) < max:
+        return s
+    else:
+        return s[0:max]
+
 def init_cap(s):
+    if s is None:
+        return ""
+    
     return s[0].upper() + s[1:]
 
 def first_sentence(text):
-    if not text:
+    if text is None:
         return ""
 
     match = _re.search(r"(.+?)\.\s+", text, _re.DOTALL)
@@ -53,10 +70,125 @@ def first_sentence(text):
     
     return match.group(1)
 
-# HTML functions
+def plural(noun, count=0):
+    if noun is None:
+        return ""
 
-from xml.sax.saxutils import escape as _xml_escape
-from xml.sax.saxutils import unescape as _xml_unescape
+    if count == 1:
+        return noun
+
+    if noun.endswith("s"):
+        return "{}ses".format(noun)
+
+    return "{}s".format(noun)
+
+def format_list(coll):
+    if not coll:
+        return
+
+    return ", ".join([_pformat(x) for x in coll])
+
+def format_dict(coll):
+    if not coll:
+        return
+
+    if not isinstance(coll, dict) and hasattr(coll, "__iter__"):
+        coll = dict(coll)
+
+    out = list()
+    key_len = max([len(str(x)) for x in coll])
+    key_len = min(48, key_len)
+    key_len += 2
+    indent = " " * (key_len + 2)
+    fmt = "%%-%ir  %%s" % key_len
+
+    for key in sorted(coll):
+        value = _pformat(coll[key])
+        value = value.replace("\n", "\n{}".format(indent))
+        args = key, value
+
+        out.append(fmt % args)
+
+    return _os.linesep.join(out)
+
+def format_repr(obj, *args):
+    cls = obj.__class__.__name__
+    strings = [str(x) for x in args]
+    return "{}({})".format(cls, ",".join(strings))
+
+_date_format = "%Y-%m-%d %H:%M:%S"
+
+def format_local_unixtime(utime=None):
+    if utime is None:
+        return
+
+    return _time.strftime(_date_format + " %Z", _time.localtime(utime))
+
+def format_local_unixtime_medium(utime):
+    if utime is None:
+        return
+
+    return _time.strftime("%d %b %H:%M", _time.localtime(utime))
+
+def format_local_unixtime_brief(utime):
+    if utime is None:
+        return
+
+    now = _time.time()
+
+    if utime > now - 86400:
+        fmt = "%H:%M"
+    else:
+        fmt = "%d %b"
+
+    return _time.strftime(fmt, _time.localtime(utime))
+
+def format_datetime(dtime):
+    if dtime is None:
+        return
+
+    return dtime.strftime(_date_format)
+
+# String-related utilities
+
+class StringCatalog(dict):
+    def __init__(self, path):
+        super().__init__()
+
+        self.path = "{}.strings".format(_os.path.splitext(path)[0])
+
+        with open(self.path) as file:
+            strings = self._parse(file)
+
+        self.update(strings)
+
+    def _parse(self, file):
+        strings = dict()
+        key = None
+        out = list()
+
+        for line in file:
+            line = line.rstrip()
+
+            if line.startswith("[") and line.endswith("]"):
+                if key:
+                    strings[key] = "".join(out).strip()
+
+                out = list()
+                key = line[1:-1]
+
+                continue
+
+            out.append(line)
+
+        strings[key] = _os.linesep.join(out).strip()
+
+        return strings
+
+    def __repr__(self):
+        return format_repr(self, self.path)
+
+# HTML functions
 
 _extra_entities = {
     '"': "&quot;",
@@ -75,6 +207,14 @@ def xml_unescape(string):
         return
 
     return _xml_unescape(string)
+
+_strip_tags_regex = _re.compile(r"<[^<]+?>")
+
+def strip_tags(string):
+    if string is None:
+        return
+
+    return re.sub(_strip_tags_regex, "", string)
 
 def _html_elem(tag, content, attrs):
     attrs = _html_attrs(attrs)
@@ -153,7 +293,7 @@ def html_section(content, **attrs):
     return _html_elem("section", content, attrs)
 
 def html_table(items, first_row_headings=True, first_col_headings=False,
-               **attrs):
+               escape_cell_data=False, **attrs):
     row_headings = list()
     rows = list()
 
@@ -169,6 +309,9 @@ def html_table(items, first_row_headings=True, first_col_headings=False,
         cols = list()
 
         for i, cell in enumerate(item):
+            if escape_cell_data:
+                cell = xml_escape(cell)
+            
             if i == 0 and first_col_headings:
                 cols.append(html_th(cell))
             else:
@@ -176,7 +319,7 @@ def html_table(items, first_row_headings=True, first_col_headings=False,
 
         rows.append(html_tr("".join(cols)))
 
-    tbody = html_elem("tbody", "".join(rows))
+    tbody = html_elem("tbody", "\n{}\n".format("\n".join(rows)))
         
     return _html_elem("table", tbody, attrs)
 

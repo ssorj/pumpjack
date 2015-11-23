@@ -12,6 +12,7 @@
   <link href="https://github.com/apache/qpid-proton/tree/master/proton-c/bindings/go">Go</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/book/overview.html">Python overview</link>
   
   <module name="core">
     The primary entry point for the event-driven API. Most
@@ -26,10 +27,10 @@
         A container gives a unique identity to each communicating
         peer.  It is often a process-level object.
 
-        It also serves as an API entry point to callback-based event
-        handling.  A container can be supplied with an event handler
-        in order to intercept important messaging events, such as
-        newly received messages or newly issued link credit for
+        It serves as an entry point to the API, allowing connections
+        and links to be established.  It can be supplied with an event
+        handler in order to intercept important messaging events, such
+        as newly received messages or newly issued link credit for
         sending messages.
 
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">AMQP definition</link>
@@ -39,23 +40,27 @@
         
         <group name="basic">
           <property name="id" value="[generated]" type="string">
-            A globally unique container identifier.
-          </property>
-
-          <property name="reactor" value="[instance]" type="@reactor">
-            The reactor associated with this container.
+            A globally unique container identifier.  It is used to
+            identify this container in any connections it establishes.
           </property>
 
           <method name="[constructor]">
             Create a new container.
 
-            <input name="id" value="[generated]" type="string" nullable="true"/>
+            <input name="id" value="[generated]" type="string" nullable="true">
+              Identifiers should be unique.  By default a UUID will be
+              used.
+            </input>
             <input name="handler" type="@event-handler" nullable="true"/>
             <output name="container" type="@container"/>
           </method>
 
           <method name="run">
-            Start processing events.
+            Start processing events.  It returns when all connections
+            and acceptors are closed.
+
+            <link node="@/proton/core/endpoint/close"/>
+            <link node="@acceptor"/>
           </method>
 
           <method name="connect">
@@ -347,6 +352,14 @@
           </property>
         </group>
         -->
+      </class>
+
+      <class name="acceptor">
+        A channel for accepting incoming connections.
+
+        <group name="basic">
+          <method name="close"/>
+        </group>
       </class>
 
       <class name="session" type="@endpoint">
@@ -841,11 +854,6 @@
       <class name="event-type"/>
       <class name="event-handler"/>
       <class name="messaging-handler"/>
-      <class name="reactor"/>
-      <class name="acceptor"/>
-      <class name="timer"/>
-      <class name="task"/>
-      <class name="selectable"/>
     </group>
 
     <group name="transport" title="Transport entities">

@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from render import *
+from .render import *
 
 class PythonRenderer(PumpjackRenderer):
     def __init__(self, output_dir):

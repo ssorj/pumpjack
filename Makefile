@@ -1,4 +1,4 @@
-.PHONY: help generate clean publish
+.PHONY: help generate clean publish update-pencil
 
 tmpdir := $(shell mktemp -d)
 pygments_style := monokai
@@ -20,3 +20,6 @@ publish:
 	transom input ${temp_dir} --site-url "/~jross/pumpjack"
 	rsync -av ${temp_dir}/ jross@people.apache.org:public_html/pumpjack
 	rm -rf ${temp_dir}
+
+update-pencil:
+	curl "https://raw.githubusercontent.com/ssorj/pencil/master/python/pencil.py" -o python/pencil.py

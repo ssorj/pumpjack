@@ -1,4 +1,3 @@
-#!/usr/bin/python
 #
 # Licensed to the Apache Software Foundation (ASF) under one
 # or more contributor license agreements.  See the NOTICE file
@@ -18,15 +17,13 @@
 # under the License.
 #
 
-from __future__ import print_function
-
-from format import *
+from pencil import *
 
 import os as _os
 
 from collections import defaultdict as _defaultdict
 
-class _Node(object):
+class _Node:
     def __init__(self, element, parent):
         self.element = element
 
@@ -44,6 +41,9 @@ class _Node(object):
         self.children = list()
         self.children_by_name = dict()
 
+        self.model = None
+        self.reference = None
+        
         if self.parent:
             if self.name in self.parent.children_by_name:
                 raise Exception("Collision! {}".format(self.name))
@@ -51,36 +51,44 @@ class _Node(object):
             self.parent.children.append(self)
             self.parent.children_by_name[self.name] = self
 
-        node = self
+            node = self
+            reference_items = [self.name]
+            
+            while node.parent:
+                node = node.parent
+                self.ancestors.append(node)
 
-        while node.parent:
-            node = node.parent
-            self.ancestors.append(node)
+                if not isinstance(node, _Group):
+                    reference_items.append(node.name)
 
-        self.model = node
+            self.model = node
 
+            self.reference = "@/{}".format("/".join(reversed(reference_items)))
+            self.model.nodes_by_reference[self.reference] = self
+        
     def __repr__(self):
-        return _format_repr(self, self.name)
+        return format_repr(self, self.reference)
 
     @property
     def abstract_path(self):
         raise NotImplementedError()
-    
-    def get_output_path(self, output_dir):
+
+    @property
+    def url(self): 
+        site_url="{{{{site_url}}}}" # XXX why doubled?
+        elems = [site_url] + list(self.abstract_path)
+        return "/".join(elems)
+
+    def output_path(self, output_dir):
         path = _os.path.join(output_dir, *self.abstract_path)
 
         return "{}.in".format(path)
-
-    def get_url(self, site_url="{{{{site_url}}}}"): # XXX why doubled?
-        elems = [site_url] + list(self.abstract_path)
-        return "/".join(elems)
 
     def process(self):
         print("Processing {}".format(self))
         
         self.process_properties()
         self.process_text()
-        self.process_links()
         self.process_annotations()
 
         for child in self.children:
@@ -99,16 +107,23 @@ class _Node(object):
         if text != "":
             self.text = text
 
-    def process_links(self):
-        for child in self.element.findall("link"):
-            self.links.append((child.text, child.attrib["href"]))
-
     def process_annotations(self):
         for child in self.element.findall("annotation"):
             self.annotations[child.attrib["name"]] = child.text
             
     def process_references(self):
         print("Processing references for {}".format(self))
+
+        for child in self.element.findall("link"):
+            if "node" in child.attrib:
+                node = self.resolve_reference(child.attrib["node"])
+                text = node.name
+                href = node.url
+            else:
+                text = child.text
+                href = child.attrib["href"]
+                
+            self.links.append((text, href))
 
         for child in self.children:
             child.process_references()
@@ -118,21 +133,31 @@ class _Node(object):
             raise Exception("'{}' doesn't look like a ref".format(ref))
 
         if ref.startswith("@/"):
-            path = ref[2:].split("/")[1:]
+            # path = ref[2:].split("/")[1:]
 
-            name = None
-            node = self.model
+            # name = None
+            # node = self.model
 
-            while path:
-                name = path.pop(0)
+            # while path:
+            #     name = path.pop(0)
 
-                try:
-                    node = node.children_by_name[name]
-                except KeyError:
-                    msg = "Cannot find child '{}' on node '{}'"
-                    raise Exception(msg.format(name, node.name))
+            #     try:
+            #         node = node.children_by_name[name]
+            #     except KeyError:
+            #         msg = "Cannot find child '{}' on node '{}' "
+            #         msg += "with children {}"
+            #         children = (["'{}'".format(x.name) for x in node.children])
+            #         children = ", ".join(children)
 
-            return node
+            #         raise Exception(msg.format(name, node.reference, children))
+
+            # return node
+
+            try:
+                return self.model.nodes_by_reference[ref]
+            except KeyError:
+                msg = "Cannot find reference '{}'"
+                raise Exception(msg.format(ref))
         else:
             module = None
 
@@ -155,12 +180,15 @@ class _Node(object):
 
                 return node
 
+class _Group(_Node):
+    pass
+        
 class _GroupDefinition(_Node):
     pass
 
 class _Module(_Node):
     def __init__(self, element, parent):
-        super(_Module, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.groups = list()
 
@@ -175,9 +203,9 @@ class _Module(_Node):
 
         super(_Module, self).process()
 
-class _ModuleGroup(_Node):
+class _ModuleGroup(_Group):
     def __init__(self, element, parent):
-        super(_ModuleGroup, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.module = parent
         
@@ -193,11 +221,11 @@ class _ModuleGroup(_Node):
             enum = _Enumeration(child, self)
             self.enumerations.append(enum)
 
-        super(_ModuleGroup, self).process()
+        super().process()
 
 class _Class(_Node):
     def __init__(self, element, parent):
-        super(_Class, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.group = parent
         self.module = self.group.parent
@@ -212,7 +240,7 @@ class _Class(_Node):
         return (self.module.name, self.name, "index.html")
         
     def process_properties(self):
-        super(_Class, self).process_properties()
+        super().process_properties()
 
         self.type = self.element.attrib.get("type")
         
@@ -222,17 +250,17 @@ class _Class(_Node):
             self.groups.append(group)
             self.groups_by_name[group.name] = group
 
-        super(_Class, self).process()
+        super().process()
 
     def process_references(self):
-        super(_Class, self).process_references()
+        super().process_references()
 
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
 
-class _ClassGroup(_Node):
+class _ClassGroup(_Group):
     def __init__(self, element, parent):
-        super(_ClassGroup, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.class_ = parent
 
@@ -253,10 +281,10 @@ class _ClassGroup(_Node):
             const = _Constant(child, self)
             self.constants.append(const)
 
-        super(_ClassGroup, self).process()
+        super().process()
         
     def process_references(self):
-        super(_ClassGroup, self).process_references()
+        super().process_references()
 
         if self.name in self.model.group_definitions_by_name:
             definition = self.model.group_definitions_by_name[self.name]
@@ -269,7 +297,7 @@ class _ClassGroup(_Node):
         
 class _ClassMember(_Node):
     def __init__(self, element, parent):
-        super(_ClassMember, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.group = parent
         self.class_ = self.group.parent
@@ -282,26 +310,22 @@ class _ClassMember(_Node):
 
 class _Parameter(_Node):
     def __init__(self, element, parent):
-        super(_Parameter, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.type = self.element.attrib.get("type")
         self.item_type = self.element.attrib.get("item-type")
         self.value = self.element.attrib.get("value")
         self.nullable = self.element.attrib.get("nullable", False)
 
-# class _Constant(_Parameter):
-#     def __init__(self, element, parent):
-#         super(_Constant, self).__init__(element, parent)
-
 class _Property(_ClassMember, _Parameter):
     def __init__(self, element, parent):
-        super(_Property, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.mutable = self.element.attrib.get("mutable", "false") == "true"
 
 class _Method(_ClassMember):
     def __init__(self, element, parent):
-        super(_Method, self).__init__(element, parent)
+        super().__init__(element, parent)
 
         self.inputs = list()
         self.outputs = list()
@@ -320,7 +344,7 @@ class _Method(_ClassMember):
             cond = _ErrorCondition(child, self)
             self.error_conditions.append(cond)
 
-        super(_Method, self).process()
+        super().process()
 
 class _ErrorCondition(_Node):
     def __init__(self, element, parent):
@@ -331,23 +355,24 @@ class _ErrorCondition(_Node):
     def process_references(self):
         self.error = self.resolve_reference(self.error_ref)
 
-        super(_ErrorCondition, self).process_references()
+        super().process_references()
 
 class _Error(_Node):
     def __init__(self, element, parent):
-        super(_Error, self).__init__(element, parent)
+        super().__init__(element, parent)
 
 class _Type(_Node):
     def __init__(self, element, parent):
-        super(_Type, self).__init__(element, parent)
+        super().__init__(element, parent)
 
 class Model(_Node):
     def __init__(self, element):
-        super(Model, self).__init__(element, None)
+        super().__init__(element, None)
 
         self.modules = list()
         self.types = list()
 
+        self.nodes_by_reference = dict()
         self.group_definitions_by_name = dict()
         self.type_names = set()
 
@@ -368,15 +393,9 @@ class Model(_Node):
             definition = _GroupDefinition(child, self)
             self.group_definitions_by_name[definition.name] = definition
 
-        super(Model, self).process()
+        super().process()
 
     def process_references(self):
-        super(Model, self).process_references()
+        super().process_references()
 
         self.type_names.update((x.name for x in self.types))
-
-def _format_repr(obj, *args):
-    cls = obj.__class__.__name__
-    strings = [str(x) for x in args]
-
-    return "{}({})".format(cls, ",".join(strings))

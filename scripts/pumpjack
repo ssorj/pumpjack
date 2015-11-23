@@ -1,4 +1,4 @@
-#!/usr/bin/python
+#!/usr/bin/python3
 
 import os
 import sys
@@ -39,7 +39,7 @@ def main():
     try:
         pump.load()
         pump.render(args.output_dir, args.renderer)
-    except PumpjackException, e:
+    except PumpjackException as e:
         sys.exit(str(e))
 
 if __name__ == "__main__":

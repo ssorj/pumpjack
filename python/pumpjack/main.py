@@ -17,8 +17,8 @@
 # under the License.
 #
 
-from html import *
-from python import *
+from .html import *
+from .python import *
 
 import os as _os
 
@@ -60,7 +60,7 @@ class Pumpjack(object):
 
         try:
             renderer.render(self.model)
-        except IOError, e:
+        except IOError as e:
             msg = "Cannot render: %s" % str(e)
             raise PumpjackException(msg)
 

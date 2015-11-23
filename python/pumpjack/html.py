@@ -17,7 +17,7 @@
 # under the License.
 #
 
-from render import *
+from .render import *
 
 import collections as _collections
 import markdown2 as _markdown2
@@ -29,7 +29,7 @@ class HtmlRenderer(PumpjackRenderer):
         super(HtmlRenderer, self).__init__(output_dir)
 
     def render(self, model):
-        output_path = model.get_output_path(self.output_dir)
+        output_path = model.output_path(self.output_dir)
         
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
@@ -63,7 +63,7 @@ class HtmlRenderer(PumpjackRenderer):
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        output_path = module.get_output_path(self.output_dir)
+        output_path = module.output_path(self.output_dir)
         
         print("Rendering {} to {}".format(module, output_path))
         
@@ -104,7 +104,7 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_close("section"))
 
     def render_class(self, out, cls):
-        output_path = cls.get_output_path(self.output_dir)
+        output_path = cls.output_path(self.output_dir)
         
         print("Rendering {} to {}".format(cls, output_path))
 
@@ -118,7 +118,7 @@ class HtmlRenderer(PumpjackRenderer):
         if "basic" in groups:
             basic_group = groups["basic"]
             del groups["basic"]
-            groups = [basic_group] + groups.values()
+            groups = [basic_group] + list(groups.values())
                 
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
@@ -207,7 +207,7 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_close("section"))
 
     def render_property(self, out, prop):
-        output_path = prop.get_output_path(self.output_dir)
+        output_path = prop.output_path(self.output_dir)
         
         print("Rendering {} to {}".format(prop, output_path))
 
@@ -227,7 +227,7 @@ class HtmlRenderer(PumpjackRenderer):
             out.write(html_table(items, False, True, class_="props"))
 
     def render_method(self, out, meth):
-        output_path = meth.get_output_path(self.output_dir)
+        output_path = meth.output_path(self.output_dir)
         
         print("Rendering {} to {}".format(meth, output_path))
 
@@ -281,7 +281,7 @@ def _html_node_title(node):
     return html_h(title, class_="pumpjack")
 
 def _html_node_link(node):
-    return html_a(_html_special(node.name), node.get_url())
+    return html_a(_html_special(node.name), node.url)
 
 def _html_node_summary(node):
     return first_sentence(node.text)
@@ -327,7 +327,7 @@ def _html_reference(node, ref):
         node = node.resolve_reference(ref)
 
         if node is not None:
-            return html_a(node.name, node.get_url())
+            return html_a(node.name, node.url)
 
     return ref
 
@@ -338,7 +338,7 @@ def _html_special(value):
     return value
 
 def _html_boolean(value):
-    if isinstance(value, basestring):
+    if isinstance(value, str):
         value = value == "true"
     
     return "&#x2612;" if value else "&#x2610;"

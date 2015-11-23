@@ -17,7 +17,8 @@
 # under the License.
 #
 
-from model import *
+from .format import *
+from .model import *
 
 import os as _os
 
