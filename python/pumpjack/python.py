@@ -207,4 +207,24 @@ class PythonRenderer(PumpjackRenderer):
     def render_type(self, out, type):
         out.write("# type {} -> {}", type.name, self.type_literals[type.name])
 
+def studly_name(name):
+    assert name
+
+    chars = list()
+    prev = None
+    curr = None
+
+    for i in range(len(name)):
+        curr = name[i]
+
+        if prev == "-":
+            curr = curr.upper()
+
+        if curr != "-":
+            chars.append(curr)
+
+        prev = curr
+
+    return "".join(chars)
+
 add_renderer("python", PythonRenderer)

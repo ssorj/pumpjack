@@ -17,7 +17,6 @@
 # under the License.
 #
 
-from .format import *
 from .model import *
 
 import os as _os
@@ -90,3 +89,13 @@ class PumpjackRenderer(object):
 
     def render_exception(self, out, exc):
         raise NotImplemented()
+
+class PumpjackWriter(object):
+    def __init__(self, out):
+        self.out = out
+
+    def write(self, s=None, *args):
+        if s is not None:
+            self.out.write(s.format(*args))
+
+        self.out.write("\n")
