@@ -117,7 +117,7 @@ class _Node:
         for child in self.element.findall("link"):
             if "node" in child.attrib:
                 node = self.resolve_reference(child.attrib["node"])
-                text = node.name
+                text = "{}.{}".format(node.parent.parent.name, node.name) # XXX
                 href = node.url
             else:
                 text = child.text
