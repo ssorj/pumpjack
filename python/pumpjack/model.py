@@ -133,31 +133,10 @@ class _Node:
             raise Exception("'{}' doesn't look like a ref".format(ref))
 
         if ref.startswith("@/"):
-            # path = ref[2:].split("/")[1:]
-
-            # name = None
-            # node = self.model
-
-            # while path:
-            #     name = path.pop(0)
-
-            #     try:
-            #         node = node.children_by_name[name]
-            #     except KeyError:
-            #         msg = "Cannot find child '{}' on node '{}' "
-            #         msg += "with children {}"
-            #         children = (["'{}'".format(x.name) for x in node.children])
-            #         children = ", ".join(children)
-
-            #         raise Exception(msg.format(name, node.reference, children))
-
-            # return node
-
             try:
                 return self.model.nodes_by_reference[ref]
             except KeyError:
-                msg = "Cannot find reference '{}'"
-                raise Exception(msg.format(ref))
+                raise Exception("Cannot find reference '{}'".format(ref))
         else:
             module = None
 
@@ -217,10 +196,6 @@ class _ModuleGroup(_Group):
             cls = _Class(child, self)
             self.classes.append(cls)
 
-        for child in self.element.findall("enumeration"):
-            enum = _Enumeration(child, self)
-            self.enumerations.append(enum)
-
         super().process()
 
 class _Class(_Node):
@@ -277,10 +252,6 @@ class _ClassGroup(_Group):
             meth = _Method(child, self)
             self.methods.append(meth)
 
-        for child in self.element.findall("constant"):
-            const = _Constant(child, self)
-            self.constants.append(const)
-
         super().process()
         
     def process_references(self):
@@ -305,7 +276,6 @@ class _ClassMember(_Node):
     @property
     def abstract_path(self):
         name = "{}.html".format(self.name)
-
         return (self.class_.module.name, self.class_.name, name)
 
 class _Parameter(_Node):
