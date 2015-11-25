@@ -18,6 +18,7 @@
 #
 
 from .render import *
+from .model import _Node
 
 import collections as _collections
 import markdown2 as _markdown2
@@ -274,6 +275,8 @@ class HtmlRenderer(PumpjackRenderer):
 add_renderer("html", HtmlRenderer)
 
 def _html_node_title(node):
+    assert isinstance(node, _Node), node
+    
     type = init_cap(node.node_type)
     name = html_span(node.name, class_="name")
     title = "{} {}".format(type, name)
@@ -281,15 +284,21 @@ def _html_node_title(node):
     return html_h(title, class_="pumpjack")
 
 def _html_node_link(node):
+    assert isinstance(node, _Node), node
+    
     return html_a(_html_special(node.name), node.url)
 
 def _html_node_summary(node):
+    assert isinstance(node, _Node), node
+    
     return first_sentence(node.text)
 
 _markdown_extras = {}
 _markdown = _markdown2.Markdown(extras=_markdown_extras)
 
 def _html_node_text(node):
+    assert isinstance(node, _Node), node
+    
     if not node.text:
         return ""
 
@@ -298,6 +307,8 @@ def _html_node_text(node):
     return _markdown.convert(text)
 
 def _html_node_links(node):
+    assert isinstance(node, _Node), node
+    
     items = list()
     
     for link in node.links:
@@ -323,6 +334,8 @@ def _html_parameter_value(param):
     return _html_special(param.value)
 
 def _html_reference(node, ref):
+    assert isinstance(node, _Node), node
+    
     if ref is not None and ref.startswith("@"):
         node = node.resolve_reference(ref)
 
