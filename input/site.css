@@ -57,12 +57,12 @@ table.pumpjack.classes th:nth-child(1) {
 }
 
 table.pumpjack.properties th:nth-child(1) {
-    width: 17.5%;
+    width: 20%;
 }
 
 table.pumpjack.properties th:nth-child(3),
 table.pumpjack.properties th:nth-child(4) {
-    width: 15%;
+    width: 12.5%;
 }
 
 table.pumpjack.properties th:nth-child(5),
@@ -71,11 +71,11 @@ table.pumpjack.properties th:nth-child(6) {
 }
 
 table.pumpjack.methods th:nth-child(1) {
-    width: 17.5%;
+    width: 20%;
 }
 
 table.pumpjack.methods th:nth-child(3) {
-    width: 30%;
+    width: 27.5%;
 }
 
 table.pumpjack.methods th:nth-child(4) {

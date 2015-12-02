@@ -540,6 +540,9 @@
         A message transfer.  Every delivery exists within the context
         of a link.
 
+        A delivery attempt can fail.  As a result, a particular
+        message may correspond to multiple deliveries.
+
         <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/group__delivery.html">C</link>
@@ -834,7 +837,6 @@
 
         <group name="basic">
           <property name="event-loop" type="@event-loop" value="[instance]"/>
-          <property name="engine" type="@engine" value="[instance]"/>
           <property name="container" type="@container" value="[instance]"/>
           <property name="connection" type="@connection" value="[instance]" nullable="true"/>
           <property name="session" type="@session" value="[instance]" nullable="true"/>
@@ -866,6 +868,9 @@
           </method>
 
           <method name="on-unhandled-error">
+            Called if an error handler function is not overriden to
+            handle an error.
+            
             <input name="event" type="@event"/>
           </method>
         </group>
@@ -875,18 +880,17 @@
         Dispatches events to event handlers.
 
         <group name="basic">
-          <property name="id [?]" value="[generated]" type="string">
-            A globally unique container identifier.  Any connections
-            managed by this event loop will have this container ID.
+          <property name="container" value="[instance]" type="@container">
+            The container associated with this event loop.
           </property>
         </group>
       </class>
       
-      <class name="engine" type="@event-loop">
+      <class name="connection-engine" type="@event-loop">
         An event loop for integrating with an existing IO framework.
         
-        An engine is an event_loop that manages a single AMQP
-        connection.  It provides a simple bytes in/bytes out
+        A connection-engine is an event_loop that manages a single
+        AMQP connection.  It provides a simple bytes in/bytes out
         interface. Incoming AMQP bytes from any kind of data
         connection are fed into the engine and processed to dispatch
         events to an event-handler. The resulting AMQP output data is
@@ -916,35 +920,143 @@
         concurrently in separate threads.
       </class>
       
-      <class name="messaging-handler">
+      <class name="messaging-handler" type="@event-handler">
+        The standard messaging event handler.
+        
         <group name="basic">
-          <method name="on-start"/>
-          <method name="on-message"/>
-          <method name="on-sendable"/>
-          <method name="on-disconnect"/>
+          <method name="on-start">
+            The event loop is starting.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-message">
+            A message is received.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-sendable">
+            The sender has credit and messages can therefore be
+            transferred.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-disconnect">
+            A network connection was disconnected.
+            
+            <input name="event" type="@event"/>
+          </method>
         </group>
 
-        <group name="more">
-          <method name="on-connection-open"/>
-          <method name="on-connection-close"/>
-          <method name="on-connection-error"/>
-          <method name="on-session-open"/>
-          <method name="on-session-close"/>
-          <method name="on-session-error"/>
-          <method name="on-link-open"/>
-          <method name="on-link-close"/>
-          <method name="on-link-error"/>
-          <method name="on-delivery-accept"/>
-          <method name="on-delivery-reject"/>
-          <method name="on-delivery-release"/>
-          <method name="on-delivery-settle"/>
+        <group name="endpoint-state">
+          <method name="on-connection-open">
+            The remote peer opened the connection.
+            
+            <input name="event" type="@event"/>
+          </method>
 
-          <method name="on-transaction-* [?]"/>
-          <method name="on-timer [?]"/>
-          <method name="on-request [?]"/>
-          <method name="on-response [?]"/>
-          <method name="on-records-inserted [?]"/>
-          <method name="on-id-loaded [?]"/>
+          <method name="on-connection-close">
+            The remote peer closed the connection.
+            
+            <input name="event" type="@event"/>
+          </method>
+            
+          <method name="on-connection-error">
+            The remote peer closed the connection with an error
+            condition.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-session-open">
+            The remote peer opened the session.
+            
+            <input name="event" type="@event"/>
+          </method>
+          
+          <method name="on-session-close">
+            The remote peer closed the session.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-session-error">
+            The remote peer closed the session with an error
+            condition.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-link-open">
+            The remote peer opened the link.
+            
+            <input name="event" type="@event"/>
+          </method>
+           
+          <method name="on-link-close">
+            The remote peer closed the link.
+            
+            <input name="event" type="@event"/>
+          </method>
+           
+          <method name="on-link-error">
+            The remote peer closed the link with an error condition.
+            
+            <input name="event" type="@event"/>
+          </method>
+        </group>
+
+        <group name="delivery-state">
+          <method name="on-delivery-accept">
+            The remote peer accepted an outgoing message.
+            
+            <input name="event" type="@event"/>
+          </method>
+          
+          <method name="on-delivery-reject">
+            The remote peer rejected an outgoing message.
+
+            XXX error condition
+            
+            <input name="event" type="@event"/>
+          </method>
+          
+          <method name="on-delivery-release">
+            The remote peer released an outgoing message.  Note that
+            this may be in response to either the RELEASE or MODIFIED
+            state as defined by the AMQP specification.
+            
+            <input name="event" type="@event"/>
+          </method>
+          
+          <method name="on-delivery-settle">
+            The remote peer settled an outgoing message.  This is the
+            point at which it should never be retransmitted.
+            
+            <input name="event" type="@event"/>
+          </method>
+        </group>
+
+        <group name="transactions">
+          <method name="on-transaction-commit">
+            The remote peer has committed a transaction.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-transaction-abort">
+            The remote peer has aborted a transaction.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-transaction-declare">
+            The remote peer has declared a transaction.
+            
+            <input name="event" type="@event"/>
+          </method>
         </group>
       </class>
     </group>
@@ -1005,6 +1117,9 @@
   <group-definition name="endpoint-state" title="Endpoint state">
   </group-definition>
 
+  <group-definition name="delivery-state" title="Delivery state">
+  </group-definition>
+
   <group-definition name="event-processing" title="Event processing">
   </group-definition>
 
@@ -1012,5 +1127,8 @@
   </group-definition>
 
   <group-definition name="flow-control" title="Flow control">
+  </group-definition>
+
+  <group-definition name="transactions" title="Transactions">
   </group-definition>
 </model>
