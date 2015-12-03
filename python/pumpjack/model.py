@@ -160,7 +160,17 @@ class _Node:
                 return node
 
 class _Group(_Node):
-    pass
+    def process_references(self):
+        super().process_references()
+
+        if self.name in self.model.group_definitions_by_name:
+            definition = self.model.group_definitions_by_name[self.name]
+        
+            if self.title is None:
+                self.title = definition.title
+
+            if self.text is None:
+                self.text = definition.text
         
 class _GroupDefinition(_Node):
     pass
@@ -253,18 +263,6 @@ class _ClassGroup(_Group):
             self.methods.append(meth)
 
         super().process()
-        
-    def process_references(self):
-        super().process_references()
-
-        if self.name in self.model.group_definitions_by_name:
-            definition = self.model.group_definitions_by_name[self.name]
-        
-            if self.title is None:
-                self.title = definition.title
-
-            if self.text is None:
-                self.text = definition.text
         
 class _ClassMember(_Node):
     def __init__(self, element, parent):
