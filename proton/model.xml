@@ -173,18 +173,6 @@
             Remote endpoint state.
           </property>
 
-          <property name="UNINITIALIZED" type="@endpoint-state" value="[singleton]">
-            The endpoint is uninitialized.
-          </property>
-
-          <property name="ACTIVE" type="@endpoint-state" value="[singleton]">
-            The endpoint is active.
-          </property>
-
-          <property name="CLOSED" type="@endpoint-state" value="[singleton]">
-            The endpoint is closed.
-          </property>
-
           <property name="local-condition" type="@condition" value="[instance]">
             The error condition of the local peer.
           </property>
@@ -197,6 +185,20 @@
 
       <class name="endpoint-state" hidden="true">
         Endpoint state values.
+
+        <group name="basic">
+          <property name="UNINITIALIZED" type="@endpoint-state" value="[singleton]">
+            The endpoint is uninitialized.
+          </property>
+
+          <property name="ACTIVE" type="@endpoint-state" value="[singleton]">
+            The endpoint is active.
+          </property>
+
+          <property name="CLOSED" type="@endpoint-state" value="[singleton]">
+            The endpoint is closed.
+          </property>
+        </group>
       </class>
       
       <class name="connection" type="@endpoint">
@@ -240,6 +242,14 @@
           <property name="transport" type="@transport" value="[instance]">
             The associated transport.
           </property>
+
+          <method name="send">
+            Send a message on the default session.
+
+            <input name="message" type="@message"/>
+            <input name="address" type="string" nullable="true"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
         </group>
 
         <group name="link-operations">
@@ -285,13 +295,13 @@
             The hostname of the remote peer.
           </property>
 
-          <property name="remote-properties" type="map [?]" value="[discovered]">
+          <property name="remote-properties" type="map" value="[discovered]">
           </property>
 
-          <property name="remote-desired-capabilities" type="map [?]" value="[discovered]">
+          <property name="remote-desired-capabilities" type="map" value="[discovered]">
           </property>
 
-          <property name="remote-offered-capabilities" type="map [?]" value="[discovered]">
+          <property name="remote-offered-capabilities" type="map" value="[discovered]">
           </property>
         </group>
 
@@ -302,7 +312,7 @@
             
             <input name="local-states" type="list" item-type="@endpoint-state"/>
             <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="results" type="iterator"/>
+            <output name="results" type="iterator" item-type="@session"/>
           </method>
 
           <method name="find-links">
@@ -311,14 +321,17 @@
 
             <input name="local-states" type="list" item-type="@endpoint-state"/>
             <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="results" type="iterator"/>
+            <output name="results" type="iterator" item-type="@link"/>
           </method>
 
-          <method name="find-updated-deliveries">
-            Find deliveries with unprocessed remote state.  The
-            results are scoped to deliveries on this connection.
+          <method name="find-deliveries">
+            Find deliveries in the specified states.  The results
+            are scoped to deliveries on this connection.
 
-            <output name="results" type="iterator"/>
+            <input name="updated" type="boolean"/>
+            <input name="readable" type="boolean"/>
+            <input name="writable" type="boolean"/>
+            <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
 
@@ -398,21 +411,25 @@
 
             <input name="local-states" type="list" item-type="@endpoint-state"/>
             <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="results" type="iterator"/>
+            <output name="results" type="iterator" item-type="@link"/>
           </method>
 
-          <method name="find-updated-deliveries">
-            Find deliveries with unprocessed remote state.  The
-            results are scoped to links on this session.
+          <method name="find-deliveries">
+            Find deliveries in the specified states.  The results
+            are scoped to deliveries on this session.
 
-            <output name="results" type="iterator"/>
+            <input name="updated" type="boolean"/>
+            <input name="readable" type="boolean"/>
+            <input name="writable" type="boolean"/>
+            <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
       </class>
       
       <class name="link" type="@endpoint">
         A named channel for sending or receiving messages.  A link can
-        be a sender or a receiver, but never both.
+        be a sender or a receiver, but never both.  A link contains an
+        ordered sequence of delivery objects.
 
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
@@ -458,7 +475,19 @@
           </property>
         </group>
 
-        <!-- queued -->
+        <group name="event-processing">
+          <method name="find-deliveries">
+            Find deliveries in the specified states.  The results
+            are scoped to deliveries on this session.
+
+            <input name="updated" type="boolean"/>
+            <input name="readable" type="boolean"/>
+            <input name="writable" type="boolean"/>
+            <output name="results" type="iterator" item-type="@delivery"/>
+          </method>
+        </group>
+
+        <!-- XXX queued -->
       </class>
 
       <class name="receiver" type="@link">
@@ -510,16 +539,67 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Terminus-class.html">Python</link>
         
         <group name="basic">
-          <property name="type" mutable="true"/>
+          <property name="type" type="@terminus-type" mutable="true"/>
           <property name="address" type="string" mutable="true"/>
         </group>
 
-        <group name="other">
+        <group name="dynamic-nodes" title="Dynamic nodes">
           <property name="dynamic" type="boolean" mutable="true"/>
-          <property name="distribution-mode" mutable="true"/>
-          <property name="expiry-policy" mutable="true"/>
-          <property name="durability" mutable="true"/>
+          <property name="dynamic-node-properties" type="map"/>
+        </group>
+
+        <group name="distribution" title="Distribution">
+          <property name="distribution-mode" type="@distribution-mode" mutable="true"/>
+          <property name="default-outcome"/>
+          <property name="outcomes" type="list"/>
+        </group>
+
+        <group name="expiration" title="Expiration">
+          <property name="expiry-policy" type="@expiry-policy" mutable="true"/>
+          <property name="timeout" mutable="true"/>
+        </group>
+        
+        <group name="more" title="More">
+          <property name="durability" type="@terminus-durability" mutable="true"/>
           <property name="filter" mutable="true"/>
+          <property name="capabilities" type="list"/>
+        </group>
+      </class>
+
+      <class name="terminus-type" hidden="true">
+        <group name="basic">
+          <property name="UNSPECIFIED" type="@terminus-type" value="[singleton]"/>
+          <property name="SOURCE" type="@terminus-type" value="[singleton]"/>
+          <property name="TARGET" type="@terminus-type" value="[singleton]"/>
+          <property name="COORDINATOR" type="@terminus-type" value="[singleton]"/>
+        </group>
+      </class>
+
+      <class name="terminus-durability" hidden="true">
+        <group name="basic">
+          <property name="NONE" type="@terminus-durability" value="[singleton]"/>
+          <property name="CONFIGURATION" type="@terminus-durability" value="[singleton]"/>
+          <property name="UNSETTLED-STATE" type="@terminus-durability" value="[singleton]"/>
+        </group>
+      </class>
+
+      <class name="distribution-mode" hidden="true">
+        <group name="basic">
+          <property name="UNSPECIFIED" type="@distribution-mode" value="[singleton]"/>
+          <property name="COPY" type="@distribution-mode" value="[singleton]"/>
+          <property name="MOVE" type="@distribution-mode" value="[singleton]"/>
+        </group>
+      </class>
+      
+      <class name="expiry-policy" hidden="true">
+        **XXX why are these completely different from the spec?**
+
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-expiry-policy">AMQP definition</link>
+        
+        <group name="basic">
+          <property name="NONDURABLE" type="@expiry-policy" value="[singleton]"/>
+          <property name="CONFIGURATION" type="@expiry-policy" value="[singleton]"/>
+          <property name="DELIVERIES" type="@expiry-policy" value="[singleton]"/>
         </group>
       </class>
       
@@ -677,9 +757,10 @@
             The identity of the user producing the message.
           </property>
           
-          <method name="create">
+          <method name="[constructor]">
             Create a new message.
-            
+
+            <input name="body" type="[?]"/>
             <output name="message" type="@message"/>
           </method>
           <method name="clear">
@@ -823,7 +904,14 @@
         <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
       </class>
       
-      <class name="dynamic-node-properties" type="@link-option"/>
+      <class name="dynamic-node-properties" type="@link-option">
+        Control the properties of nodes created on demand.
+
+        **XXX lifetime-policy, supported-dist-modes**
+        
+        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties"/>
+      </class>
+
       <class name="filter" type="@link-option"/>
       <class name="durable-subscription" type="@link-option"/>
       <class name="move" type="@link-option"/>
@@ -861,6 +949,8 @@
           </method>
 
           <method name="on-unhandled">
+            Fallback event handling.
+            
             Called if an event handler function is not overriden to
             handle an event.
 
@@ -868,6 +958,8 @@
           </method>
 
           <method name="on-unhandled-error">
+            Fallback error handling.
+            
             Called if an error handler function is not overriden to
             handle an error.
             
@@ -889,31 +981,33 @@
       <class name="connection-engine" type="@event-loop">
         An event loop for integrating with an existing IO framework.
         
-        A connection-engine is an event_loop that manages a single
+        A connection-engine is an `event-loop` that manages a single
         AMQP connection.  It provides a simple bytes in/bytes out
         interface. Incoming AMQP bytes from any kind of data
         connection are fed into the engine and processed to dispatch
-        events to an event-handler. The resulting AMQP output data is
-        available from the engine and can sent back over the
+        events to an `event-handler`. The resulting AMQP output data
+        is available from the engine and can sent back over the
         connection.
 
         The engine does no IO of its own. It assumes a two-way flow of
         bytes over some externally-managed "connection". The
-        "connection" could be a socket managed by select, poll, epoll
-        or some other mechanism, or it could be something else such as
-        an RDMA connection, a shared-memory buffer or a Unix pipe.
+        "connection" could be a socket managed by `select`, `poll`,
+        `epoll` or some other mechanism, or it could be something else
+        such as an RDMA connection, a shared-memory buffer or a Unix
+        pipe.
 
-        The engine is an alternative event-loop to the container. The
-        container is easier to use in single-threaded, standalone
-        applications that want to use standard socket connections. The
-        engine can be embedding into any existing IO framework for any
-        type of IO.
+        The engine is an alternative `event-loop` to the container
+        **[XXX revisit: substitute reactor?]**. The container is
+        easier to use in single-threaded, standalone applications that
+        want to use standard socket connections. The engine can be
+        embedding into any existing IO framework for any type of IO.
 
         The application is coded the same way for engine or container:
-        you implement event-handler. Handlers attached to an engine
-        will receive transport, connection, session, link and message
-        events. They will not receive reactor, selectable or timer
-        events, the engine assumes those are managed externally.
+        you implement `event-handler`. Handlers attached to an engine
+        will receive `transport`, `connection`, `session`, `link`, and
+        `message` events. They will not receive `reactor`,
+        `selectable`, or `timer` events, the engine assumes those are
+        managed externally.
 
         *Thread safety* - A single engine instance cannot be called
         concurrently, but different engine instances can be processed
@@ -937,6 +1031,8 @@
           </method>
 
           <method name="on-sendable">
+            A message can be sent.
+            
             The sender has credit and messages can therefore be
             transferred.
             

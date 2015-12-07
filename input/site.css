@@ -60,7 +60,10 @@ table.pumpjack.properties th:nth-child(1) {
     width: 20%;
 }
 
-table.pumpjack.properties th:nth-child(3),
+table.pumpjack.properties th:nth-child(3) {
+    width: 15%;
+}
+
 table.pumpjack.properties th:nth-child(4) {
     width: 12.5%;
 }
