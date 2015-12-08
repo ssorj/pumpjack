@@ -243,13 +243,9 @@ class _Class(_Node):
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
 
-        print(111)
-
         annotations = self.module.annotations
         
         if "class-link-function" in annotations:
-            print(222)
-            
             text_template = annotations["class-link-text-template"]
             href_template = annotations["class-link-href-template"]
             func = globals()[annotations["class-link-function"]]
@@ -257,8 +253,6 @@ class _Class(_Node):
             link = func(self, text_template, href_template)
 
             if link is not None:
-                print(333)
-                
                 self.links.append(link)
 
 class _ClassGroup(_Group):
