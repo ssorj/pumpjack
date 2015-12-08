@@ -243,6 +243,24 @@ class _Class(_Node):
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
 
+        print(111)
+
+        annotations = self.module.annotations
+        
+        if "class-link-function" in annotations:
+            print(222)
+            
+            text_template = annotations["class-link-text-template"]
+            href_template = annotations["class-link-href-template"]
+            func = globals()[annotations["class-link-function"]]
+            
+            link = func(self, text_template, href_template)
+
+            if link is not None:
+                print(333)
+                
+                self.links.append(link)
+
 class _ClassGroup(_Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
@@ -367,3 +385,12 @@ class Model(_Node):
         super().process_references()
 
         self.type_names.update((x.name for x in self.types))
+
+def _gen_amqp_type_link(class_, text_template, href_template):
+    if not class_.name.startswith("amqp-"):
+        return
+    
+    text = text_template
+    href = href_template.format(class_.name[5:])
+
+    return text, href

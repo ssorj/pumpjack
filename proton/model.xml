@@ -1184,31 +1184,35 @@
     applications, these classes will not be used directly.
 
     <annotation name="requires">internal</annotation>
+    <annotation name="class-link-text-template">AMQP definition</annotation>
+    <annotation name="class-link-href-template">https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#type-{}</annotation>
+    <annotation name="class-link-function">_gen_amqp_type_link</annotation>
 
     <group name="amqp-types" title="AMQP data types">
+      <class name="amqp-array"></class>
       <class name="amqp-binary"></class>
       <class name="amqp-boolean"></class>
-      <class name="amqp-null"></class>
-      <class name="amqp-ubyte"></class>
-      <class name="amqp-ushort"></class>
-      <class name="amqp-uint"></class>
-      <class name="amqp-ulong"></class>
       <class name="amqp-byte"></class>
-      <class name="amqp-short"></class>
-      <class name="amqp-int"></class>
-      <class name="amqp-long"></class>
-      <class name="amqp-float"></class>
-      <class name="amqp-double"></class>
+      <class name="amqp-char"></class>
+      <class name="amqp-decimal128"></class>
       <class name="amqp-decimal32"></class>
       <class name="amqp-decimal64"></class>
-      <class name="amqp-decimal128"></class>
-      <class name="amqp-char"></class>
-      <class name="amqp-timestamp"></class>
-      <class name="amqp-uuid"></class>
+      <class name="amqp-double"></class>
+      <class name="amqp-float"></class>
+      <class name="amqp-int"></class>
+      <class name="amqp-list"></class>
+      <class name="amqp-long"></class>
+      <class name="amqp-map"></class>
+      <class name="amqp-null"></class>
+      <class name="amqp-short"></class>
       <class name="amqp-string"></class>
       <class name="amqp-symbol"></class>
-      <class name="amqp-list"></class>
-      <class name="amqp-map"></class>
+      <class name="amqp-timestamp"></class>
+      <class name="amqp-ubyte"></class>
+      <class name="amqp-uint"></class>
+      <class name="amqp-ulong"></class>
+      <class name="amqp-ushort"></class>
+      <class name="amqp-uuid"></class>
     </group>
 
     <group name="codec" title="Encoding and decoding">
