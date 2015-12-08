@@ -541,27 +541,27 @@
         <group name="basic">
           <property name="type" type="@terminus-type" mutable="true"/>
           <property name="address" type="string" mutable="true"/>
-        </group>
-
-        <group name="dynamic-nodes" title="Dynamic nodes">
-          <property name="dynamic" type="boolean" mutable="true"/>
-          <property name="dynamic-node-properties" type="map"/>
-        </group>
-
-        <group name="distribution" title="Distribution">
-          <property name="distribution-mode" type="@distribution-mode" mutable="true"/>
+          <property name="durability" type="@terminus-durability" mutable="true"/>
           <property name="default-outcome"/>
           <property name="outcomes" type="list"/>
         </group>
 
-        <group name="expiration" title="Expiration">
+        <group name="distribution" title="Message distribution">
+          <property name="distribution-mode" type="@distribution-mode" mutable="true"/>
+          <property name="filter" mutable="true"/>
+        </group>
+
+        <group name="dynamic-nodes" title="Dynamic node creation">
+          <property name="dynamic" type="boolean" mutable="true"/>
+          <property name="dynamic-node-properties" type="map"/>
+        </group>
+
+        <group name="terminus-expiration" title="Terminus expiration">
           <property name="expiry-policy" type="@expiry-policy" mutable="true"/>
           <property name="timeout" mutable="true"/>
         </group>
         
-        <group name="more" title="More">
-          <property name="durability" type="@terminus-durability" mutable="true"/>
-          <property name="filter" mutable="true"/>
+        <group name="extended-attributes">
           <property name="capabilities" type="list"/>
         </group>
       </class>
@@ -831,7 +831,7 @@
           <property name="reply-to-group-id" mutable="true" nullable="true"/>
         </group>
 
-        <group name="extended-attributes" title="Extended attributes">
+        <group name="extended-attributes">
           <property name="application-properties" type="map"/>
           <property name="delivery-annotations" type="map"/>
           <property name="message-annotations" type="map"/>
@@ -1184,6 +1184,41 @@
     applications, these classes will not be used directly.
 
     <annotation name="requires">internal</annotation>
+
+    <group name="amqp-types" title="AMQP data types">
+      <class name="amqp-binary"></class>
+      <class name="amqp-boolean"></class>
+      <class name="amqp-null"></class>
+      <class name="amqp-ubyte"></class>
+      <class name="amqp-ushort"></class>
+      <class name="amqp-uint"></class>
+      <class name="amqp-ulong"></class>
+      <class name="amqp-byte"></class>
+      <class name="amqp-short"></class>
+      <class name="amqp-int"></class>
+      <class name="amqp-long"></class>
+      <class name="amqp-float"></class>
+      <class name="amqp-double"></class>
+      <class name="amqp-decimal32"></class>
+      <class name="amqp-decimal64"></class>
+      <class name="amqp-decimal128"></class>
+      <class name="amqp-char"></class>
+      <class name="amqp-timestamp"></class>
+      <class name="amqp-uuid"></class>
+      <class name="amqp-string"></class>
+      <class name="amqp-symbol"></class>
+      <class name="amqp-list"></class>
+      <class name="amqp-map"></class>
+    </group>
+
+    <group name="codec" title="Encoding and decoding">
+      <class name="value"></class>
+      <class name="value-type"></class>
+      <class name="encoder"></class>
+      <class name="encode-error"></class>
+      <class name="decoder"></class>
+      <class name="decode-error"></class>
+    </group>
   </module>
   
   <module name="internal">
@@ -1226,5 +1261,8 @@
   </group-definition>
 
   <group-definition name="transactions" title="Transactions">
+  </group-definition>
+
+  <group-definition name="extended-attributes" title="Extended attributes">
   </group-definition>
 </model>
