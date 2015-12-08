@@ -7,7 +7,6 @@
   programming languages.
 
   <link href="{{{{site_url}}}}/overview.html">Overview</link>
-  <link href="{{{{site_url}}}}/protocol-engines.html">Protocol engines</link>
   <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html">AMQP specification</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++</link>

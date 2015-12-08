@@ -28,5 +28,6 @@ at-most-once, at-least-once, or exactly-once.
 
  - [Delivery guarantees](delivery-guarantees.html)
  - [Protocol engines](protocol-engines.html)
+ - [API layout](api-layout.html)
 
 ;; XXX add an engine-oriented section
