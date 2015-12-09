@@ -26,8 +26,11 @@ class PythonRenderer(PumpjackRenderer):
         self.type_literals["string"] = "str"
         self.type_literals["boolean"] = "bool"
         self.type_literals["integer"] = "int"
-        self.type_literals["any"] = "object"
+        self.type_literals["object"] = "object"
         self.type_literals["class"] = "type"
+        self.type_literals["list"] = "list"
+        self.type_literals["map"] = "dict"
+        self.type_literals["iterator"] = "iterator" # XXX
 
     def render_class_name(self, cls):
         return init_cap(studly_name(cls.name))
@@ -51,59 +54,36 @@ class PythonRenderer(PumpjackRenderer):
         out.write("# Module {}", module.name)
         out.write()
 
-        for cls in module.classes:
-            self.render_class(out, cls)
-            out.write()
-
-        for exc in module.exceptions:
-            self.render_exception(out, exc)
-            out.write()
-
-        for enum in module.enumerations:
-            self.render_enumeration(out, enum)
-            out.write()
+        for group in module.groups:
+            for cls in group.classes:
+                self.render_class(out, cls)
+                out.write()
 
         out.write("# End of module {}", module.name)
 
     def render_class(self, out, cls):
         name = self.render_class_name(cls)
-        type = self.get_type_literal(cls, cls.type)
-
-        if cls.type is None:
-            type = "object"
+        type = "object"
+        
+        if cls.type is not None:
+            type = self.render_class_name(cls.type)
 
         out.write("class {}({}):", name, type)
         out.write("    \"\"\"")
-        out.write("    {}", cls.doc)
+        out.write("    {}", cls.text)
         out.write()
 
-        for group, methods in cls.methods_by_group.iteritems():
-            names = [self.render_method_name(x) for x in methods]
-            out.write("    @group {}: {}", group, ", ".join(names))
+        for group in cls.groups:
+            names = [self.render_method_name(x) for x in group.methods]
+            out.write("    @group {}: {}", group.name, ", ".join(names))
 
         out.write("    \"\"\"")
         out.write()
 
-        if cls.constants:
-            for const in cls.constants:
-                self.render_constant(out, const)
-
-            out.write()
-
-        if cls.enumerations:
-            for enum in cls.enumerations:
-                for const in enum.constants:
-                    self.render_constant(out, const)
-
+        for group in cls.groups:
+            for meth in group.methods:
+                self.render_method(out, meth)
                 out.write()
-
-        if cls.constructor:
-            self.render_constructor(out, cls.constructor)
-            out.write()
-
-        for meth in cls.methods:
-            self.render_method(out, meth)
-            out.write()
 
         out.write("    # End of class {}", name)
 
@@ -158,14 +138,14 @@ class PythonRenderer(PumpjackRenderer):
 
     def render_method_body(self, out, meth):
         out.write("        \"\"\"")
-        out.write("        {}", meth.doc)
+        out.write("        {}", meth.text)
         out.write()
 
         for input in meth.inputs:
             name = self.render_var_name(input)
 
-            if input.doc:
-                out.write("        @param {}: {}", name, input.doc)
+            if input.text:
+                out.write("        @param {}: {}", name, input.text)
 
             literal = self.get_type_literal(meth, input.type)
             out.write("        @type {}: {}", name, literal)
@@ -174,15 +154,15 @@ class PythonRenderer(PumpjackRenderer):
             output = meth.outputs[0]
             name = self.render_var_name(output)
 
-            if output.doc:
-                out.write("        @return: {}", name, output.doc)
+            if output.text:
+                out.write("        @return: {}", name, output.text)
 
             literal = self.get_type_literal(meth, output.type)
             out.write("        @rtype: {}", literal)
 
-        for cond in meth.exception_conditions:
-            cls = self.render_class_name(cond.exception)
-            out.write("        @raise {}: {}", cls, cond.doc)
+        # for cond in meth.exception_conditions:
+        #     cls = self.render_class_name(cond.exception)
+        #     out.write("        @raise {}: {}", cls, cond.doc)
 
         out.write("        \"\"\"")
 

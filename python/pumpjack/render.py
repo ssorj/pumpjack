@@ -50,12 +50,12 @@ class PumpjackRenderer(object):
         # XXX
         if ref is None:
             return
-
+        
         if ref.startswith("@"):
             cls = node.resolve_reference(ref)
             return self.render_class_name(cls)
         else:
-            return self.type_literals[ref]
+            return self.type_literals.get(ref, ref) # XXX
 
     def render_class_name(self, cls):
         return cls.name
