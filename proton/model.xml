@@ -442,6 +442,12 @@
           <property name="session" type="@session" value="[instance]">
             The containing session
           </property>
+
+          <method name="detach">
+            Detach a link without closing it.  For durable
+            subscriptions this means the subscription is inactive but
+            not canceled.
+          </method>
         </group>
 
         <group name="termini" title="Source and target">
@@ -921,11 +927,23 @@
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties"/>
       </class>
 
-      <class name="filter" type="@link-option"/>
-      <class name="durable-subscription" type="@link-option"/>
-      <class name="move" type="@link-option"/>
-      <class name="copy" type="@link-option"/>
-      <class name="browse" type="@copy"/>
+      <class name="filter" type="@link-option">
+      </class>
+        
+      <class name="durable-subscription" type="@link-option">
+      </class>
+
+      <class name="move" type="@link-option">
+        Acquire and consume messages as they are received.
+      </class>
+
+      <class name="copy" type="@link-option">
+        Read but do not consume received messages.
+      </class>
+
+      <class name="browse" type="@copy">
+        An alias for copy.
+      </class>
     </group>
 
     <group name="event-processing">
@@ -948,15 +966,7 @@
       <class name="event-handler">
         The base event handler.
 
-        [?] What is a child event handler?  When does it get called?
-
         <group name="basic"> <!-- XXX somehow this only works with basic -->
-          <method name="add-child">
-            Add a child event handler.
-
-            <input name="child" type="@event-handler"/>
-          </method>
-
           <method name="on-unhandled">
             Fallback event handling.
             
@@ -1145,6 +1155,12 @@
         </group>
 
         <group name="transactions">
+          <method name="on-transaction-declare">
+            The remote peer has declared a transaction.
+            
+            <input name="event" type="@event"/>
+          </method>
+
           <method name="on-transaction-commit">
             The remote peer has committed a transaction.
             
@@ -1156,10 +1172,16 @@
             
             <input name="event" type="@event"/>
           </method>
+        </group>
 
-          <method name="on-transaction-declare">
-            The remote peer has declared a transaction.
-            
+        <group name="timers" title="Timers">
+          <method name="on-timer">
+            <input name="event" type="@event"/>
+          </method>
+        </group>
+
+        <group name="application-events" title="Application events">
+          <method name="on-application-event">
             <input name="event" type="@event"/>
           </method>
         </group>
