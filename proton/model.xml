@@ -296,12 +296,6 @@
 
           <property name="remote-properties" type="map" value="[discovered]">
           </property>
-
-          <property name="remote-desired-capabilities" type="map" value="[discovered]">
-          </property>
-
-          <property name="remote-offered-capabilities" type="map" value="[discovered]">
-          </property>
         </group>
 
         <group name="event-processing">
@@ -334,23 +328,23 @@
           </method>
         </group>
 
-        <!--
-        <group name="connection-capabilities" title="Connection capabilities">
-          <property name="offered-capabilities" type="list">
-            Extension capabilities the connection initiator supports.
+        <group name="extended-attributes">
+          <property name="local-offered-capabilities" type="list [?]">
+            Extensions the local peer supports.
           </property>
           
-          <property name="desired-capabilities" type="list">
-            Extension capabilities the connection initiator can use.
+          <property name="local-desired-capabilities" type="list">
+            Extensions the local peer can use.
           </property>
 
-          <property name="remote-offered-capabilities">
+          <property name="remote-offered-capabilities" value="[discovered]" type="list">
+            Extensions the remote peer supports.
           </property>
           
-          <property name="remote-desired-capabilities">
+          <property name="remote-desired-capabilities" value="[discovered]" type="list">
+            Extensions the remote peer can use.
           </property>
         </group>
-        -->
       </class>
 
       <class name="acceptor">
@@ -541,8 +535,17 @@
           <property name="type" type="@terminus-type" mutable="true"/>
           <property name="address" type="string" mutable="true"/>
           <property name="durability" type="@terminus-durability" mutable="true"/>
-          <property name="default-outcome"/>
-          <property name="outcomes" type="list"/>
+
+          <property name="default-outcome" type="symbol">
+            The default delivery state.  It indicates the outcome to
+            be used for transfers that have not reached a terminal
+            state at the receiver when the transfer is settled,
+            including when the source is destroyed.
+          </property>
+
+          <property name="outcomes" type="list" item-type="symbol">
+            The delivery states allowed for this terminus.
+          </property>
         </group>
 
         <group name="distribution" title="Message distribution">
@@ -551,8 +554,13 @@
         </group>
 
         <group name="dynamic-nodes" title="Dynamic node creation">
-          <property name="dynamic" type="boolean" mutable="true"/>
-          <property name="dynamic-node-properties" type="map"/>
+          <property name="dynamic" type="boolean" mutable="true">
+            Request creation of a remote node.
+          </property>
+          
+          <property name="dynamic-node-properties" type="map">
+            Properties of the created node.
+          </property>
         </group>
 
         <group name="terminus-expiration" title="Terminus expiration">
@@ -561,7 +569,9 @@
         </group>
         
         <group name="extended-attributes">
-          <property name="capabilities" type="list"/>
+          <property name="capabilities" type="list">
+            Extensions supported or desired.
+          </property>
         </group>
       </class>
 
@@ -1187,31 +1197,42 @@
     <annotation name="class-link-href-template">https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#type-{}</annotation>
     <annotation name="class-link-function">_gen_amqp_type_link</annotation>
 
-    <group name="amqp-types" title="AMQP data types">
-      <class name="amqp-array"></class>
-      <class name="amqp-binary"></class>
-      <class name="amqp-boolean"></class>
-      <class name="amqp-byte"></class>
-      <class name="amqp-char"></class>
-      <class name="amqp-decimal128"></class>
-      <class name="amqp-decimal32"></class>
-      <class name="amqp-decimal64"></class>
-      <class name="amqp-double"></class>
-      <class name="amqp-float"></class>
-      <class name="amqp-int"></class>
-      <class name="amqp-list"></class>
-      <class name="amqp-long"></class>
-      <class name="amqp-map"></class>
-      <class name="amqp-null"></class>
-      <class name="amqp-short"></class>
-      <class name="amqp-string"></class>
-      <class name="amqp-symbol"></class>
-      <class name="amqp-timestamp"></class>
-      <class name="amqp-ubyte"></class>
-      <class name="amqp-uint"></class>
-      <class name="amqp-ulong"></class>
-      <class name="amqp-ushort"></class>
-      <class name="amqp-uuid"></class>
+    <group name="basic-scalar-types" title="Scalar data types">
+      <class name="amqp-null">An empty value.</class>
+      <class name="amqp-boolean">A true or false value.</class>
+      <class name="amqp-char">A single Unicode character.</class>
+      <class name="amqp-string">A sequence of Unicode characters.</class>
+      <class name="amqp-binary">A sequence of bytes.</class>
+      <class name="amqp-float">A 32-bit floating point number.</class>
+      <class name="amqp-double">A 64-bit floating point number.</class>
+      <class name="amqp-byte">A signed 8-bit integer.</class>
+      <class name="amqp-short">A signed 16-bit integer.</class>
+      <class name="amqp-int">A signed 32-bit integer.</class>
+      <class name="amqp-long">A signed 64-bit integer.</class>
+      <class name="amqp-ubyte">An unsigned 8-bit integer.</class>
+      <class name="amqp-ushort">An unsigned 16-bit integer.</class>
+      <class name="amqp-uint">An unsigned 32-bit integer.</class>
+      <class name="amqp-ulong">An unsigned 64-bit integer.</class>
+    </group>
+
+    <group name="composite-types" title="Composite data types">
+      <class name="amqp-array">A sequence of values of a single type.</class>
+      <class name="amqp-list">A sequence of values of variable type.</class>
+      <class name="amqp-map">A mapping from distinct keys to values.</class>
+    </group>
+
+    <group name="semantic-types" title="Semantic data types">
+      <class name="amqp-symbol">A symbolic value from a constrained domain.</class>
+      <class name="amqp-timestamp">An absolute point in time.</class>
+      <class name="amqp-uuid">A universally unique identifier.</class>
+    </group>
+
+    <group name="decimal-types" title="Decimal floating point data types">
+      <link href="https://en.wikipedia.org/wiki/Decimal_floating_point">Decimal floating point</link>
+      
+      <class name="amqp-decimal32">A 32-bit decimal floating point number.</class>
+      <class name="amqp-decimal64">A 64-bit decimal floating point number.</class>
+      <class name="amqp-decimal128">A 128-bit decimal floating point number.</class>
     </group>
 
     <group name="codec" title="Encoding and decoding">
