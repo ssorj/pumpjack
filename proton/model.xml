@@ -775,7 +775,7 @@
           <method name="[constructor]">
             Create a new message.
 
-            <input name="body" type="[?]"/>
+            <input name="body" type="object"/>
             <output name="message" type="@message"/>
           </method>
           <method name="clear">
