@@ -4,8 +4,8 @@ tmpdir := $(shell mktemp -d)
 pygments_style := monokai
 
 generate: clean
-	scripts/pumpjack -r html -i proton -o input
-	transom input output
+	PYTHONPATH=${PWD}/python scripts/pumpjack -r html -i proton -o input
+	transom input output --site-url "file://${PWD}/output"
 
 help:
 	@echo "generate, clean, publish"

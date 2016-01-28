@@ -30,9 +30,9 @@
 
         It serves as an entry point to the API, allowing connections
         and links to be established.  It can be supplied with an event
-        handler in order to intercept important messaging events, such
-        as newly received messages or newly issued link credit for
-        sending messages.
+        handler in order to intercept important events, such as newly
+        received messages or newly issued link credit for sending
+        messages.
 
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">AMQP definition</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/container_8h.html">C</link>
@@ -45,18 +45,26 @@
             identify this container in any connections it establishes.
           </property>
 
-          <property name="event-loop" value="[instance]" type="@event-loop">
-            The underlying event loop for this container.
+          <property name="handler" value="[instance]" type="@handler" nullable="true">
+            The main event handler.
           </property>
 
-          <property name="event-handler" value="[instance]" type="@event-handler" nullable="true">
-            The main event handler.
+          <property name="client-connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
+            Default settings for new outbound connections.
+          </property>
+
+          <property name="server-connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
+            Default settings for new inbound connections.
+          </property>
+
+          <property name="link-options" value="[instance]" type="list" item-type="@link-option" mutable="true">
+            Default settings for new links.
           </property>
 
           <method name="[constructor]">
             Create a new container.
 
-            <input name="handler" type="@event-handler" nullable="true">
+            <input name="handler" type="@handler" nullable="true">
               The main event handler for this container.
             </input>
             
@@ -72,49 +80,60 @@
             Start processing events.  It returns when all connections
             and acceptors are closed.
 
-            <link node="@/proton/core/endpoint/close"/>
+            <link node="@/proton/core/connection/close"/>
             <link node="@acceptor"/>
           </method>
 
           <method name="connect">
-            Initiate the establishment of an AMQP connection.
+            Create and open an outbound connection.
 
-            [?] How do we know when the operation is complete?
-            on-connection-open?
+            The operation is complete when on-connection-open fires.
+
+            <link node="@/proton/core/handler/on-connection-open"/>
             
             <input name="url" type="@url"/>
             <output name="connection" type="@connection"/>
             <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
           </method>
           
           <method name="listen">
-            Initiate a server socket, accepting incoming AMQP
-            connections.
+            Listen for incoming connections.
+            
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
             
             <input name="url" type="@url"/>
             <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="acceptor" type="@acceptor"/>
           </method>
         </group>
 
         <group name="link-operations">
           <method name="open-receiver">
-            Create and initiate opening of a receiving link.
+            Create and open a receiving link.
+            
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
             
             <input name="url" type="@url"/>
             <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
           <method name="open-sender">
-            Create and initiate opening of a sending link.
+            Create and open a sending link.
 
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
+            
             <input name="url" type="@url"/>
             <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
@@ -134,6 +153,11 @@
         and reconciles remote endpoint state changes as they are
         communicated over the wire.
 
+        <link node="@/proton/core/connection"/>
+        <link node="@/proton/core/session"/>
+        <link node="@/proton/core/sender"/>
+        <link node="@/proton/core/receiver"/>
+
         <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">AMQP definition</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1endpoint.html">C++</link>
@@ -141,28 +165,8 @@
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
 
         <group name="basic">
-          <method name="open">
-            Initiate endpoint open.
-
-            This moves the local state of the endpoint to ACTIVE and
-            triggers an opening frame to be sent to the peer.  An
-            endpoint is fully active once both peers have opened it.
-
-            [?] How is ^^ reflected in the API?
-          </method>
-
-          <method name="close">
-            Initiate endpoint close.
-
-            This moves the local state of the endpoint to CLOSED and
-            triggers a closing frame to be sent to the peer.  An
-            endpoint is fully shut down once both peers have closed
-            it.
-
-            [?] How is ^^ reflected in the API?
-          </method>
         </group>
-
+        
         <group name="endpoint-state">
           <property name="local-state" type="@endpoint-state" value="UNINITIALIZED">
             Local endpoint state.
@@ -201,8 +205,10 @@
       </class>
       
       <class name="connection" type="@endpoint">
-        The basis for network communication; it contains sessions.  It
-        typically corresponds to a TCP connection.
+        A top-level channel for communication.
+        
+        In current implementations, a connection corresponds to a TCP
+        connection, represented by a transport.
 
         A connection object contains zero or more session objects,
         which in turn contain zero or more link objects.  Each link
@@ -214,6 +220,9 @@
         -->
 
         <!-- What behaviors do you get by default? -->
+
+        <link node="@transport"/>
+        <link node="@session"/>
         
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
@@ -222,18 +231,6 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
         <group name="basic">
-          <property name="hostname" type="string" mutable="true">
-            The name of the remote peer.
-          </property>
-
-          <property name="user" type="string" mutable="true" nullable="true">
-            The user name for authentication.
-          </property>
-
-          <property name="password" type="string" mutable="true" nullable="true">
-            The password for authentication.
-          </property>
-
           <property name="container" type="@container" value="[instance]">
             The container which holds this connection.
           </property>
@@ -241,6 +238,24 @@
           <property name="transport" type="@transport" value="[instance]">
             The associated transport.
           </property>
+
+          <method name="open">
+            Open the connection.
+
+            The operation is complete when on-connection-open fires.
+
+            <link node="@/proton/core/handler/on-connection-open"/>
+
+            <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
+          </method>
+
+          <method name="close">
+            Close the connection.
+
+            The operation is complete when on-connection-close fires.
+            
+            <link node="@/proton/core/handler/on-connection-close"/>
+          </method>
 
           <method name="send">
             Send a message on the default session.
@@ -255,18 +270,26 @@
           <method name="open-sender">
             Create and open a sender using the default session.
 
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
+
             <input name="address" type="string"/>
             <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
 
           <method name="open-receiver">
             Create and open a receiver using the default session.
 
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
+
             <input name="address" type="string"/>
             <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
         </group>
@@ -280,21 +303,34 @@
             Create and initiate opening the session.
 
             <input name="options" value="[empty list]" type="list" item-type="session-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="session" type="@session"/>
           </method>
         </group>
         
         <group name="endpoint-state">
+          <property name="local-container-id" type="string">
+            The unique identity of the remote container.
+          </property>
+          
           <property name="remote-container-id" type="string" value="[discovered]">
             The unique identity of the remote container.
           </property>
           
-          <property name="remote-hostname" type="string" value="[discovered]">
-            The hostname of the remote peer.
+          <property name="local-host" type="string">
+            The name of the remote peer.
           </property>
 
-          <property name="remote-properties" type="map" value="[discovered]">
+          <property name="remote-host" type="string" value="[discovered]">
+            The name of the remote peer.
+          </property>
+
+          <property name="local-user" type="string">
+            The user name for authentication.
+          </property>
+
+          <property name="remote-user" type="string" value="[discovered]">
+            The user name for authentication.
           </property>
         </group>
 
@@ -329,18 +365,24 @@
         </group>
 
         <group name="extended-attributes">
-          <property name="local-offered-capabilities" type="list [?]">
+          <property name="local-properties" type="map">
+          </property>
+
+          <property name="remote-properties" type="map" value="[discovered]">
+          </property>
+
+          <property name="local-offered-capabilities" type="list">
             Extensions the local peer supports.
+          </property>
+          
+          <property name="remote-offered-capabilities" value="[discovered]" type="list">
+            Extensions the remote peer supports.
           </property>
           
           <property name="local-desired-capabilities" type="list">
             Extensions the local peer can use.
           </property>
 
-          <property name="remote-offered-capabilities" value="[discovered]" type="list">
-            Extensions the remote peer supports.
-          </property>
-          
           <property name="remote-desired-capabilities" value="[discovered]" type="list">
             Extensions the remote peer can use.
           </property>
@@ -348,18 +390,25 @@
       </class>
 
       <class name="acceptor">
-        A channel for accepting incoming connections.
+        A context for accepting inbound connections.
 
         <link node="@/proton/core/container/listen"/>
 
         <group name="basic">
           <method name="close"/>
+
+          <property name="connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
+            Default settings for new inbound connections.
+          </property>
         </group>
       </class>
 
       <class name="session" type="@endpoint">
         A container of links.
 
+        <link node="@connection"/>
+        <link node="@link"/>
+        
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
@@ -370,24 +419,40 @@
           <property name="connection" type="@connection" value="[instance]">
             The containing connection.
           </property>
+
+          <method name="close">
+            Close the session.
+
+            The operation is complete when on-session-close fires.
+            
+            <link node="@/proton/core/handler/on-session-close"/>
+          </method>
         </group>
 
         <group name="link-operations">
           <method name="open-receiver">
-            Create and initiate opening of a receiving link.
+            Create and open a receiving link.
+
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
             
             <input name="address" type="string"/>
             <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
           <method name="open-sender">
-            Create and initiate opening of a sending link.
+            Create and open a sending link.
+
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
 
             <input name="address" type="string"/>
             <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@event-handler" nullable="true"/>
+            <input name="handler" type="@handler" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
@@ -395,6 +460,13 @@
         <group name="flow-control">
           <property name="incoming-bytes" type="integer"/>
           <property name="outgoing-bytes" type="integer"/>
+        </group>
+
+        <group name="endpoint-state">
+          <property name="local-incoming-window" type="integer" mutable="true"/>
+          <property name="remote-incoming-window" type="integer" value="[discovered]"/>
+          <property name="local-outgoing-window" type="integer" mutable="true"/>
+          <property name="remote-outgoing-window" type="integer" value="[discovered]"/>
         </group>
 
         <group name="event-processing">
@@ -424,6 +496,11 @@
         be a sender or a receiver, but never both.  A link contains an
         ordered sequence of delivery objects.
 
+        <link node="@session"/>
+        <link node="@sender"/>
+        <link node="@receiver"/>
+        <link node="@delivery"/>
+
         <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
@@ -447,6 +524,14 @@
             Detach a link without closing it.  For durable
             subscriptions this means the subscription is inactive but
             not canceled.
+          </method>
+
+          <method name="close">
+            Close the link.
+
+            The operation is complete when on-link-close fires.
+            
+            <link node="@/proton/core/handler/on-link-close"/>
           </method>
         </group>
 
@@ -497,16 +582,19 @@
         </group>
         
         <group name="flow-control">
-          <method name="flow">
+          <method name="add-credit">
             Issue credit on the link.  This increases the credit
             issued to the remote sender by the specified number of
             messages.
 
             <input name="count" type="integer"/>
           </method>
-
-          <method name="drain"/>
-          <method name="draining [?]"/>
+          
+          <method name="release-credit">
+            Release credit on the link.  This tells the sender to use
+            all existing credit immediately to send deliveries and
+            then discard any excess credit.
+          </method>
         </group>
       </class>
       
@@ -519,12 +607,6 @@
 
             <input name="message" type="@message"/>
             <output name="delivery" type="@delivery"/>
-          </method>
-        </group>
-
-        <group name="flow-control">
-          <method name="offer [offered?]">
-            <input name="count" type="integer"/>
           </method>
         </group>
       </class>
@@ -948,10 +1030,12 @@
 
     <group name="event-processing">
       <class name="event">
-        The Proton event object.
+        The Proton event object.  It is passed to the methods on
+        handler.
+
+        <link node="@handler"/>
 
         <group name="basic">
-          <property name="event-loop" type="@event-loop" value="[instance]"/>
           <property name="container" type="@container" value="[instance]"/>
           <property name="connection" type="@connection" value="[instance]" nullable="true"/>
           <property name="session" type="@session" value="[instance]" nullable="true"/>
@@ -963,8 +1047,11 @@
         </group>
       </class>
       
-      <class name="event-handler">
-        The base event handler.
+      <class name="handler">
+        The Proton event handler.  It allows users to intercept and
+        change Proton behaviors.
+
+        <link node="@event"/>
 
         <group name="basic"> <!-- XXX somehow this only works with basic -->
           <method name="on-unhandled">
@@ -984,59 +1071,7 @@
             
             <input name="event" type="@event"/>
           </method>
-        </group>
-      </class>
 
-      <class name="event-loop">
-        Dispatches events to event handlers.
-
-        <group name="basic">
-          <property name="container" value="[instance]" type="@container">
-            The container associated with this event loop.
-          </property>
-        </group>
-      </class>
-      
-      <class name="connection-engine" type="@event-loop">
-        An event loop for integrating with an existing IO framework.
-        
-        A connection-engine is an `event-loop` that manages a single
-        AMQP connection.  It provides a simple bytes in/bytes out
-        interface. Incoming AMQP bytes from any kind of data
-        connection are fed into the engine and processed to dispatch
-        events to an `event-handler`. The resulting AMQP output data
-        is available from the engine and can sent back over the
-        connection.
-
-        The engine does no IO of its own. It assumes a two-way flow of
-        bytes over some externally-managed "connection". The
-        "connection" could be a socket managed by `select`, `poll`,
-        `epoll` or some other mechanism, or it could be something else
-        such as an RDMA connection, a shared-memory buffer or a Unix
-        pipe.
-
-        The engine is an alternative `event-loop` to the container
-        **[XXX revisit: substitute reactor?]**. The container is
-        easier to use in single-threaded, standalone applications that
-        want to use standard socket connections. The engine can be
-        embedding into any existing IO framework for any type of IO.
-
-        The application is coded the same way for engine or container:
-        you implement `event-handler`. Handlers attached to an engine
-        will receive `transport`, `connection`, `session`, `link`, and
-        `message` events. They will not receive `reactor`,
-        `selectable`, or `timer` events, the engine assumes those are
-        managed externally.
-
-        *Thread safety* - A single engine instance cannot be called
-        concurrently, but different engine instances can be processed
-        concurrently in separate threads.
-      </class>
-      
-      <class name="messaging-handler" type="@event-handler">
-        The standard messaging event handler.
-        
-        <group name="basic">
           <method name="on-start">
             The event loop is starting.
             
@@ -1156,19 +1191,19 @@
 
         <group name="transactions">
           <method name="on-transaction-declare">
-            The remote peer has declared a transaction.
+            The remote peer declared a transaction.
             
             <input name="event" type="@event"/>
           </method>
 
           <method name="on-transaction-commit">
-            The remote peer has committed a transaction.
+            The remote peer committed a transaction.
             
             <input name="event" type="@event"/>
           </method>
 
           <method name="on-transaction-abort">
-            The remote peer has aborted a transaction.
+            The remote peer aborted a transaction.
             
             <input name="event" type="@event"/>
           </method>
@@ -1184,6 +1219,48 @@
           <method name="on-application-event">
             <input name="event" type="@event"/>
           </method>
+        </group>
+      </class>
+
+      <class name="connection-engine">
+        An event loop for integrating with an existing IO framework.
+        
+        A connection-engine is an `event-loop` that manages a single
+        AMQP connection.  It provides a simple bytes in/bytes out
+        interface. Incoming AMQP bytes from any kind of data
+        connection are fed into the engine and processed to dispatch
+        events to an `handler`. The resulting AMQP output data
+        is available from the engine and can sent back over the
+        connection.
+
+        The engine does no IO of its own. It assumes a two-way flow of
+        bytes over some externally-managed "connection". The
+        "connection" could be a socket managed by `select`, `poll`,
+        `epoll` or some other mechanism, or it could be something else
+        such as an RDMA connection, a shared-memory buffer or a Unix
+        pipe.
+
+        The engine is an alternative `event-loop` to the container
+        **[XXX revisit: substitute reactor?]**. The container is
+        easier to use in single-threaded, standalone applications that
+        want to use standard socket connections. The engine can be
+        embedding into any existing IO framework for any type of IO.
+
+        The application is coded the same way for engine or container:
+        you implement `handler`. Handlers attached to an engine
+        will receive `transport`, `connection`, `session`, `link`, and
+        `message` events. They will not receive `reactor`,
+        `selectable`, or `timer` events, the engine assumes those are
+        managed externally.
+
+        *Thread safety* - A single engine instance cannot be called
+        concurrently, but different engine instances can be processed
+        concurrently in separate threads.
+
+        <group name="basic">
+          <property name="container" value="[instance]" type="@container">
+            The container associated with this event loop.
+          </property>
         </group>
       </class>
     </group>

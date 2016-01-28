@@ -30,4 +30,6 @@ at-most-once, at-least-once, or exactly-once.
  - [Protocol engines](protocol-engines.html)
  - [API layout](api-layout.html)
 
+ - [AMQP conceptual model](http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176)
+
 ;; XXX add an engine-oriented section

@@ -1,5 +1,11 @@
 @import url({{site_url}}/transom/site.css);
 
+#-head-content,
+#-body-content,
+#-foot-content {
+    max-width: inherit;
+}
+
 h1.pumpjack {
     font-weight: 300;
 }
@@ -84,4 +90,3 @@ table.pumpjack.methods th:nth-child(3) {
 table.pumpjack.methods th:nth-child(4) {
     width: 15%;
 }
-
