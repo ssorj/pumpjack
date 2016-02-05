@@ -1054,26 +1054,8 @@
         <link node="@event"/>
 
         <group name="basic"> <!-- XXX somehow this only works with basic -->
-          <method name="on-unhandled">
-            Fallback event handling.
-            
-            Called if an event handler function is not overriden to
-            handle an event.
-
-            <input name="event" type="@event"/>
-          </method>
-
-          <method name="on-unhandled-error">
-            Fallback error handling.
-            
-            Called if an error handler function is not overriden to
-            handle an error.
-            
-            <input name="event" type="@event"/>
-          </method>
-
           <method name="on-start">
-            The event loop is starting.
+            The event loop is started.
             
             <input name="event" type="@event"/>
           </method>
@@ -1093,8 +1075,33 @@
             <input name="event" type="@event"/>
           </method>
 
-          <method name="on-disconnect">
-            A network connection was disconnected.
+          <method name="on-transport-close">
+            The underlying network transport closed.
+            
+            <input name="event" type="@event"/>
+          </method>
+            
+          <method name="on-transport-error">
+            The underlying network transport closed with an error
+            condition.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-unhandled">
+            Fallback event handling.
+            
+            Called if an event handler function is not overriden to
+            handle an event.
+
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-unhandled-error">
+            Fallback error handling.
+            
+            Called if an error handler function is not overriden to
+            handle an error.
             
             <input name="event" type="@event"/>
           </method>
