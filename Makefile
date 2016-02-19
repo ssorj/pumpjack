@@ -1,19 +1,24 @@
-.PHONY: help generate clean publish update-pencil
+export PYTHONPATH = ${PWD}/python
 
-tmpdir := $(shell mktemp -d)
-pygments_style := monokai
-
-generate: clean
+.PHONY: render-html
+render-html: clean
 	PYTHONPATH=${PWD}/python scripts/pumpjack -r html -i proton -o input
 	transom input output --site-url "file://${PWD}/output"
 
-help:
-	@echo "generate, clean, publish"
+.PHONY: render-python
+render-python: 
+	scripts/pumpjack -r python -i proton -o output
 
+.PHONY: help
+help:
+	@echo "render-html, render-python, clean, publish"
+
+.PHONY: clean
 clean:
 	find python -type f -name \*.pyc -delete
 	rm -rf output
 
+.PHONY: publish
 publish: temp_dir := $(shell mktemp -d)
 publish:
 	chmod 755 ${temp_dir}
@@ -21,5 +26,6 @@ publish:
 	rsync -av ${temp_dir}/ jross@people.apache.org:public_html/pumpjack
 	rm -rf ${temp_dir}
 
+.PHONY: update-pencil
 update-pencil:
 	curl "https://raw.githubusercontent.com/ssorj/pencil/master/python/pencil.py" -o python/pencil.py

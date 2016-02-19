@@ -19,7 +19,7 @@
     The primary entry point for the event-driven API. Most
     applications will import only this module.
 
-    <annotation name="requires">amqp</annotation>
+    <annotation name="requires">amqp, io</annotation>
 
     <group name="model" title="AMQP model">
       <class name="container">
@@ -83,7 +83,37 @@
             <link node="@/proton/core/connection/close"/>
             <link node="@acceptor"/>
           </method>
+        </group>
 
+        <group name="message-operations">
+          <method name="send">
+            Send a message.  The 
+
+            <input name="message" type="@message"/>
+            <input name="url" type="@url"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+
+          <method name="send-request">
+            Send a request message.  The message.reply-to property is
+            set automatically.
+
+            <input name="message" type="@message"/>
+            <input name="url" type="@url"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+
+          <method name="send-response">
+            Send a response message.  The message.to proprty is set
+            automatically.
+
+            <input name="response" type="@message"/>
+            <input name="request" type="@message"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+        </group>
+
+        <group name="connection-operations">
           <method name="connect">
             Create and open an outbound connection.
 
@@ -255,13 +285,35 @@
             The operation is complete when on-connection-close fires.
             
             <link node="@/proton/core/handler/on-connection-close"/>
+          
+            <input name="condition" type="@condition" value="null" nullable="true"/>
           </method>
-
+        </group>
+        
+        <group name="message-operations">
           <method name="send">
             Send a message on the default session.
 
             <input name="message" type="@message"/>
-            <input name="address" type="string" nullable="true"/>
+            <input name="address" type="string"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+
+          <method name="send-request">
+            Send a request message.  The message.reply-to property is
+            set automatically.
+
+            <input name="message" type="@message"/>
+            <input name="address" type="string"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+
+          <method name="send-response">
+            Send a response message.  The message.to property is set
+            automatically.
+
+            <input name="response" type="@message"/>
+            <input name="request" type="@message"/>
             <output name="delivery" type="@delivery"/>
           </method>
         </group>
@@ -334,6 +386,7 @@
           </property>
         </group>
 
+        <!--
         <group name="event-processing">
           <method name="find-sessions">
             Find session endpoints in the specified states.  The
@@ -363,6 +416,7 @@
             <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
+        -->  
 
         <group name="extended-attributes">
           <property name="local-properties" type="map">
@@ -426,6 +480,8 @@
             The operation is complete when on-session-close fires.
             
             <link node="@/proton/core/handler/on-session-close"/>
+
+            <input name="condition" type="@condition" value="null" nullable="true"/>
           </method>
         </group>
 
@@ -469,6 +525,7 @@
           <property name="remote-outgoing-window" type="integer" value="[discovered]"/>
         </group>
 
+        <!--
         <group name="event-processing">
           <method name="find-links">
             Find link endpoints in the specified states.  The results
@@ -489,6 +546,7 @@
             <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
+        -->
       </class>
       
       <class name="link" type="@endpoint">
@@ -532,6 +590,8 @@
             The operation is complete when on-link-close fires.
             
             <link node="@/proton/core/handler/on-link-close"/>
+            
+            <input name="condition" type="@condition" value="null" nullable="true"/>
           </method>
         </group>
 
@@ -559,6 +619,7 @@
           </property>
         </group>
 
+        <!--
         <group name="event-processing">
           <method name="find-deliveries">
             Find deliveries in the specified states.  The results
@@ -570,28 +631,28 @@
             <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
+        -->
 
         <!-- XXX queued -->
       </class>
 
       <class name="receiver" type="@link">
-        A link for receiving messages
+        A link for receiving messages.
 
         <group name="basic">
-          <method name="recv"/>
         </group>
         
         <group name="flow-control">
-          <method name="add-credit">
+          <method name="flow">
             Issue credit on the link.  This increases the credit
             issued to the remote sender by the specified number of
             messages.
 
             <input name="count" type="integer"/>
           </method>
-          
-          <method name="release-credit">
-            Release credit on the link.  This tells the sender to use
+
+          <method name="drain">
+            Request all queued messages.  This tells the sender to use
             all existing credit immediately to send deliveries and
             then discard any excess credit.
           </method>
@@ -601,9 +662,17 @@
       <class name="sender" type="@link">
         A link for sending messages.
 
-        <group name="basic">
+        <group name="message-operations">
           <method name="send">
             Send a message on the link.
+
+            <input name="message" type="@message"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+
+          <method name="send-request">
+            Send a request message.  The message.reply-to property is
+            set automatically.
 
             <input name="message" type="@message"/>
             <output name="delivery" type="@delivery"/>
@@ -1010,9 +1079,11 @@
       </class>
 
       <class name="filter" type="@link-option">
+        Select messages by criteria.
       </class>
         
       <class name="durable-subscription" type="@link-option">
+        Create a persistent subscription.
       </class>
 
       <class name="move" type="@link-option">
@@ -1086,6 +1157,7 @@
             condition.
             
             <input name="event" type="@event"/>
+            <input name="message" type="@message" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-unhandled">
@@ -1095,6 +1167,7 @@
             handle an event.
 
             <input name="event" type="@event"/>
+            <input name="sender" type="@sender" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-unhandled-error">
@@ -1104,6 +1177,7 @@
             handle an error.
             
             <input name="event" type="@event"/>
+            <input name="transport" type="@transport" value="[instance]" nullable="true"/>
           </method>
         </group>
 
@@ -1112,12 +1186,14 @@
             The remote peer opened the connection.
             
             <input name="event" type="@event"/>
+            <input name="connection" type="@connection" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-connection-close">
             The remote peer closed the connection.
             
             <input name="event" type="@event"/>
+            <input name="connection" type="@connection" value="[instance]" nullable="true"/>
           </method>
             
           <method name="on-connection-error">
@@ -1125,18 +1201,21 @@
             condition.
             
             <input name="event" type="@event"/>
+            <input name="connection" type="@connection" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-session-open">
             The remote peer opened the session.
             
             <input name="event" type="@event"/>
+            <input name="session" type="@session" value="[instance]" nullable="true"/>
           </method>
           
           <method name="on-session-close">
             The remote peer closed the session.
             
             <input name="event" type="@event"/>
+            <input name="session" type="@session" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-session-error">
@@ -1144,24 +1223,35 @@
             condition.
             
             <input name="event" type="@event"/>
+            <input name="session" type="@session" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-link-open">
             The remote peer opened the link.
             
             <input name="event" type="@event"/>
+            <input name="link" type="@link" value="[instance]" nullable="true"/>
+          </method>
+
+          <method name="on-link-drain">
+            XXX The remote peer drained the link.
+            
+            <input name="event" type="@event"/>
+            <input name="link" type="@link" value="[instance]" nullable="true"/>
           </method>
            
           <method name="on-link-close">
             The remote peer closed the link.
             
             <input name="event" type="@event"/>
+            <input name="link" type="@link" value="[instance]" nullable="true"/>
           </method>
            
           <method name="on-link-error">
             The remote peer closed the link with an error condition.
             
             <input name="event" type="@event"/>
+            <input name="link" type="@link" value="[instance]" nullable="true"/>
           </method>
         </group>
 
@@ -1170,6 +1260,7 @@
             The remote peer accepted an outgoing message.
             
             <input name="event" type="@event"/>
+            <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
           </method>
           
           <method name="on-delivery-reject">
@@ -1178,6 +1269,7 @@
             XXX error condition
             
             <input name="event" type="@event"/>
+            <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
           </method>
           
           <method name="on-delivery-release">
@@ -1186,6 +1278,7 @@
             state as defined by the AMQP specification.
             
             <input name="event" type="@event"/>
+            <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
           </method>
           
           <method name="on-delivery-settle">
@@ -1193,6 +1286,7 @@
             point at which it should never be retransmitted.
             
             <input name="event" type="@event"/>
+            <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
           </method>
         </group>
 
@@ -1215,60 +1309,6 @@
             <input name="event" type="@event"/>
           </method>
         </group>
-
-        <group name="timers" title="Timers">
-          <method name="on-timer">
-            <input name="event" type="@event"/>
-          </method>
-        </group>
-
-        <group name="application-events" title="Application events">
-          <method name="on-application-event">
-            <input name="event" type="@event"/>
-          </method>
-        </group>
-      </class>
-
-      <class name="connection-engine">
-        An event loop for integrating with an existing IO framework.
-        
-        A connection-engine is an `event-loop` that manages a single
-        AMQP connection.  It provides a simple bytes in/bytes out
-        interface. Incoming AMQP bytes from any kind of data
-        connection are fed into the engine and processed to dispatch
-        events to an `handler`. The resulting AMQP output data
-        is available from the engine and can sent back over the
-        connection.
-
-        The engine does no IO of its own. It assumes a two-way flow of
-        bytes over some externally-managed "connection". The
-        "connection" could be a socket managed by `select`, `poll`,
-        `epoll` or some other mechanism, or it could be something else
-        such as an RDMA connection, a shared-memory buffer or a Unix
-        pipe.
-
-        The engine is an alternative `event-loop` to the container
-        **[XXX revisit: substitute reactor?]**. The container is
-        easier to use in single-threaded, standalone applications that
-        want to use standard socket connections. The engine can be
-        embedding into any existing IO framework for any type of IO.
-
-        The application is coded the same way for engine or container:
-        you implement `handler`. Handlers attached to an engine
-        will receive `transport`, `connection`, `session`, `link`, and
-        `message` events. They will not receive `reactor`,
-        `selectable`, or `timer` events, the engine assumes those are
-        managed externally.
-
-        *Thread safety* - A single engine instance cannot be called
-        concurrently, but different engine instances can be processed
-        concurrently in separate threads.
-
-        <group name="basic">
-          <property name="container" value="[instance]" type="@container">
-            The container associated with this event loop.
-          </property>
-        </group>
       </class>
     </group>
 
@@ -1283,12 +1323,13 @@
     </group>
 
     <group name="errors" title="Error handling">
-      <class name="proton-error"/>
-      <class name="timeout-error"/>
+      <class name="proton-error">The base class for Proton errors.</class>
+      <class name="timeout-error">An operation timed out.</class>
     </group>
 
     <group name="utilities" title="Important utilities">
       <class name="duration"/>
+      <class name="timestamp"/>
       <class name="url"/>
       <class name="url-error"/>
     </group>
@@ -1298,7 +1339,6 @@
     AMQP data encoding and decoding. For typical Proton-based
     applications, these classes will not be used directly.
 
-    <annotation name="requires">internal</annotation>
     <annotation name="class-link-text-template">AMQP definition</annotation>
     <annotation name="class-link-href-template">https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#type-{}</annotation>
     <annotation name="class-link-function">_gen_amqp_type_link</annotation>
@@ -1350,13 +1390,60 @@
       <class name="decode-error"></class>
     </group>
   </module>
-  
+
+  <!--
   <module name="internal">
     API internals and language extensions.  These are classes that are
     necessary for the implementation, but not promoted for general
     consumption by API users.
   </module>
+  -->
 
+  <module name="io">
+    IO integration
+
+    <group name="basic">
+      <class name="connection-engine">
+        An event loop for integrating with an existing IO framework.
+        
+        A connection-engine is an `event-loop` that manages a single
+        AMQP connection.  It provides a simple bytes in/bytes out
+        interface. Incoming AMQP bytes from any kind of data
+        connection are fed into the engine and processed to dispatch
+        events to an `handler`. The resulting AMQP output data
+        is available from the engine and can sent back over the
+        connection.
+
+        The engine does no IO of its own. It assumes a two-way flow of
+        bytes over some externally-managed "connection". The
+        "connection" could be a socket managed by `select`, `poll`,
+        `epoll` or some other mechanism, or it could be something else
+        such as an RDMA connection, a shared-memory buffer or a Unix
+        pipe.
+
+        The engine is an alternative `event-loop` to the container
+        **[XXX revisit: substitute reactor?]**. The container is
+        easier to use in single-threaded, standalone applications that
+        want to use standard socket connections. The engine can be
+        embedding into any existing IO framework for any type of IO.
+
+        The application is coded the same way for engine or container:
+        you implement `handler`. Handlers attached to an engine
+        will receive `transport`, `connection`, `session`, `link`, and
+        `message` events. They will not receive `reactor`,
+        `selectable`, or `timer` events, the engine assumes those are
+        managed externally.
+
+        *Thread safety* - A single engine instance cannot be called
+        concurrently, but different engine instances can be processed
+        concurrently in separate threads.
+      </class>
+
+      <class name="io-adapter"></class>
+      <class name="sockets-io"></class>
+    </group>
+  </module>
+  
   <type name="string"/>
   <type name="boolean"/>
   <type name="integer"/>
@@ -1365,6 +1452,12 @@
   <type name="map"/>
 
   <group-definition name="basic" title="Basic properties and methods">
+  </group-definition>
+
+  <group-definition name="message-operations" title="Message operations">
+  </group-definition>
+
+  <group-definition name="connection-operations" title="Connection operations">
   </group-definition>
 
   <group-definition name="link-operations" title="Link operations">

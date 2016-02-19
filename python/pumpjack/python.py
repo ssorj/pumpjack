@@ -36,6 +36,9 @@ class PythonRenderer(PumpjackRenderer):
         return init_cap(studly_name(cls.name))
 
     def render_method_name(self, meth):
+        if meth.name == "[constructor]":
+            return "__init__"
+        
         return meth.name.replace("-", "_")
 
     def render_var_name(self, var):
@@ -68,9 +71,14 @@ class PythonRenderer(PumpjackRenderer):
         if cls.type is not None:
             type = self.render_class_name(cls.type)
 
+        # XXX functionify
+        text = ""
+        if cls.text is not None:
+            text = cls.text.replace("\n        ", "\n    ")
+        
         out.write("class {}({}):", name, type)
         out.write("    \"\"\"")
-        out.write("    {}", cls.text)
+        out.write("    {}", text)
         out.write()
 
         for group in cls.groups:
@@ -137,8 +145,13 @@ class PythonRenderer(PumpjackRenderer):
         self.render_method_body(out, meth)
 
     def render_method_body(self, out, meth):
+        # XXX functionify
+        text = ""
+        if meth.text is not None:
+            text = meth.text.replace("\n            ", "\n        ")
+        
         out.write("        \"\"\"")
-        out.write("        {}", meth.text)
+        out.write("        {}", text)
         out.write()
 
         for input in meth.inputs:
