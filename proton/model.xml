@@ -50,15 +50,15 @@
           </property>
 
           <property name="client-connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
-            Default settings for new outbound connections.
+            Default options for new outbound connections.
           </property>
 
           <property name="server-connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
-            Default settings for new inbound connections.
+            Default options for new inbound connections.
           </property>
 
           <property name="link-options" value="[instance]" type="list" item-type="@link-option" mutable="true">
-            Default settings for new links.
+            Default options for new links.
           </property>
 
           <method name="[constructor]">
@@ -94,7 +94,7 @@
             <output name="delivery" type="@delivery"/>
           </method>
 
-          <method name="send-request">
+          <method name="send-request" experimental="true">
             Send a request message.  The message.reply-to property is
             set automatically.
 
@@ -103,7 +103,7 @@
             <output name="delivery" type="@delivery"/>
           </method>
 
-          <method name="send-response">
+          <method name="send-response" experimental="true">
             Send a response message.  The message.to proprty is set
             automatically.
 
@@ -122,8 +122,8 @@
             <link node="@/proton/core/handler/on-connection-open"/>
             
             <input name="url" type="@url"/>
-            <output name="connection" type="@connection"/>
             <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
+            <output name="connection" type="@connection"/>
           </method>
           
           <method name="listen">
@@ -135,7 +135,6 @@
             
             <input name="url" type="@url"/>
             <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
             <output name="acceptor" type="@acceptor"/>
           </method>
         </group>
@@ -439,20 +438,6 @@
 
           <property name="remote-desired-capabilities" value="[discovered]" type="list">
             Extensions the remote peer can use.
-          </property>
-        </group>
-      </class>
-
-      <class name="acceptor">
-        A context for accepting inbound connections.
-
-        <link node="@/proton/core/container/listen"/>
-
-        <group name="basic">
-          <method name="close"/>
-
-          <property name="connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
-            Default settings for new inbound connections.
           </property>
         </group>
       </class>
@@ -885,6 +870,7 @@
           <!-- <method name="send-update" -->
         </group>
 
+        <!--
         <group name="event-processing">
           <property name="updated" type="boolean">
           </property>
@@ -895,6 +881,7 @@
           <property name="writable" type="boolean">
           </property>
         </group>
+        -->  
       </class>
 
       <class name="delivery-state" hidden="true">
@@ -1002,6 +989,38 @@
           <property name="delivery-annotations" type="map"/>
           <property name="message-annotations" type="map"/>
           <property name="footer" type="map"/>
+        </group>
+      </class>
+      
+      <class name="acceptor">
+        A context for accepting inbound connections.
+
+        <link node="@/proton/core/container/listen"/>
+
+        <group name="basic">
+          <method name="close"/>
+
+          <property name="connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
+            Default settings for new inbound connections.
+          </property>
+        </group>
+      </class>
+
+      <class name="transport">
+        A network channel supporting an AMQP connection.
+
+        <group name="basic">
+          <property name="ssl" type="@ssl" value="[instance]">
+            Get SSL information.
+          </property>
+          
+          <property name="sasl" type="@sasl" value="[instance]">
+            Get SASL information.
+          </property>
+          
+          <property name="condition" type="@condition" value="[instance]">
+            Get the error condition.
+          </property>
         </group>
       </class>
     </group>
@@ -1312,26 +1331,59 @@
       </class>
     </group>
 
-    <group name="transport" title="Transport entities">
-      <class name="transport"/>
-      <class name="transport-error"/>
-      <class name="ssl"/>
-      <class name="ssl-certificate"/>
-      <class name="ssl-domain"/>
-      <class name="ssl-error"/>
-      <class name="sasl"/>
+    <group name="security" title="Security">
+      <class name="sasl">
+        SASL information.
+      </class>
+      
+      <class name="ssl">
+        SSL information.
+
+        <property name="verify-mode"></property>
+        <property name="resume-status"></property>
+      </class>
+      
+      <class name="ssl-certificate">
+        An SSL certificate.
+      </class>
+      
+      <class name="ssl-client-options">
+        SSL configuration for outbound connections.
+      </class>
+      
+      <class name="ssl-server-options">
+        SSL configuration for inbound connections.
+      </class>
     </group>
 
     <group name="errors" title="Error handling">
-      <class name="proton-error">The base class for Proton errors.</class>
-      <class name="timeout-error">An operation timed out.</class>
+      <class name="proton-error">
+        The base class for Proton errors.
+      </class>
+      
+      <class name="timeout-error">
+        An operation timed out.
+      </class>
     </group>
 
     <group name="utilities" title="Important utilities">
-      <class name="duration"/>
-      <class name="timestamp"/>
-      <class name="url"/>
-      <class name="url-error"/>
+      Proton language implementations will 
+      
+      <class name="duration">
+        A span of time in milliseconds.
+      </class>
+      
+      <class name="timestamp">
+        An absolute point in time.
+      </class>
+      
+      <class name="url">
+        A Proton URL.
+      </class>
+      
+      <class name="url-error">
+        Raised if URL parsing fails.
+      </class>
     </group>
   </module>
 
