@@ -51,10 +51,10 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Module", "Content", "Depends on"))
 
         for module in model.modules:
-            link = _html_node_link(module)
+            link = _html_node_table_link(module)
             summary = _html_node_summary(module)
             requires = module.annotations.get("requires")
-
+            
             items.append((link, summary, requires))
 
         out.write(html_table(items, class_="pumpjack modules"))
@@ -76,13 +76,13 @@ class HtmlRenderer(PumpjackRenderer):
             out.write(_html_node_links(module))
 
             for group in module.groups:
-                self.render_module_group(out, group)
+                self.render_class_group(out, group)
 
             for group in module.groups:
                 for cls in group.classes:
                     self.render_class(out, cls)
 
-    def render_module_group(self, out, group):
+    def render_class_group(self, out, group):
         out.write(html_open("section"))
         out.write(html_h(group.title))
         out.write(_html_node_text(group))
@@ -92,7 +92,7 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Class", "Summary"))
                         
         for cls in group.classes:
-            link = _html_node_link(cls)
+            link = _html_node_table_link(cls)
             summary = first_sentence(cls.text)
 
             if cls.hidden:
@@ -101,7 +101,6 @@ class HtmlRenderer(PumpjackRenderer):
             items.append((link, summary))
 
         out.write(html_table(items, class_="pumpjack classes"))
-
         out.write(html_close("section"))
 
     def render_class(self, out, cls):
@@ -111,16 +110,21 @@ class HtmlRenderer(PumpjackRenderer):
 
         classes = _get_classes(cls)
         groups = _collections.OrderedDict()
-
+        basic_group = None
+                
         for c in classes:
             for group in c.groups:
+                if group.name == "basic":
+                    basic_group = group
+                    continue
+                
                 groups[group.name] = group
 
-        if "basic" in groups:
-            basic_group = groups["basic"]
-            del groups["basic"]
-            groups = [basic_group] + list(groups.values())
-                
+        groups = list(groups.values())
+
+        if basic_group is not None:
+            groups.insert(0, basic_group)
+
         with _open_output(output_path) as f:
             out = PumpjackWriter(f)
 
@@ -129,7 +133,7 @@ class HtmlRenderer(PumpjackRenderer):
             out.write(_html_node_links(cls))
 
             for group in groups:
-                self.render_class_group(out, cls, group)
+                self.render_class_member_group(out, cls, group)
 
             for group in cls.groups:
                 for prop in group.properties:
@@ -138,9 +142,8 @@ class HtmlRenderer(PumpjackRenderer):
                 for meth in group.methods:
                     self.render_method(out, meth)
 
-    def render_class_group(self, out, cls, group):
+    def render_class_member_group(self, out, cls, group):
         out.write(html_open("section"))
-
         out.write(html_h(group.title))
         out.write(_html_node_text(group))
         out.write(_html_node_links(group))
@@ -165,7 +168,7 @@ class HtmlRenderer(PumpjackRenderer):
                           "Mutable", "Nullable"))
 
             for prop in properties:
-                link = _html_node_link(prop)
+                link = _html_node_table_link(prop)
                 summary = _html_node_summary(prop)
                 type = _html_parameter_type(prop)
                 value = _html_parameter_value(prop)
@@ -184,7 +187,7 @@ class HtmlRenderer(PumpjackRenderer):
             items.append(("Method", "Summary", "Inputs", "Outputs"))
                             
             for meth in methods:
-                link = _html_node_link(meth)
+                link = _html_node_table_link(meth)
                 summary = _html_node_summary(meth)
 
                 inputs = list()
@@ -279,14 +282,36 @@ def _html_node_title(node):
     
     type = init_cap(node.node_type)
     name = html_span(node.name, class_="name")
-    title = "{} {}".format(type, name)
+    flags = _html_node_flags(node)
+    title = "{} {} {}".format(type, name, flags)
 
     return html_h(title, class_="pumpjack")
 
 def _html_node_link(node):
     assert isinstance(node, _Node), node
-    
+
     return html_a(_html_special(node.name), node.url)
+
+def _html_node_flags(node):
+    assert isinstance(node, _Node), node
+
+    flags = list()
+
+    if node.experimental:
+        flags.append(html_span("experimental", class_="flag"))
+
+    if node.internal:
+        flags.append(html_span("internal", class_="flag"))
+        
+    return " ".join(flags)
+
+def _html_node_table_link(node):
+    assert isinstance(node, _Node), node
+    
+    link = _html_node_link(node)
+    flags = _html_node_flags(node)
+    
+    return "{} {}".format(link, flags)
 
 def _html_node_summary(node):
     assert isinstance(node, _Node), node

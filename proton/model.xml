@@ -45,20 +45,8 @@
             identify this container in any connections it establishes.
           </property>
 
-          <property name="handler" value="[instance]" type="@handler" nullable="true">
+          <property name="handler" value="[instance]" type="@handler">
             The main event handler.
-          </property>
-
-          <property name="client-connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
-            Default options for new outbound connections.
-          </property>
-
-          <property name="server-connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
-            Default options for new inbound connections.
-          </property>
-
-          <property name="link-options" value="[instance]" type="list" item-type="@link-option" mutable="true">
-            Default options for new links.
           </property>
 
           <method name="[constructor]">
@@ -78,36 +66,65 @@
 
           <method name="run">
             Start processing events.  It returns when all connections
-            and acceptors are closed.
+            and acceptors are closed or the container is stopped.
 
             <link node="@/proton/core/connection/close"/>
             <link node="@acceptor"/>
           </method>
+
+          <method name="stop" experimental="true">
+            Stop processing events.
+
+            XXX should this cleanly close stuff?  I think so.
+          </method>
+        </group>
+
+        <group name="configuration">
+          <property name="client-connection-options" value="[instance]" type="@connection-options" mutable="true">
+            Default options for new outbound connections.
+          </property>
+
+          <property name="server-connection-options" value="[instance]" type="@connection-options" mutable="true">
+            Default options for new inbound connections.
+          </property>
+
+          <property name="session-options" value="[instance]" type="@session-options" mutable="true">
+            Default options for new sessions.
+          </property>
+
+          <property name="link-options" value="[instance]" type="@link-options" mutable="true">
+            Default options for new links.
+          </property>
         </group>
 
         <group name="message-operations">
-          <method name="send">
-            Send a message.  The 
+          <method name="send" experimental="true">
+            Send a message.
 
             <input name="message" type="@message"/>
-            <input name="url" type="@url"/>
+            <input name="url" type="url"/>
             <output name="delivery" type="@delivery"/>
           </method>
 
           <method name="send-request" experimental="true">
-            Send a request message.  The message.reply-to property is
+            Send a request message.  The message reply-to property is
             set automatically.
 
+            <link node="@/proton/core/message/reply-to"/>
+
             <input name="message" type="@message"/>
-            <input name="url" type="@url"/>
+            <input name="url" type="url"/>
             <output name="delivery" type="@delivery"/>
           </method>
 
           <method name="send-response" experimental="true">
-            Send a response message.  The message.to proprty is set
-            automatically.
+            Send a response message.  The message address and
+            correlation-id properties are set automatically.
 
-            <input name="response" type="@message"/>
+            <link node="@/proton/core/message/address"/>
+            <link node="@/proton/core/message/correlation-id"/>
+
+            <input name="message" type="@message"/>
             <input name="request" type="@message"/>
             <output name="delivery" type="@delivery"/>
           </method>
@@ -121,8 +138,8 @@
 
             <link node="@/proton/core/handler/on-connection-open"/>
             
-            <input name="url" type="@url"/>
-            <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
+            <input name="url" type="url"/>
+            <input name="options" value="[empty list]" type="@connection-options"/>
             <output name="connection" type="@connection"/>
           </method>
           
@@ -133,8 +150,8 @@
 
             <link node="@/proton/core/handler/on-link-open"/>
             
-            <input name="url" type="@url"/>
-            <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
+            <input name="url" type="url"/>
+            <input name="options" value="[empty list]" type="@connection-options"/>
             <output name="acceptor" type="@acceptor"/>
           </method>
         </group>
@@ -147,9 +164,8 @@
 
             <link node="@/proton/core/handler/on-link-open"/>
             
-            <input name="url" type="@url"/>
-            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="url" type="url"/>
+            <input name="options" type="@link-options" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
@@ -160,10 +176,59 @@
 
             <link node="@/proton/core/handler/on-link-open"/>
             
-            <input name="url" type="@url"/>
-            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="url" type="url"/>
+            <input name="options" type="@link-options"/>
             <output name="sender" type="@sender"/>
+          </method>
+        </group>
+      </class>
+
+      <class name="client" type="@container" experimental="true">
+        A container that connects to a server.
+        
+        <group name="basic">
+          <method name="[constructor]">
+            Create a new client.
+
+            <input name="url" type="url">
+              The host and port to connect to.
+            </input>
+
+            <input name="handler" type="@handler" nullable="true">
+              The main event handler for this container.
+            </input>
+            
+            <input name="id" value="[generated]" type="string" nullable="true">
+              Identifiers should be unique.  By default a UUID will be
+              used.
+            </input>
+
+            <output name="client" type="@client"/>
+          </method>
+        </group>
+      </class>
+
+      <class name="server" type="@container" experimental="true">
+        A container that listens for client connections.
+        
+        <group name="basic">
+          <method name="[constructor]">
+            Create a new server.
+
+            <input name="url" type="url">
+              The host and port to listen on.
+            </input>
+
+            <input name="handler" type="@handler" nullable="true">
+              The main event handler for this container.
+            </input>
+            
+            <input name="id" value="[generated]" type="string" nullable="true">
+              Identifiers should be unique.  By default a UUID will be
+              used.
+            </input>
+
+            <output name="server" type="@server"/>
           </method>
         </group>
       </class>
@@ -193,9 +258,6 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Endpoint.html">Java</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
 
-        <group name="basic">
-        </group>
-        
         <group name="endpoint-state">
           <property name="local-state" type="@endpoint-state" value="UNINITIALIZED">
             Local endpoint state.
@@ -268,14 +330,14 @@
             The associated transport.
           </property>
 
-          <method name="open">
+          <method name="open" experimental="true">
             Open the connection.
 
             The operation is complete when on-connection-open fires.
 
             <link node="@/proton/core/handler/on-connection-open"/>
 
-            <input name="options" value="[empty list]" type="list" item-type="@connection-option"/>
+            <input name="options" type="@connection-options" nullable="true"/>
           </method>
 
           <method name="close">
@@ -285,12 +347,12 @@
             
             <link node="@/proton/core/handler/on-connection-close"/>
           
-            <input name="condition" type="@condition" value="null" nullable="true"/>
+            <input name="condition" type="@condition" nullable="true"/>
           </method>
         </group>
         
         <group name="message-operations">
-          <method name="send">
+          <method name="send" experimental="true">
             Send a message on the default session.
 
             <input name="message" type="@message"/>
@@ -298,20 +360,25 @@
             <output name="delivery" type="@delivery"/>
           </method>
 
-          <method name="send-request">
-            Send a request message.  The message.reply-to property is
+          <method name="send-request" experimental="true">
+            Send a request message.  The message reply-to property is
             set automatically.
+
+            <link node="@/proton/core/message/reply-to"/>
 
             <input name="message" type="@message"/>
             <input name="address" type="string"/>
             <output name="delivery" type="@delivery"/>
           </method>
 
-          <method name="send-response">
-            Send a response message.  The message.to property is set
-            automatically.
+          <method name="send-response" experimental="true">
+            Send a response message.  The message address and
+            correlation-id properties are set automatically.
 
-            <input name="response" type="@message"/>
+            <link node="@/proton/core/message/address"/>
+            <link node="@/proton/core/message/correlation-id"/>
+
+            <input name="message" type="@message"/>
             <input name="request" type="@message"/>
             <output name="delivery" type="@delivery"/>
           </method>
@@ -326,8 +393,7 @@
             <link node="@/proton/core/handler/on-link-open"/>
 
             <input name="address" type="string"/>
-            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" type="@link-options" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
 
@@ -339,8 +405,7 @@
             <link node="@/proton/core/handler/on-link-open"/>
 
             <input name="address" type="string"/>
-            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" type="@link-options" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
         </group>
@@ -385,43 +450,13 @@
           </property>
         </group>
 
-        <!--
-        <group name="event-processing">
-          <method name="find-sessions">
-            Find session endpoints in the specified states.  The
-            results are scoped to sessions on this connection.
-            
-            <input name="local-states" type="list" item-type="@endpoint-state"/>
-            <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="results" type="iterator" item-type="@session"/>
-          </method>
-
-          <method name="find-links">
-            Find link endpoints in the specified states.  The results
-            are scoped to links on this connection.
-
-            <input name="local-states" type="list" item-type="@endpoint-state"/>
-            <input name="remote-states" type="list" item-type="@endpoint-state"/>
-            <output name="results" type="iterator" item-type="@link"/>
-          </method>
-
-          <method name="find-deliveries">
-            Find deliveries in the specified states.  The results
-            are scoped to deliveries on this connection.
-
-            <input name="updated" type="boolean"/>
-            <input name="readable" type="boolean"/>
-            <input name="writable" type="boolean"/>
-            <output name="results" type="iterator" item-type="@delivery"/>
-          </method>
-        </group>
-        -->  
-
         <group name="extended-attributes">
           <property name="local-properties" type="map">
+            Application properties defined by the local peer.
           </property>
 
           <property name="remote-properties" type="map" value="[discovered]">
+            Application properties defined by the remote peer.
           </property>
 
           <property name="local-offered-capabilities" type="list">
@@ -439,6 +474,36 @@
           <property name="remote-desired-capabilities" value="[discovered]" type="list">
             Extensions the remote peer can use.
           </property>
+        </group>
+
+        <group name="event-processing">
+          <method name="find-sessions" internal="true">
+            Find session endpoints in the specified states.  The
+            results are scoped to sessions on this connection.
+            
+            <input name="local-states" type="list" item-type="@endpoint-state"/>
+            <input name="remote-states" type="list" item-type="@endpoint-state"/>
+            <output name="results" type="iterator" item-type="@session"/>
+          </method>
+
+          <method name="find-links" internal="true">
+            Find link endpoints in the specified states.  The results
+            are scoped to links on this connection.
+
+            <input name="local-states" type="list" item-type="@endpoint-state"/>
+            <input name="remote-states" type="list" item-type="@endpoint-state"/>
+            <output name="results" type="iterator" item-type="@link"/>
+          </method>
+
+          <method name="find-deliveries" internal="true">
+            Find deliveries in the specified states.  The results
+            are scoped to deliveries on this connection.
+
+            <input name="updated" type="boolean"/>
+            <input name="readable" type="boolean"/>
+            <input name="writable" type="boolean"/>
+            <output name="results" type="iterator" item-type="@delivery"/>
+          </method>
         </group>
       </class>
 
@@ -459,6 +524,16 @@
             The containing connection.
           </property>
 
+          <method name="open" experimental="true">
+            Open the session.
+
+            The operation is complete when on-session-open fires.
+
+            <link node="@/proton/core/handler/on-session-open"/>
+
+            <input name="options" type="@session-options" nullable="true"/>
+          </method>
+
           <method name="close">
             Close the session.
 
@@ -466,10 +541,38 @@
             
             <link node="@/proton/core/handler/on-session-close"/>
 
-            <input name="condition" type="@condition" value="null" nullable="true"/>
+            <input name="condition" type="@condition" nullable="true"/>
           </method>
         </group>
 
+        <group name="message-operations">
+          <method name="send" experimental="true">
+            Send a message on the link.
+
+            <input name="message" type="@message"/>
+            <input name="address" type="string"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+
+          <method name="send-request" experimental="true">
+            Send a request message.  The message.reply-to property is
+            set automatically.
+
+            <input name="message" type="@message"/>
+            <input name="address" type="string"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+          
+          <method name="send-response" experimental="true">
+            Send a response message.  The message.to property is set
+            automatically.
+
+            <input name="response" type="@message"/>
+            <input name="request" type="@message"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+        </group>
+        
         <group name="link-operations">
           <method name="open-receiver">
             Create and open a receiving link.
@@ -479,8 +582,7 @@
             <link node="@/proton/core/handler/on-link-open"/>
             
             <input name="address" type="string"/>
-            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" type="@link-options" nullable="true"/>
             <output name="receiver" type="@receiver"/>
           </method>
 
@@ -492,8 +594,7 @@
             <link node="@/proton/core/handler/on-link-open"/>
 
             <input name="address" type="string"/>
-            <input name="options" value="[empty list]" type="list" item-type="@link-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" type="@link-options" nullable="true"/>
             <output name="sender" type="@sender"/>
           </method>
         </group>
@@ -510,9 +611,8 @@
           <property name="remote-outgoing-window" type="integer" value="[discovered]"/>
         </group>
 
-        <!--
         <group name="event-processing">
-          <method name="find-links">
+          <method name="find-links" internal="true">
             Find link endpoints in the specified states.  The results
             are scoped to links on this session.
 
@@ -521,7 +621,7 @@
             <output name="results" type="iterator" item-type="@link"/>
           </method>
 
-          <method name="find-deliveries">
+          <method name="find-deliveries" internal="true">
             Find deliveries in the specified states.  The results
             are scoped to deliveries on this session.
 
@@ -531,7 +631,6 @@
             <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
-        -->
       </class>
       
       <class name="link" type="@endpoint">
@@ -555,16 +654,22 @@
             The link name.
           </property>
 
-          <property name="options" type="list" item-type="@link-option" value="[empty list]">
-            Link options.
-          </property>
-
           <property name="session" type="@session" value="[instance]">
-            The containing session
+            The containing session.
           </property>
 
+          <method name="open" experimental="true">
+            Open the link.
+
+            The operation is complete when on-link-open fires.
+
+            <link node="@/proton/core/handler/on-link-open"/>
+
+            <input name="options" type="@link-options" nullable="true"/>
+          </method>
+          
           <method name="detach">
-            Detach a link without closing it.  For durable
+            Detach the link without closing it.  For durable
             subscriptions this means the subscription is inactive but
             not canceled.
           </method>
@@ -576,7 +681,7 @@
             
             <link node="@/proton/core/handler/on-link-close"/>
             
-            <input name="condition" type="@condition" value="null" nullable="true"/>
+            <input name="condition" type="@condition" nullable="true"/>
           </method>
         </group>
 
@@ -604,9 +709,8 @@
           </property>
         </group>
 
-        <!--
         <group name="event-processing">
-          <method name="find-deliveries">
+          <method name="find-deliveries" internal="true">
             Find deliveries in the specified states.  The results
             are scoped to deliveries on this session.
 
@@ -616,7 +720,6 @@
             <output name="results" type="iterator" item-type="@delivery"/>
           </method>
         </group>
-        -->
 
         <!-- XXX queued -->
       </class>
@@ -636,10 +739,15 @@
             <input name="count" type="integer"/>
           </method>
 
-          <method name="drain">
+          <method name="drain" experimental="true">
             Request all queued messages.  This tells the sender to use
             all existing credit immediately to send deliveries and
             then discard any excess credit.
+
+            The operation is complete when the on-link-drain event
+            fires.
+
+            <link node="@/proton/core/handler/on-link-drain"/>
           </method>
         </group>
       </class>
@@ -655,11 +763,20 @@
             <output name="delivery" type="@delivery"/>
           </method>
 
-          <method name="send-request">
+          <method name="send-request" experimental="true">
             Send a request message.  The message.reply-to property is
             set automatically.
 
             <input name="message" type="@message"/>
+            <output name="delivery" type="@delivery"/>
+          </method>
+          
+          <method name="send-response" experimental="true">
+            Send a response message.  The message.to property is set
+            automatically.
+
+            <input name="response" type="@message"/>
+            <input name="request" type="@message"/>
             <output name="delivery" type="@delivery"/>
           </method>
         </group>
@@ -870,18 +987,16 @@
           <!-- <method name="send-update" -->
         </group>
 
-        <!--
         <group name="event-processing">
-          <property name="updated" type="boolean">
+          <property name="updated" type="boolean" internal="true">
           </property>
 
-          <property name="readable" type="boolean">
+          <property name="readable" type="boolean" internal="true">
           </property>
 
-          <property name="writable" type="boolean">
+          <property name="writable" type="boolean" internal="true">
           </property>
         </group>
-        -->  
       </class>
 
       <class name="delivery-state" hidden="true">
@@ -906,7 +1021,7 @@
             <!-- XXX used to remove duplicates -->
           </property>
 
-          <property name="user-id" type="string" mutable="true" nullable="true">
+          <property name="user" type="string" mutable="true" nullable="true">
             The identity of the user producing the message.
           </property>
           
@@ -998,10 +1113,14 @@
         <link node="@/proton/core/container/listen"/>
 
         <group name="basic">
-          <method name="close"/>
-
-          <property name="connection-options" value="[instance]" type="list" item-type="@connection-option" mutable="true">
-            Default settings for new inbound connections.
+          <method name="close">
+            Close the acceptor.
+          </method>
+        </group>
+        
+        <group name="configuration">
+          <property name="connection-options" type="@connection-options" mutable="true">
+            Default options for new inbound connections.
           </property>
         </group>
       </class>
@@ -1011,11 +1130,11 @@
 
         <group name="basic">
           <property name="ssl" type="@ssl" value="[instance]">
-            Get SSL information.
+            Get SSL connection information.
           </property>
           
           <property name="sasl" type="@sasl" value="[instance]">
-            Get SASL information.
+            Get SASL connection information.
           </property>
           
           <property name="condition" type="@condition" value="[instance]">
@@ -1025,96 +1144,111 @@
       </class>
     </group>
 
-    <group name="connection-options" title="Connection options">
-      <class name="connection-option">
-        The base class for connection options.
-
+    <group name="configuration">
+      <class name="connection-options">
+        Options for new connections.
+        
         <link node="@/proton/core/connection"/>
         <link node="@/proton/core/container/connect"/>
         <link node="@/proton/core/container/listen"/>
-      </class>
-      
-      <class name="reconnect">
-        Automatically reestablish the connection.
-      </class>
-      
-      <class name="heartbeats">
-        Periodically send empty frames to test that the connection is
-        alive.
-      </class>
-    </group>
-    
-    <group name="link-options" title="Link options">
-      <class name="link-option">
-        The base class for link options.
 
+        <group name="basic">
+          <property name="handler" type="@handler" mutable="true" nullable="true">
+            The event handler for the connection.
+          </property>
+          
+          <property name="idle-timeout" type="integer" value="[XXX]" mutable="true">
+            Expire the connection after a period of no activity.
+          </property>
+
+          <property name="max-channels" type="integer" value="[XXX]" mutable="true">
+          </property>
+
+          <property name="max-frame-size" type="integer" value="" mutable="true">
+          </property>
+        </group>
+      </class>
+
+      <class name="session-options">
+        Options for new sessions.
+        
+        <link node="@/proton/core/session"/>
+        <link node="@/proton/core/connection/open-session"/>
+      </class>
+
+      <class name="link-options">
+        Options for new links.
+        
         <link node="@/proton/core/link"/>
         <link node="@/proton/core/container/open-receiver"/>
         <link node="@/proton/core/container/open-sender"/>
-      </class>
 
-      <class name="at-most-once" type="@link-option">
-        Unreliable delivery.  The sender settles the message as soon
-        as it sends it.  If the connection is lost before the message
-        is received, the message will not be delivered.
+        <property name="delivery-mode">
+          <choice name="at-most-once">
+            Unreliable delivery.  The sender settles the message as
+            soon as it sends it.  If the connection is lost before the
+            message is received, the message will not be delivered.
 
-        <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
-      </class>
+            <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+          </choice>
 
-      <class name="at-least-once" type="@link-option">
-        Reliable delivery.  The receiver accepts and settles the
-        message on receipt.  If the connection is lost before the
-        sender is informed of the settlement, then the delivery is
-        considered in-doubt and will be retried.  This will ensure it
-        eventually gets delivered, provided the connection and link
-        can be reestablished.  It may, however, be delivered multiple
-        times.
+          <choice name="at-least-once">
+            Reliable delivery.  The receiver accepts and settles the
+            message on receipt.  If the connection is lost before the
+            sender is informed of the settlement, then the delivery is
+            considered in-doubt and will be retried.  This will ensure
+            it eventually gets delivered, provided the connection and
+            link can be reestablished.  It may, however, be delivered
+            multiple times.
 
-        <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
-      </class>
+            <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+          </choice>
 
-      <class name="exactly-once" type="@link-option">
-        Reliable delivery with no duplicates.  The receiver accepts
-        the message but doesn't settle it.  The sender settles once it
-        is aware that the receiver accepted it.  In this way the
-        receiver retains knowledge of an accepted message until it is
-        sure the sender knows it has been accepted.  If the connection
-        is lost before settlement, the receiver informs the sender of
-        all the unsettled deliveries it knows about, and from this the
-        sender can deduce which need to be redelivered. The sender
-        likewise informs the receiver which deliveries it knows about,
-        from which the receiver can deduce which have already been
-        settled.
+          <choice name="exactly-once">
+            Reliable delivery with no duplicates.  The receiver
+            accepts the message but doesn't settle it.  The sender
+            settles once it is aware that the receiver accepted it.
+            In this way the receiver retains knowledge of an accepted
+            message until it is sure the sender knows it has been
+            accepted.  If the connection is lost before settlement,
+            the receiver informs the sender of all the unsettled
+            deliveries it knows about, and from this the sender can
+            deduce which need to be redelivered. The sender likewise
+            informs the receiver which deliveries it knows about, from
+            which the receiver can deduce which have already been
+            settled.
 
-        <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
-      </class>
+            <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+          </choice>
+        </property>
+
+        <property name="filter">
+          Select messages by criteria.
+        </property>
+          
+        <property name="durable-subscription">
+          Create a persistent subscription.
+        </property>
       
-      <class name="dynamic-node-properties" type="@link-option">
-        Control the properties of nodes created on demand.
+        <property name="dynamic-node-properties">
+          Control the properties of nodes created on demand.
 
-        **XXX lifetime-policy, supported-dist-modes**
-        
-        <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties"/>
-      </class>
+          **XXX lifetime-policy, supported-dist-modes**
+          
+          <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties"/>
+        </property>
 
-      <class name="filter" type="@link-option">
-        Select messages by criteria.
-      </class>
-        
-      <class name="durable-subscription" type="@link-option">
-        Create a persistent subscription.
-      </class>
+        <property name="move">
+          Acquire and consume messages as they are received.
+        </property>
 
-      <class name="move" type="@link-option">
-        Acquire and consume messages as they are received.
-      </class>
+        <property name="copy">
+          Read but do not consume received messages.
+        </property>
 
-      <class name="copy" type="@link-option">
-        Read but do not consume received messages.
-      </class>
-
-      <class name="browse" type="@copy">
-        An alias for copy.
+        <property name="browse">
+          An alias for copy.
+        </property>
       </class>
     </group>
 
@@ -1143,9 +1277,15 @@
 
         <link node="@event"/>
 
-        <group name="basic"> <!-- XXX somehow this only works with basic -->
+        <group name="common" title="Common application events">
           <method name="on-start">
             The event loop is started.
+            
+            <input name="event" type="@event"/>
+          </method>
+
+          <method name="on-stop" experimental="true">
+            The event loop is stopped.
             
             <input name="event" type="@event"/>
           </method>
@@ -1154,6 +1294,7 @@
             A message is received.
             
             <input name="event" type="@event"/>
+            <input name="message" type="@message" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-sendable">
@@ -1163,20 +1304,7 @@
             transferred.
             
             <input name="event" type="@event"/>
-          </method>
-
-          <method name="on-transport-close">
-            The underlying network transport closed.
-            
-            <input name="event" type="@event"/>
-          </method>
-            
-          <method name="on-transport-error">
-            The underlying network transport closed with an error
-            condition.
-            
-            <input name="event" type="@event"/>
-            <input name="message" type="@message" value="[instance]" nullable="true"/>
+            <input name="sender" type="@sender" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-unhandled">
@@ -1186,7 +1314,6 @@
             handle an event.
 
             <input name="event" type="@event"/>
-            <input name="sender" type="@sender" value="[instance]" nullable="true"/>
           </method>
 
           <method name="on-unhandled-error">
@@ -1196,7 +1323,6 @@
             handle an error.
             
             <input name="event" type="@event"/>
-            <input name="transport" type="@transport" value="[instance]" nullable="true"/>
           </method>
         </group>
 
@@ -1252,8 +1378,15 @@
             <input name="link" type="@link" value="[instance]" nullable="true"/>
           </method>
 
-          <method name="on-link-drain">
-            XXX The remote peer drained the link.
+          <method name="on-link-drain" experimental="true">
+            The remote peer drained the link.
+            
+            <input name="event" type="@event"/>
+            <input name="link" type="@link" value="[instance]" nullable="true"/>
+          </method>
+           
+          <method name="on-link-detach" experimental="true">
+            The remote peer detached the link.
             
             <input name="event" type="@event"/>
             <input name="link" type="@link" value="[instance]" nullable="true"/>
@@ -1309,20 +1442,37 @@
           </method>
         </group>
 
+        <group name="transport-state">
+          <method name="on-transport-close">
+            The underlying network channel closed.
+            
+            <input name="event" type="@event"/>
+            <input name="transport" type="@transport" value="[instance]" nullable="true"/>
+          </method>
+            
+          <method name="on-transport-error">
+            The underlying network channel closed with an error
+            condition.
+            
+            <input name="event" type="@event"/>
+            <input name="transport" type="@transport" value="[instance]" nullable="true"/>
+          </method>
+        </group>
+
         <group name="transactions">
-          <method name="on-transaction-declare">
+          <method name="on-transaction-declare" experimental="true">
             The remote peer declared a transaction.
             
             <input name="event" type="@event"/>
           </method>
 
-          <method name="on-transaction-commit">
+          <method name="on-transaction-commit" experimental="true">
             The remote peer committed a transaction.
             
             <input name="event" type="@event"/>
           </method>
 
-          <method name="on-transaction-abort">
+          <method name="on-transaction-abort" experimental="true">
             The remote peer aborted a transaction.
             
             <input name="event" type="@event"/>
@@ -1333,11 +1483,11 @@
 
     <group name="security" title="Security">
       <class name="sasl">
-        SASL information.
+        SASL properties for a connection.
       </class>
       
       <class name="ssl">
-        SSL information.
+        SSL properties for a connection.
 
         <property name="verify-mode"></property>
         <property name="resume-status"></property>
@@ -1365,29 +1515,9 @@
         An operation timed out.
       </class>
     </group>
-
-    <group name="utilities" title="Important utilities">
-      Proton language implementations will 
-      
-      <class name="duration">
-        A span of time in milliseconds.
-      </class>
-      
-      <class name="timestamp">
-        An absolute point in time.
-      </class>
-      
-      <class name="url">
-        A Proton URL.
-      </class>
-      
-      <class name="url-error">
-        Raised if URL parsing fails.
-      </class>
-    </group>
   </module>
 
-  <module name="amqp">
+  <module name="amqp" experimental="true">
     AMQP data encoding and decoding. For typical Proton-based
     applications, these classes will not be used directly.
 
@@ -1434,28 +1564,20 @@
     </group>
 
     <group name="codec" title="Encoding and decoding">
-      <class name="value"></class>
-      <class name="value-type"></class>
-      <class name="encoder"></class>
-      <class name="encode-error"></class>
-      <class name="decoder"></class>
-      <class name="decode-error"></class>
+      <class name="value" experimental="true"></class>
+      <class name="value-type" experimental="true"></class>
+      <class name="encoder" experimental="true"></class>
+      <class name="encode-error" experimental="true"></class>
+      <class name="decoder" experimental="true"></class>
+      <class name="decode-error" experimental="true"></class>
     </group>
   </module>
 
-  <!--
-  <module name="internal">
-    API internals and language extensions.  These are classes that are
-    necessary for the implementation, but not promoted for general
-    consumption by API users.
-  </module>
-  -->
-
-  <module name="io">
+  <module name="io" experimental="true">
     IO integration
 
-    <group name="basic">
-      <class name="connection-engine">
+    <group name="io-interfaces" title="IO interfaces">
+      <class name="connection-engine" experimental="true">
         An event loop for integrating with an existing IO framework.
         
         A connection-engine is an `event-loop` that manages a single
@@ -1491,8 +1613,11 @@
         concurrently in separate threads.
       </class>
 
-      <class name="io-adapter"></class>
-      <class name="sockets-io"></class>
+      <class name="io-adapter" experimental="true"></class>
+    </group>
+
+    <group name="io-implementations" title="IO implementations">
+      <class name="sockets-io" experimental="true"></class>
     </group>
   </module>
   
@@ -1502,8 +1627,14 @@
   <type name="object"/>
   <type name="list"/>
   <type name="map"/>
+  <type name="timestamp"/>
+  <type name="duration"/>
+  <type name="url"/>
 
   <group-definition name="basic" title="Basic properties and methods">
+  </group-definition>
+
+  <group-definition name="configuration" title="Configuration">
   </group-definition>
 
   <group-definition name="message-operations" title="Message operations">
@@ -1526,7 +1657,10 @@
   <group-definition name="delivery-state" title="Delivery state">
   </group-definition>
 
-  <group-definition name="event-processing" title="Event processing">
+  <group-definition name="transport-state" title="Transport state">
+  </group-definition>
+
+  <group-definition name="event-processing" title="Event processing" internal="true">
   </group-definition>
 
   <group-definition name="error-handling" title="Error handling">

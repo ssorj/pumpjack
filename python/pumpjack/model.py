@@ -97,6 +97,9 @@ class _Node:
     def process_properties(self):
         self.title = self.element.attrib.get("title")
         self.hidden = self.element.attrib.get("hidden", "false") == "true"
+        self.experimental = self.element.attrib.get \
+                            ("experimental", "false") == "true"
+        self.internal = self.element.attrib.get("internal", "false") == "true"
         
     def process_text(self):
         text = self.element.text
