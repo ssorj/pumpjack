@@ -18,7 +18,7 @@
 #
 
 from .render import *
-from .model import _Node
+from .model import _Enumeration, _ExternalType, _Node
 
 import collections as _collections
 import markdown2 as _markdown2
@@ -81,6 +81,9 @@ class HtmlRenderer(PumpjackRenderer):
             for group in module.groups:
                 for cls in group.classes:
                     self.render_class(out, cls)
+
+                for enum in group.enumerations:
+                    self.render_enumeration(out, enum)
 
     def render_class_group(self, out, group):
         out.write(html_open("section"))
@@ -172,8 +175,8 @@ class HtmlRenderer(PumpjackRenderer):
                 summary = _html_node_summary(prop)
                 type = _html_parameter_type(prop)
                 value = _html_parameter_value(prop)
-                mutable = _html_boolean(prop.mutable)
-                nullable = _html_boolean(prop.nullable)
+                mutable = _html_boolean_tick_box(prop.mutable)
+                nullable = _html_boolean_tick_box(prop.nullable)
 
                 if value and value.startswith("[") and value.endswith("]"):
                     value = html_span(value[1:-1], class_="special")
@@ -224,11 +227,18 @@ class HtmlRenderer(PumpjackRenderer):
             items = (
                 ("Type", _html_parameter_type(prop)),
                 ("Default value", _html_parameter_value(prop)),
-                ("Mutable", prop.mutable),
-                ("Nullable", prop.nullable),
+                ("Mutable", _html_boolean_text(prop.mutable)),
+                ("Nullable", _html_boolean_text(prop.nullable)),
             )
 
             out.write(html_table(items, False, True, class_="props"))
+            
+            if isinstance(prop.type, _Enumeration):
+                text = "Enumeration {}".format(prop.type.name)
+
+                out.write(html_elem("h2", text))
+                
+                self.render_enumeration_table(out, prop.type)
 
     def render_method(self, out, meth):
         output_path = meth.output_path(self.output_dir)
@@ -256,7 +266,7 @@ class HtmlRenderer(PumpjackRenderer):
             name = input.name
             type = _html_parameter_type(input)
             value = _html_parameter_value(input)
-            nullable = _html_boolean(input.nullable)
+            nullable = _html_boolean_tick_box(input.nullable)
             
             items.append((name, type, value, nullable))
 
@@ -269,12 +279,38 @@ class HtmlRenderer(PumpjackRenderer):
         for output in meth.outputs:
             name = output.name
             type = _html_parameter_type(output)
-            nullable = _html_boolean(output.nullable)
+            nullable = _html_boolean_tick_box(output.nullable)
             
             items.append((name, type, nullable))
 
         out.write(html_table(items, class_="parameters"))
 
+    def render_enumeration(self, out, enum):
+        output_path = enum.output_path(self.output_dir)
+
+        print("Rendering {} to {}".format(enum, output_path))
+
+        with _open_output(output_path) as f:
+            out = PumpjackWriter(f)
+            
+            out.write(_html_node_title(enum))
+            out.write(_html_node_text(enum))
+            out.write(_html_node_links(enum))
+
+            self.render_enumeration_table(out, enum)
+
+    def render_enumeration_table(self, out, enum):
+        items = list()
+        items.append(("Name", "Summary"))
+        
+        for value in enum.values:
+            name = value.name
+            summary = _html_node_summary(value)
+
+            items.append((name, summary))
+
+        out.write(html_table(items))
+                    
 add_renderer("html", HtmlRenderer)
 
 def _html_node_title(node):
@@ -350,7 +386,7 @@ def _html_parameter_type(param):
     return type
 
 def _html_input(input):
-    if input.type in input.model.type_names:
+    if input.type in input.model.external_types_by_name:
         return input.name
 
     return _html_parameter_type(input)
@@ -360,14 +396,12 @@ def _html_parameter_value(param):
 
 def _html_reference(node, ref):
     assert isinstance(node, _Node), node
+    assert isinstance(ref, _Node), ref
     
-    if ref is not None and ref.startswith("@"):
-        node = node.resolve_reference(ref)
-
-        if node is not None:
-            return html_a(node.name, node.url)
-
-    return ref
+    if isinstance(ref, _ExternalType):
+        return ref.name
+    
+    return html_a(ref.name, ref.url)
 
 def _html_special(value):
     if value is not None and value.startswith("[") and value.endswith("]"):
@@ -375,11 +409,17 @@ def _html_special(value):
 
     return value
 
-def _html_boolean(value):
+def _html_boolean_tick_box(value):
     if isinstance(value, str):
         value = value == "true"
     
     return "&#x2612;" if value else "&#x2610;"
+
+def _html_boolean_text(value):
+    if isinstance(value, str):
+        value = value == "true"
+    
+    return "Yes" if value else "No"
 
 def _dedent_text(text):
     if text[0] == "\n":

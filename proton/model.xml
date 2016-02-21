@@ -258,7 +258,7 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Endpoint.html">Java</link>
         <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
 
-        <group name="endpoint-state">
+        <group name="endpoint-state-group">
           <property name="local-state" type="@endpoint-state" value="UNINITIALIZED">
             Local endpoint state.
           </property>
@@ -273,27 +273,25 @@
           
           <property name="remote-condition" type="@condition" value="[instance]">
             The error condition of the remote peer.
-          </property>
+          </property>          
         </group>
       </class>
 
-      <class name="endpoint-state" hidden="true">
+      <enumeration name="endpoint-state">
         Endpoint state values.
 
-        <group name="basic">
-          <property name="UNINITIALIZED" type="@endpoint-state" value="[singleton]">
-            The endpoint is uninitialized.
-          </property>
+        <value name="UNINITIALIZED">
+          The endpoint is uninitialized.
+        </value>
 
-          <property name="ACTIVE" type="@endpoint-state" value="[singleton]">
-            The endpoint is active.
-          </property>
+        <value name="ACTIVE">
+          The endpoint is active.
+        </value>
 
-          <property name="CLOSED" type="@endpoint-state" value="[singleton]">
-            The endpoint is closed.
-          </property>
-        </group>
-      </class>
+        <value name="CLOSED">
+          The endpoint is closed.
+        </value>
+      </enumeration>
       
       <class name="connection" type="@endpoint">
         A top-level channel for communication.
@@ -418,13 +416,12 @@
           <method name="open-session">
             Create and initiate opening the session.
 
-            <input name="options" value="[empty list]" type="list" item-type="session-option"/>
-            <input name="handler" type="@handler" nullable="true"/>
+            <input name="options" type="@session-options" nullable="true"/>
             <output name="session" type="@session"/>
           </method>
         </group>
         
-        <group name="endpoint-state">
+        <group name="endpoint-state-group">
           <property name="local-container-id" type="string">
             The unique identity of the remote container.
           </property>
@@ -604,7 +601,7 @@
           <property name="outgoing-bytes" type="integer"/>
         </group>
 
-        <group name="endpoint-state">
+        <group name="endpoint-state-group">
           <property name="local-incoming-window" type="integer" mutable="true"/>
           <property name="remote-incoming-window" type="integer" value="[discovered]"/>
           <property name="local-outgoing-window" type="integer" mutable="true"/>
@@ -809,7 +806,10 @@
 
         <group name="distribution" title="Message distribution">
           <property name="distribution-mode" type="@distribution-mode" mutable="true"/>
-          <property name="filter" mutable="true"/>
+
+          <property name="filter" type="string" mutable="true">
+            XXX Check type
+          </property>
         </group>
 
         <group name="dynamic-nodes" title="Dynamic node creation">
@@ -824,7 +824,10 @@
 
         <group name="terminus-expiration" title="Terminus expiration">
           <property name="expiry-policy" type="@expiry-policy" mutable="true"/>
-          <property name="timeout" mutable="true"/>
+          
+          <property name="timeout" type="timestamp" mutable="true">
+            XXX Check type
+          </property>
         </group>
         
         <group name="extended-attributes">
@@ -879,8 +882,8 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Condition-class.html">Python</link>
 
         <group name="basic">
-          <property name="name" mutable="true"/>
-          <property name="description" mutable="true"/>
+          <property name="name" type="string" mutable="true"/>
+          <property name="description" type="string" mutable="true"/>
         </group>
       </class>
       
@@ -1015,9 +1018,11 @@
         <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
 
         <group name="basic">
-          <property name="id" mutable="true" nullable="true">
+          <property name="id" type="string" mutable="true" nullable="true">
             A globally unique message identifier.
 
+            XXX Check type
+            
             <!-- XXX used to remove duplicates -->
           </property>
 
@@ -1031,15 +1036,18 @@
             <input name="body" type="object"/>
             <output name="message" type="@message"/>
           </method>
+          
           <method name="clear">
             Clear the content of the message.  All fields are reset to
             their default values.
           </method>
+          
           <method name="encode">
             Encode the message to bytes.
 
             <output name="bytes" type="bytes"/>
           </method>
+          
           <method name="decode">
             Decode the message from bytes.
             
@@ -1048,25 +1056,30 @@
         </group>
 
         <group name="routing" title="Routing">
-          <property name="address" mutable="true"/>
-          <property name="reply-to" mutable="true" nullable="true"/>
-          <property name="correlation-id" mutable="true" nullable="true"/>
+          <property name="address" type="string" mutable="true"/>
+          <property name="reply-to" type="string" mutable="true" nullable="true"/>
+          <property name="correlation-id" type="string" mutable="true" nullable="true"/>
         </group>
 
         <group name="content" title="Content">
-          <property name="subject" mutable="true" nullable="true"/>
-          <property name="body" mutable="true" nullable="true"/>
-          <property name="content-encoding" mutable="true" nullable="true"/>
-          <property name="content-type" mutable="true" nullable="true"/>
-          <property name="inferred" mutable="true" nullable="true"/>
-          <property name="expiry-time" mutable="true" nullable="true"/>
-          <property name="creation-time" mutable="true" nullable="true"/>
+          <property name="subject" type="string" mutable="true" nullable="true"/>
+          <property name="body" type="object" mutable="true" nullable="true"/>
+          <property name="content-encoding" type="string" mutable="true" nullable="true"/>
+          <property name="content-type" type="string" mutable="true" nullable="true"/>
+          <property name="inferred" type="boolean" mutable="true" nullable="true"/>
+
+          <property name="expiry-time" type="duration" mutable="true" nullable="true">
+            XXX Check type
+          </property>
+
+          <property name="creation-time" type="timestamp" mutable="true" nullable="true">
+          </property>
         </group>
 
         <group name="transfer-headers" title="Transfer headers">
           <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-header">AMQP spec</link>
           
-          <property name="durable" value="false" type="boolean" mutable="true">
+          <property name="durable" type="boolean" value="false" mutable="true">
             Durability requirement.  The durable property indicates
             that the message should be held durably by any
             intermediaries taking responsibility for the message.  A
@@ -1074,12 +1087,12 @@
             unexpectedly terminated and restarted.
           </property>
 
-          <property name="priority" value="4" mutable="true" type="integer" nullable="true">
+          <property name="priority" type="integer" value="4" mutable="true" nullable="true">
             Relative message priority.  Higher numbers indciate higher
             priority.
           </property>
 
-          <property name="ttl" mutable="true" type="integer" nullable="true">
+          <property name="ttl" type="integer" mutable="true" nullable="true">
             The time to live.  The message must be discarded after
             'ttl' milliseconds.
           </property>
@@ -1094,16 +1107,31 @@
         </group>
 
         <group name="message-groups" title="Message groups">
-          <property name="group-id" mutable="true" nullable="true"/>
-          <property name="group-sequence" mutable="true" nullable="true"/>
-          <property name="reply-to-group-id" mutable="true" nullable="true"/>
+          <property name="group-id" type="string" mutable="true" nullable="true"/>
+
+          <property name="group-sequence" type="integer" mutable="true" nullable="true">
+            XXX Check type
+          </property>
+
+          <property name="reply-to-group-id" type="string" mutable="true" nullable="true"/>
         </group>
 
         <group name="extended-attributes">
-          <property name="application-properties" type="map"/>
-          <property name="delivery-annotations" type="map"/>
-          <property name="message-annotations" type="map"/>
-          <property name="footer" type="map"/>
+          <property name="application-properties" type="map">
+            XXX Document key and value types
+          </property>
+
+          <property name="delivery-annotations" type="map">
+            XXX Document key and value types
+          </property>
+
+          <property name="message-annotations" type="map">
+            XXX Document key and value types
+          </property>
+
+          <property name="footer" type="map">
+            XXX Document key and value types
+          </property>
         </group>
       </class>
       
@@ -1326,7 +1354,7 @@
           </method>
         </group>
 
-        <group name="endpoint-state">
+        <group name="endpoint-state-group">
           <method name="on-connection-open">
             The remote peer opened the connection.
             
@@ -1621,15 +1649,18 @@
     </group>
   </module>
   
-  <type name="string"/>
-  <type name="boolean"/>
-  <type name="integer"/>
-  <type name="object"/>
-  <type name="list"/>
-  <type name="map"/>
-  <type name="timestamp"/>
-  <type name="duration"/>
-  <type name="url"/>
+  <external-type name="string"/>
+  <external-type name="bytes"/>
+  <external-type name="boolean"/>
+  <external-type name="integer"/>
+  <external-type name="object"/>
+  <external-type name="list"/>
+  <external-type name="map"/>
+  <external-type name="iterator"/>
+  <external-type name="timestamp"/>
+  <external-type name="duration"/>
+  <external-type name="url"/>
+  <external-type name="symbol"/> <!-- XXX -->
 
   <group-definition name="basic" title="Basic properties and methods">
   </group-definition>
@@ -1651,7 +1682,7 @@
     creating new ones.
   </group-definition>
 
-  <group-definition name="endpoint-state" title="Endpoint state">
+  <group-definition name="endpoint-state-group" title="Endpoint state">
   </group-definition>
 
   <group-definition name="delivery-state" title="Delivery state">

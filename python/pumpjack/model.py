@@ -97,9 +97,9 @@ class _Node:
     def process_properties(self):
         self.title = self.element.attrib.get("title")
         self.hidden = self.element.attrib.get("hidden", "false") == "true"
+        self.internal = self.element.attrib.get("internal", "false") == "true"
         self.experimental = self.element.attrib.get \
                             ("experimental", "false") == "true"
-        self.internal = self.element.attrib.get("internal", "false") == "true"
         
     def process_text(self):
         text = self.element.text
@@ -132,35 +132,42 @@ class _Node:
             child.process_references()
 
     def resolve_reference(self, ref):
+        # Find external types by name
+        
         if not ref.startswith("@"):
-            raise Exception("'{}' doesn't look like a ref".format(ref))
+            try:
+                return self.model.external_types_by_name[ref]
+            except KeyError:
+                raise Exception("Cannot find external type '{}'".format(ref))
 
+        # Find nodes by fully qualified paths
+        
         if ref.startswith("@/"):
             try:
                 return self.model.nodes_by_reference[ref]
             except KeyError:
                 raise Exception("Cannot find reference '{}'".format(ref))
-        else:
-            module = None
 
-            for ancestor in self.ancestors:
-                if isinstance(ancestor, _Module):
-                    module = ancestor
+        module = self.find_ancestor(_Module)
+
+        if module:
+            name = ref[1:]
+            node = None
+
+            for group in module.groups:
+                if name in group.children_by_name:
+                    node = group.children_by_name[name]
                     break
+            else:
+                msg = "Cannot find child '{}' on module '{}'"
+                raise Exception(msg.format(name, module.name))
 
-            if module:
-                name = ref[1:]
-                node = None
+            return node
 
-                for group in module.groups:
-                    if name in group.children_by_name:
-                        node = group.children_by_name[name]
-                        break
-                else:
-                    msg = "Cannot find child '{}' on module '{}'"
-                    raise Exception(msg.format(name, module.name))
-
-                return node
+    def find_ancestor(self, cls):
+        for ancestor in self.ancestors:
+            if isinstance(ancestor, cls):
+                return ancestor
 
 class _Group(_Node):
     def process_references(self):
@@ -209,9 +216,17 @@ class _ModuleGroup(_Group):
             cls = _Class(child, self)
             self.classes.append(cls)
 
+        for child in self.element.findall("enumeration"):
+            enum = _Enumeration(child, self)
+            self.enumerations.append(enum)
+
         super().process()
 
-class _Class(_Node):
+class _Type(_Node):
+    def __init__(self, element, parent):
+        super().__init__(element, parent)
+
+class _Class(_Type):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -300,6 +315,15 @@ class _Parameter(_Node):
         self.value = self.element.attrib.get("value")
         self.nullable = self.element.attrib.get("nullable", False)
 
+    def process_references(self):
+        super().process_references()
+
+        if self.type is not None:
+            self.type = self.resolve_reference(self.type)
+
+        if self.item_type is not None:
+            self.item_type = self.resolve_reference(self.item_type)
+
 class _Property(_ClassMember, _Parameter):
     def __init__(self, element, parent):
         super().__init__(element, parent)
@@ -329,6 +353,37 @@ class _Method(_ClassMember):
 
         super().process()
 
+class _Enumeration(_Type):
+    def __init__(self, element, parent):
+        super().__init__(element, parent)
+
+        self.group = parent
+        self.module = self.group.parent
+
+        self.values = list()
+
+    @property
+    def abstract_path(self):
+        name = "{}.html".format(self.name)
+        return (self.module.name, name)
+
+    def process(self):
+        for child in self.element.findall("value"):
+            value = _Value(child, self)
+            self.values.append(value)
+        
+        super().process()
+
+class _Value(_Node):
+    def __init__(self, element, parent):
+        super().__init__(element, parent)
+
+        self.enumeration = self.parent
+    
+class _ExternalType(_Type):
+    def __init__(self, element, parent):
+        super().__init__(element, parent)
+
 class _ErrorCondition(_Node):
     def __init__(self, element, parent):
         super(_ErrorCondition, self).__init__(element, parent)
@@ -344,21 +399,17 @@ class _Error(_Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
-class _Type(_Node):
-    def __init__(self, element, parent):
-        super().__init__(element, parent)
-
 class Model(_Node):
     def __init__(self, element):
         super().__init__(element, None)
 
         self.modules = list()
-        self.types = list()
+        self.external_types = list()
+        self.external_types_by_name = dict()
+        self.group_definitions_by_name = dict()
 
         self.nodes_by_reference = dict()
-        self.group_definitions_by_name = dict()
-        self.type_names = set()
-
+        
     @property
     def abstract_path(self):
         return ("index.html",)
@@ -368,20 +419,16 @@ class Model(_Node):
             module = _Module(child, self)
             self.modules.append(module)
 
-        for child in self.element.findall("type"):
-            type = _Type(child, self)
-            self.types.append(type)
+        for child in self.element.findall("external-type"):
+            type_ = _ExternalType(child, self)
+            self.external_types.append(type_)
+            self.external_types_by_name[type_.name] = type_
 
         for child in self.element.findall("group-definition"):
             definition = _GroupDefinition(child, self)
             self.group_definitions_by_name[definition.name] = definition
 
         super().process()
-
-    def process_references(self):
-        super().process_references()
-
-        self.type_names.update((x.name for x in self.types))
 
 def _gen_amqp_type_link(class_, text_template, href_template):
     if not class_.name.startswith("amqp-"):
