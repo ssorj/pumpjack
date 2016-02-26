@@ -32,10 +32,15 @@ class _Node:
         
         self.title = None
         self.text = None
-        self.hidden = False
         self.links = list()
         self.annotations = dict()
 
+        self.hidden = False
+        self.internal = False
+        self.proposed = False
+        self.deprecated = False
+        self.experimental = False
+        
         self.parent = parent
         self.ancestors = list()
         self.children = list()
@@ -96,8 +101,12 @@ class _Node:
         
     def process_properties(self):
         self.title = self.element.attrib.get("title")
+
         self.hidden = self.element.attrib.get("hidden", "false") == "true"
         self.internal = self.element.attrib.get("internal", "false") == "true"
+        self.proposed = self.element.attrib.get("proposed", "false") == "true"
+        self.deprecated = self.element.attrib.get \
+                          ("deprecated", "false") == "true"
         self.experimental = self.element.attrib.get \
                             ("experimental", "false") == "true"
         

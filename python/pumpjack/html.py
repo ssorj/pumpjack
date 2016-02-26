@@ -98,7 +98,7 @@ class HtmlRenderer(PumpjackRenderer):
             link = _html_node_table_link(cls)
             summary = first_sentence(cls.text)
 
-            if cls.hidden:
+            if cls.hidden or cls.internal:
                 continue
 
             items.append((link, summary))
@@ -146,6 +146,9 @@ class HtmlRenderer(PumpjackRenderer):
                     self.render_method(out, meth)
 
     def render_class_member_group(self, out, cls, group):
+        if group.hidden or group.internal:
+            return
+        
         out.write(html_open("section"))
         out.write(html_h(group.title))
         out.write(_html_node_text(group))
@@ -171,6 +174,9 @@ class HtmlRenderer(PumpjackRenderer):
                           "Mutable", "Nullable"))
 
             for prop in properties:
+                if prop.hidden or prop.internal:
+                    continue
+                
                 link = _html_node_table_link(prop)
                 summary = _html_node_summary(prop)
                 type = _html_parameter_type(prop)
@@ -190,6 +196,9 @@ class HtmlRenderer(PumpjackRenderer):
             items.append(("Method", "Summary", "Inputs", "Outputs"))
                             
             for meth in methods:
+                if meth.hidden or meth.internal:
+                    continue
+                
                 link = _html_node_table_link(meth)
                 summary = _html_node_summary(meth)
 
@@ -333,12 +342,18 @@ def _html_node_flags(node):
 
     flags = list()
 
-    if node.experimental:
-        flags.append(html_span("experimental", class_="flag"))
-
     if node.internal:
         flags.append(html_span("internal", class_="flag"))
         
+    if node.proposed:
+        flags.append(html_span("proposed", class_="flag"))
+
+    if node.deprecated:
+        flags.append(html_span("deprecated", class_="flag"))
+        
+    if node.experimental:
+        flags.append(html_span("experimental", class_="flag"))
+
     return " ".join(flags)
 
 def _html_node_table_link(node):
