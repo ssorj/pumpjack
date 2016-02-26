@@ -1,0 +1,181 @@
+<class name="link" type="@endpoint">
+  A named channel for sending or receiving messages.  A link can
+  be a sender or a receiver, but never both.  A link contains an
+  ordered sequence of delivery objects.
+
+  <link node="@link-options"/>
+  <link node="@session"/>
+  <link node="@sender"/>
+  <link node="@receiver"/>
+  <link node="@delivery"/>
+
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Link.html">Java</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
+
+  <group name="basic">
+    <property name="name" type="string" value="[generated]">
+      The link name.
+    </property>
+
+    <property name="session" type="@session" value="[instance]">
+      The containing session.
+    </property>
+
+    <method name="open" experimental="true">
+      Open the link.
+
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+
+      <input name="options" type="@link-options" nullable="true"/>
+    </method>
+    
+    <method name="close">
+      Close the link.
+
+      The operation is complete when on-link-close fires.
+      
+      <link node="@/proton/core/handler/on-link-close"/>
+      
+      <input name="condition" type="@condition" nullable="true"/>
+    </method>
+
+    <method name="detach">
+      Detach the link without closing it.  For durable
+      subscriptions this means the subscription is inactive but
+      not canceled.
+      
+      The operation is complete when on-link-detach fires.
+      
+      <link node="@/proton/core/handler/on-link-detach"/>
+      
+      <input name="condition" type="@condition" nullable="true"/>
+    </method>
+  </group>
+
+  <group name="termini" title="Source and target">
+    <property name="local-source" type="@terminus" value="[instance]">
+      The source terminus of the local peer.
+    </property>
+
+    <property name="local-target" type="@terminus" value="[instance]">
+      The target terminus of the local peer.
+    </property>
+
+    <property name="remote-source" type="@terminus" value="[instance]">
+      The source terminus of the remote peer.
+    </property>
+
+    <property name="remote-target" type="@terminus" value="[instance]">
+      The target terminus of the remote peer.
+    </property>
+  </group>
+
+  <group name="flow-control">
+    <property name="local-credit" type="integer" value="[discovered]">
+      The local view of the total outstanding credit on the link.
+
+      Each whole integer of credit permits one message transfer.
+    </property>
+
+    <property name="remote-credit" type="integer" value="[discovered]">
+      The remote view of the total outstanding credit on the link.
+
+      Each whole integer of credit permits one message transfer.
+    </property>
+  </group>
+
+  <group name="events" internal="true">
+    <method name="find-deliveries" internal="true">
+      Find deliveries in the specified states.  The results
+      are scoped to deliveries on this session.
+
+      <input name="updated" type="boolean"/>
+      <input name="readable" type="boolean"/>
+      <input name="writable" type="boolean"/>
+      <output name="results" type="iterator" item-type="@delivery"/>
+    </method>
+  </group>
+
+  <!-- XXX queued -->
+</class>
+
+<class name="receiver" type="@link">
+  A link for receiving messages.
+
+  <link node="@sender"/>
+
+  <group name="basic">
+  </group>
+  
+  <group name="flow-control">
+    <method name="add-credit" proposed="true">
+      Issue credit on the link.  This increases the credit
+      issued to the remote sender by the specified number of
+      messages.
+
+      <input name="count" type="integer"/>
+    </method>
+
+    <method name="flush" proposed="true">
+      Request all available messages.  This tells the sender to
+      use all existing credit immediately to send deliveries and
+      then discard any excess credit.
+
+      The operation is complete when the on-receiver-flush event
+      fires.
+
+      <link node="@/proton/core/handler/on-receiver-flush"/>
+    </method>
+  </group>
+</class>
+
+<class name="sender" type="@link">
+  A link for sending messages.
+
+  <link node="@receiver"/>
+  
+  <group name="message-operations">
+    <method name="send">
+      Send a message on the link.
+
+      <input name="message" type="@message"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+
+    <method name="send-request" proposed="true">
+      Send a request message.  The message reply-to property is
+      set automatically.
+
+      <input name="message" type="@message"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+    
+    <method name="send-response" proposed="true">
+      Send a response message.  The message address and
+      correlation-id properties are set automatically.
+
+      <input name="response" type="@message"/>
+      <input name="request" type="@message"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+  </group>
+
+  <group name="flow-control">
+    <property name="sendable" type="integer" value="[discovered]" proposed="true">
+      The number of messages that can be sent with current credit.
+    </property>
+
+    <property name="queued" type="integer" value="[discovered]" proposed="true">
+      The number of messages already queued for transfer.
+    </property>
+
+    <property name="flushing" type="boolean" value="[discovered]" mutable="true" proposed="true">
+      The receiving end has activated flushing mode.
+    </property>
+  </group>
+</class>

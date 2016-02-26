@@ -1,0 +1,132 @@
+<class name="session" type="@endpoint">
+  A container of links.
+
+  <link node="@session-options"/>
+  <link node="@connection"/>
+  <link node="@link"/>
+  
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Session.html">Java</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
+  
+  <group name="basic">
+    <property name="connection" type="@connection" value="[instance]">
+      The containing connection.
+    </property>
+
+    <method name="open" experimental="true">
+      Open the session.
+
+      The operation is complete when on-session-open fires.
+
+      <link node="@/proton/core/handler/on-session-open"/>
+
+      <input name="options" type="@session-options" nullable="true"/>
+    </method>
+
+    <method name="close">
+      Close the session.
+
+      The operation is complete when on-session-close fires.
+      
+      <link node="@/proton/core/handler/on-session-close"/>
+
+      <input name="condition" type="@condition" nullable="true"/>
+    </method>
+  </group>
+
+  <group name="message-operations">
+    <method name="send" proposed="true">
+      Send a message on a link with the given address.
+
+      <input name="message" type="@message"/>
+      <input name="address" type="string"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+
+    <method name="send-request" proposed="true">
+      Send a request message.  The message.reply-to property is
+      set automatically.
+
+      <input name="message" type="@message"/>
+      <input name="address" type="string"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+    
+    <method name="send-response" proposed="true">
+      Send a response message.  The message.to property is set
+      automatically.
+
+      <input name="response" type="@message"/>
+      <input name="request" type="@message"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+  </group>
+  
+  <group name="link-operations">
+    <method name="open-receiver">
+      Create and open a receiving link.
+
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+      
+      <input name="address" type="string"/>
+      <input name="options" type="@link-options" nullable="true"/>
+      <output name="receiver" type="@receiver"/>
+    </method>
+
+    <method name="open-sender">
+      Create and open a sending link.
+
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+
+      <input name="address" type="string"/>
+      <input name="options" type="@link-options" nullable="true"/>
+      <output name="sender" type="@sender"/>
+    </method>
+  </group>
+
+  <group name="flow-control">
+    <property name="incoming-bytes" type="integer" value="[discovered]">
+      The number of incoming bytes currently buffered.
+    </property>
+    
+    <property name="outgoing-bytes" type="integer" value="[discovered]">
+      The number of outgoing bytes currently buffered.
+    </property>
+    
+    <property name="remote-incoming-window" type="integer" value="[discovered]">
+      The remote peer's max number of incoming transfer frames.
+    </property>
+    
+    <property name="remote-outgoing-window" type="integer" value="[discovered]">
+      The remote peer's max number of outgoing transfer frames.
+    </property>
+  </group>
+
+  <group name="events" internal="true">
+    <method name="find-links" internal="true">
+      Find link endpoints in the specified states.  The results
+      are scoped to links on this session.
+
+      <input name="local-states" type="list" item-type="@endpoint-state"/>
+      <input name="remote-states" type="list" item-type="@endpoint-state"/>
+      <output name="results" type="iterator" item-type="@link"/>
+    </method>
+
+    <method name="find-deliveries" internal="true">
+      Find deliveries in the specified states.  The results
+      are scoped to deliveries on this session.
+
+      <input name="updated" type="boolean"/>
+      <input name="readable" type="boolean"/>
+      <input name="writable" type="boolean"/>
+      <output name="results" type="iterator" item-type="@delivery"/>
+    </method>
+  </group>
+</class>

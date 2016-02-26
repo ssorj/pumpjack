@@ -1,0 +1,193 @@
+<class name="connection" type="@endpoint">
+  A top-level channel for communication.
+  
+  In current implementations, a connection corresponds to a TCP
+  connection, represented by a transport.
+
+  A connection object contains zero or more session objects,
+  which in turn contain zero or more link objects.  Each link
+  object contains an ordered sequence of delivery objects.
+
+  <!--
+  The connection is the basis for discovering endpoint and
+  delivery state changes.
+  -->
+
+  <!-- What behaviors do you get by default? -->
+
+  <link node="@connection-options"/>
+  <link node="@transport"/>
+  <link node="@session"/>
+  
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1connection.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Connection.html">Java</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
+
+  <group name="basic">
+    <property name="container" type="@container" value="[instance]">
+      The container which holds this connection.
+    </property>
+
+    <property name="transport" type="@transport" value="[instance]">
+      The associated transport.
+    </property>
+
+    <method name="open" experimental="true">
+      Open the connection.
+
+      The operation is complete when on-connection-open fires.
+
+      <link node="@/proton/core/handler/on-connection-open"/>
+
+      <input name="options" type="@connection-options" nullable="true"/>
+    </method>
+
+    <method name="close">
+      Close the connection.
+
+      The operation is complete when on-connection-close fires.
+      
+      <link node="@/proton/core/handler/on-connection-close"/>
+    
+      <input name="condition" type="@condition" nullable="true"/>
+    </method>
+  </group>
+  
+  <group name="message-operations">
+    <method name="send" experimental="true">
+      Send a message on the default session.
+
+      <input name="message" type="@message"/>
+      <input name="address" type="string"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+
+    <method name="send-request" proposed="true">
+      Send a request message.  The message reply-to property is
+      set automatically.
+
+      <link node="@/proton/core/message/reply-to"/>
+
+      <input name="message" type="@message"/>
+      <input name="address" type="string"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+
+    <method name="send-response" proposed="true">
+      Send a response message.  The message address and
+      correlation-id properties are set automatically.
+
+      <link node="@/proton/core/message/address"/>
+      <link node="@/proton/core/message/correlation-id"/>
+
+      <input name="message" type="@message"/>
+      <input name="request" type="@message"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+  </group>
+
+  <group name="link-operations">
+    <method name="open-sender">
+      Create and open a sender using the default session.
+
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+
+      <input name="address" type="string"/>
+      <input name="options" type="@link-options" nullable="true"/>
+      <output name="sender" type="@sender"/>
+    </method>
+
+    <method name="open-receiver">
+      Create and open a receiver using the default session.
+
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+
+      <input name="address" type="string"/>
+      <input name="options" type="@link-options" nullable="true"/>
+      <output name="receiver" type="@receiver"/>
+    </method>
+  </group>
+
+  <group name="session-operations" title="Session operations">
+    <property name="default-session" type="@session" value="[instance]">
+      The session used by open-sender and open-receiver.
+    </property>
+
+    <method name="open-session">
+      Create and initiate opening the session.
+
+      <input name="options" type="@session-options" nullable="true"/>
+      <output name="session" type="@session"/>
+    </method>
+  </group>
+  
+  <group name="endpoint-state-group">
+    <property name="remote-container-id" type="string" value="[discovered]">
+      The unique identity of the remote container.
+    </property>
+    
+    <property name="remote-host" type="string" value="[discovered]">
+      The name of the remote peer.
+    </property>
+
+    <property name="remote-user" type="string" value="[discovered]">
+      The user name for authentication.
+    </property>
+  </group>
+
+  <group name="extended-attributes">
+    <property name="remote-properties" type="map" value="[discovered]">
+      XXX check types
+      
+      Application properties defined by the remote peer.
+    </property>
+
+    <property name="remote-offered-capabilities" value="[discovered]" type="list">
+      XXX check types
+      
+      Extensions the remote peer supports.
+    </property>
+    
+    <property name="remote-desired-capabilities" value="[discovered]" type="list">
+      XXX check types
+      
+      Extensions the remote peer can use.
+    </property>
+  </group>
+
+  <group name="events">
+    <method name="find-sessions" internal="true">
+      Find session endpoints in the specified states.  The
+      results are scoped to sessions on this connection.
+      
+      <input name="local-states" type="list" item-type="@endpoint-state"/>
+      <input name="remote-states" type="list" item-type="@endpoint-state"/>
+      <output name="results" type="iterator" item-type="@session"/>
+    </method>
+
+    <method name="find-links" internal="true">
+      Find link endpoints in the specified states.  The results
+      are scoped to links on this connection.
+
+      <input name="local-states" type="list" item-type="@endpoint-state"/>
+      <input name="remote-states" type="list" item-type="@endpoint-state"/>
+      <output name="results" type="iterator" item-type="@link"/>
+    </method>
+
+    <method name="find-deliveries" internal="true">
+      Find deliveries in the specified states.  The results
+      are scoped to deliveries on this connection.
+
+      <input name="updated" type="boolean"/>
+      <input name="readable" type="boolean"/>
+      <input name="writable" type="boolean"/>
+      <output name="results" type="iterator" item-type="@delivery"/>
+    </method>
+  </group>
+</class>

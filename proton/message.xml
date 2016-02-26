@@ -1,0 +1,158 @@
+<class name="message">
+  A mutable holder of application content.
+
+  <!-- XXX a message is a value object -->
+
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/message_8h.html">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1message.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/message/Message.html">Java</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
+
+  <group name="basic">
+    <property name="id" type="scalar" mutable="true" nullable="true">
+      A globally unique message identifier.
+
+      XXX Check type
+      
+      <!-- XXX used to remove duplicates -->
+    </property>
+
+    <property name="user" type="string" mutable="true" nullable="true">
+      The identity of the user producing the message.
+    </property>
+    
+    <method name="[constructor]">
+      Create a new message.
+
+      <input name="body" type="object"/>
+      <output name="message" type="@message"/>
+    </method>
+    
+    <method name="clear">
+      Clear the content of the message.  All fields are reset to
+      their default values.
+    </method>
+  </group>
+
+  <group name="routing" title="Routing">
+    <property name="address" type="string" mutable="true" nullable="true">
+      The message destination.
+    </property>
+  
+    <property name="reply-to" type="string" mutable="true" nullable="true">
+      The address for replies.
+    </property>
+  
+    <property name="correlation-id" type="string" mutable="true" nullable="true">
+      An identifier for matching related messages.
+    </property>
+  </group>
+
+  <group name="content" title="Content">
+    <property name="subject" type="string" mutable="true" nullable="true">
+      Summary information.
+    </property>
+    
+    <property name="body" type="object" mutable="true" nullable="true">
+      The main message content.
+    </property>
+    
+    <property name="content-type" type="symbol" mutable="true" nullable="true">
+      The MIME type of the body.
+    </property>
+    
+    <property name="content-encoding" type="string" mutable="true" nullable="true" internal="true">
+      The encoding of the body.
+    </property>
+    
+    <property name="expiry-time" type="timestamp" mutable="true" nullable="true">
+      The absolute time past which the message should be discarded.
+    </property>
+
+    <property name="creation-time" type="timestamp" mutable="true" nullable="true">
+      The absolute time of message creation.
+    </property>
+    
+    <property name="inferred" type="boolean" value="false" mutable="true" nullable="true">
+      Determine the AMQP section type from the body type.
+    </property>
+  </group>
+
+  <group name="transfer-headers" title="Transfer headers">
+    <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-header">AMQP definition</link>
+    
+    <property name="durable" type="boolean" value="false" mutable="true">
+      Durability requirement.  The durable property indicates
+      that the message should be held durably by any
+      intermediaries taking responsibility for the message.  A
+      durable message is saved even if the intermediary is
+      unexpectedly terminated and restarted.
+    </property>
+
+    <property name="priority" type="integer" value="4" mutable="true" nullable="true">
+      Relative message priority.  Higher numbers indciate higher
+      priority.
+    </property>
+
+    <property name="ttl" type="duration" mutable="true" nullable="true">
+      The time to live.  The message must be discarded after
+      'ttl' milliseconds.
+    </property>
+
+    <property name="first-acquirer" type="boolean" value="true" mutable="true">
+      The recipient is first to acquire the message.
+    </property>
+
+    <property name="delivery-count" type="integer" value="0" mutable="true">
+      The number of prior unsuccessful delivery attempts.
+    </property>
+  </group>
+
+  <group name="message-groups" title="Message groups">
+    <property name="group-id" type="string" mutable="true" nullable="true">
+      The identifier of the group the message belongs to.
+    </property>
+
+    <property name="group-sequence" type="integer" mutable="true" nullable="true">
+      The relative position of this message within its group.
+    </property>
+
+    <property name="reply-to-group-id" type="string" mutable="true" nullable="true">
+      The group a reply message belongs to.
+    </property>
+  </group>
+
+  <group name="extended-attributes">
+    <property name="application-properties" type="map" key-type="string" item-type="scalar">
+      Application-defined message attributes.
+    </property>
+
+    <property name="delivery-annotations" type="map" key-type="symbol" item-type="object">
+      Delivery-specific transport attributes.
+    </property>
+
+    <property name="message-annotations" type="map" key-type="symbol" item-type="object">
+      Message-specific transport attributes.
+    </property>
+
+    <property name="footer" type="map" hidden="true" key-type="symbol" item-type="object">
+      Transport attributes that can only be evaluated after the
+      whole message has been seen.
+    </property>
+  </group>
+
+  <group name="codec">
+    <method name="encode">
+      Encode the message to bytes.
+
+      <output name="bytes" type="bytes"/>
+    </method>
+    
+    <method name="decode">
+      Decode the message from bytes.
+      
+      <input name="bytes" type="bytes"/>
+    </method>
+  </group>
+</class>

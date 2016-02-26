@@ -1,0 +1,71 @@
+<class name="endpoint">
+  The base class for connection, session, and link.
+
+  Every AMQP endpoint starts out in an uninitialized state and
+  then proceeds linearly to an active and then closed state.
+  This lifecycle occurs at both endpoints involved, and so the
+  state model for an endpoint includes not only the known local
+  state but also the last known state of the remote endpoint.
+
+  The local and remote peers each maintain a set of
+  corresponding local and remote endpoints.  Each peer evaluates
+  and reconciles remote endpoint state changes as they are
+  communicated over the wire.
+
+  <link node="@/proton/core/connection"/>
+  <link node="@/proton/core/session"/>
+  <link node="@/proton/core/sender"/>
+  <link node="@/proton/core/receiver"/>
+
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">AMQP definition</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1endpoint.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Endpoint.html">Java</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
+
+  <group name="endpoint-state-group">
+    <property name="local-state" type="@endpoint-state" value="UNINITIALIZED">
+      Local endpoint state.
+    </property>
+
+    <property name="remote-state" type="@endpoint-state" value="UNINITIALIZED">
+      Remote endpoint state.
+    </property>
+
+    <property name="uninitialized" type="boolean" value="[discovered]" proposed="true">
+      The local and remote endpoint states are UNINITIALIZED.
+    </property>
+
+    <property name="active" type="boolean" value="[discovered]" proposed="true">
+      The local and remote endpoint states are ACTIVE.
+    </property>
+
+    <property name="closed" type="boolean" value="[discovered]" proposed="true">
+      The local and remote endpoint states are CLOSED.
+    </property>
+    
+    <property name="local-condition" type="@condition" value="[instance]">
+      The error condition of the local peer.
+    </property>
+    
+    <property name="remote-condition" type="@condition" value="[instance]">
+      The error condition of the remote peer.
+    </property>
+  </group>
+</class>
+
+<enumeration name="endpoint-state">
+  Endpoint state values.
+
+  <value name="UNINITIALIZED">
+    The endpoint is uninitialized.
+  </value>
+
+  <value name="ACTIVE">
+    The endpoint is active.
+  </value>
+
+  <value name="CLOSED">
+    The endpoint is closed.
+  </value>
+</enumeration>

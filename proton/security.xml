@@ -1,0 +1,18 @@
+<class name="sasl">
+  SASL properties for a connection.
+</class>
+
+<class name="ssl">
+  SSL properties for a connection.
+
+  <property name="verify-mode"></property>
+  <property name="resume-status"></property>
+</class>
+
+<class name="ssl-client-options">
+  SSL configuration for outbound connections.
+</class>
+
+<class name="ssl-server-options">
+  SSL configuration for inbound connections.
+</class>

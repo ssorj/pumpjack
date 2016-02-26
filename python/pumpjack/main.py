@@ -30,30 +30,6 @@ class Pumpjack(object):
 
         self.model = None
 
-    def merge_content(self, content, input_dir):
-        input_files = _os.listdir(input_dir)
-        
-        out = list()
-        tokens = _re.split("({{.+?}})", content)
-
-        for token in tokens:
-            if token[:2] != "{{" or token[-2:] != "}}":
-                out.append(token)
-                continue
-            
-            file_name = token[2:-2]
-
-            if file_name in input_files:
-                file_path = _os.path.join(input_dir, file_name)
-                
-                with open(file_path, "r") as f:
-                    file_content = f.read()
-                    
-                out.append(self.merge_content(file_content, input_dir))
-                continue
-
-        return "".join(out)
-    
     def load(self):
         path = _os.path.join(self.input_dir, "model.xml")
 
@@ -68,18 +44,32 @@ class Pumpjack(object):
         self.model.process()
         self.model.process_references()
 
-    def _load_file(self, path):
-        assert _os.path.isfile(path)
+    def merge_content(self, content, input_dir):
+        input_files = _os.listdir(input_dir)
         
-        tree = ElementTree()
+        out = list()
+        tokens = _re.split(r"(@.+?@)", content)
 
-        with open(path) as f:
-            tree.parse(f)
-
-        elem = tree.getroot()
+        for token in tokens:
+            if (token[:1], token[-1:]) != ("@", "@"):
+                out.append(token)
+                continue
             
-        return Model(elem)
+            file_name = token[1:-1]
 
+            if file_name in input_files:
+                file_path = _os.path.join(input_dir, file_name)
+                
+                with open(file_path, "r") as f:
+                    file_content = f.read()
+                    
+                out.append(self.merge_content(file_content, input_dir))
+                continue
+
+            out.append(token)
+
+        return "".join(out)
+    
     def render(self, output_dir, renderer_name):
         assert self.model is not None
 

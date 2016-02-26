@@ -1,0 +1,23 @@
+<class name="condition" experimental="true">
+  An endpoint error state.
+
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-amqp-error">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/condition_8h.html">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Condition-class.html">Python</link>
+
+  <group name="basic">
+    <property name="name" type="symbol" mutable="true">
+      The AMQP condition name.
+    </property>
+    
+    <property name="description" type="string" mutable="true" nullable="true">
+      A longer message about the condition.
+    </property>
+
+    <property name="info" type="map" key-type="symbol" mutable="true" nullable="true">
+      XXX Check types
+      
+      Extra information about the condition.
+    </property>
+  </group>
+</class>

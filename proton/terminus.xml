@@ -1,0 +1,104 @@
+<class name="terminus" experimental="true">
+  One end of a link, either a source or a target.
+
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/terminus_8h.html">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1terminus.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Terminus-class.html">Python</link>
+  
+  <group name="basic">
+    <property name="type" type="@terminus-type" value="UNSPECIFIED" mutable="true">
+      Source, target, or coordinator.
+    </property>
+      
+    <property name="address" type="string" mutable="true">
+      The address of the source or target.
+    </property>
+
+    <property name="durability" type="@terminus-durability" value="NONE" mutable="true">
+      The policy for saving terminus state.
+    </property>
+
+    <property name="default-outcome" type="symbol" mutable="true">
+      The default delivery state.  It indicates the outcome to
+      be used for transfers that have not reached a terminal
+      state at the receiver when the transfer is settled,
+      including when the source is destroyed.
+    </property>
+
+    <property name="outcomes" type="list" item-type="symbol" mutable="true">
+      The delivery states allowed for this terminus.
+    </property>
+  </group>
+
+  <group name="distribution" title="Message distribution">
+    <property name="distribution-mode" type="@distribution-mode" value="MOVE" mutable="true">
+      Move or copy messages.
+    </property>
+
+    <property name="filters" type="map" key-type="symbol" mutable="true" nullable="true">
+      XXX Check types
+      
+      Select messages by criteria.
+    </property>
+  </group>
+
+  <group name="dynamic-nodes" title="Dynamic node creation">
+    <property name="dynamic" type="boolean" value="false" mutable="true">
+      Request creation of a remote node.
+    </property>
+    
+    <property name="dynamic-node-properties" type="map" key-type="symbol" mutable="true" nullable="true">
+      XXX Check types
+      
+      Properties of the created node.
+    </property>
+  </group>
+
+  <group name="terminus-expiration" title="Terminus expiration">
+    <property name="expiry-policy" type="@expiry-policy" value="LINK-CLOSE" mutable="true">
+      Control when the clock for expiration begins.
+    </property>
+    
+    <property name="timeout" type="duration" mutable="true">
+      The period after which a terminus discarded.
+    </property>
+  </group>
+  
+  <group name="extended-attributes">
+    <property name="capabilities" type="list" item-type="symbol" mutable="true" nullable="true">
+      Extensions supported or desired.
+    </property>
+  </group>
+</class>
+
+<enumeration name="terminus-type">
+  <value name="UNSPECIFIED"/>
+  <value name="SOURCE"/>
+  <value name="TARGET"/>
+  <value name="COORDINATOR"/>
+</enumeration>
+
+<enumeration name="terminus-durability">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-durability">AMQP definition</link>
+  
+  <value name="NONE"/>
+  <value name="CONFIGURATION"/>
+  <value name="UNSETTLED-STATE"/>
+</enumeration>
+
+<enumeration name="distribution-mode">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-std-dist-mode">AMQP definition</link>
+  
+  <value name="COPY"/>
+  <value name="MOVE"/>
+</enumeration>
+
+<enumeration name="expiry-policy">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-expiry-policy">AMQP definition</link>
+
+  <value name="LINK-CLOSE"/>
+  <value name="SESSION-CLOSE"/>
+  <value name="CONNECTION-CLOSE"/>
+  <value name="NEVER"/>
+</enumeration>

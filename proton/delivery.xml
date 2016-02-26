@@ -1,0 +1,116 @@
+<class name="delivery">
+  A message transfer.  Every delivery exists within the context
+  of a link.
+
+  A delivery attempt can fail.  As a result, a particular
+  message may correspond to multiple deliveries.
+
+  <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">AMQP definition</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/group__delivery.html">C</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1delivery.html">C++</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Delivery.html">Java</link>
+  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Delivery-class.html">Python</link>
+  
+  <group name="basic">
+    <property name="id" type="bytes" value="[generated]">
+      The delivery identifier.
+    </property>
+
+    <property name="link" value="[instance]" type="@link">
+      The link on which the delivery was sent or received.
+    </property>
+  </group>
+
+  <group name="settlement" title="Settlement">
+    Settlement state governs how long a message transfer is
+    tracked at the local and remote peers, and when each can
+    safely consider the transfer resolved, that is "settled".
+    
+    <property name="local-settled" value="false" type="boolean">
+      True if the delivery has been settled locally.
+    </property>
+    
+    <property name="remote-settled" value="false" type="boolean">
+      True if the delivery has been settled by the remote peer.
+    </property>
+
+    <method name="settle">
+      Mark the delivery settled.  A settled delivery can never
+      be used again.
+    </method>
+  </group>
+
+  <group name="delivery-state" title="Delivery state">
+    Delivery states represent the current status or final
+    outcome of a message transfer. Every delivery contains both
+    a local and a remote delivery state.  The remote state
+    indicates the last known remote state of the delivery.
+    
+    <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">AMQP definition</link>
+    
+    <property name="local-state" value="NONE" type="@delivery-state">
+      The local delivery state.
+    </property>
+    
+    <property name="remote-state" value="NONE" type="@delivery-state">
+      The delivery state at the remote peer.
+    </property>
+    
+    <method name="accept">
+      Change the delivery state to ACCEPTED and settle.
+    </method>
+
+    <method name="reject">
+      Change the delivery state to REJECTED and settle.
+    </method>
+
+    <method name="release">
+      Change the delivery state to RELEASED and settle.
+    </method>
+    
+    <method name="modify">
+      Change the delivery state to MODIFIED and settle.
+    </method>
+  </group>
+
+  <group name="events" internal="true">
+    <property name="updated" type="boolean" internal="true">
+    </property>
+
+    <property name="readable" type="boolean" internal="true">
+    </property>
+
+    <property name="writable" type="boolean" internal="true">
+    </property>
+  </group>
+</class>
+
+<enumeration name="delivery-state">
+  Delivery state values
+  
+  <value name="NONE">
+    The initial state before any delivery data is transferred.
+  </value>
+  
+  <value name="RECEIVED">
+    A non-terminal state indicating data has been received.
+  </value>
+
+  <value name="ACCEPTED">
+    The delivery was successfully processed; terminal.
+  </value>
+
+  <value name="REJECTED">
+    The delivery was invalid; terminal.
+  </value>
+
+  <value name="RELEASED">
+    The delivery is returned to the sender; terminal.
+  </value>
+
+  <value name="MODIFIED">
+    The delivery is returned to the sender for annotation
+    before further delivery attempts; terminal.
+  </value>
+</enumeration>

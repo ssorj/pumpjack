@@ -1,0 +1,46 @@
+<module name="core">
+  The primary entry point for the event-driven API. Many
+  applications will import only this module.
+
+  <annotation name="requires">amqp, io</annotation>
+
+  <group name="model" title="AMQP model">
+    @container.xml@
+
+    @connection.xml@
+
+    @session.xml@
+
+    @link.xml@
+
+    @message.xml@
+
+    @delivery.xml@
+
+    @transport.xml@
+    
+    @acceptor.xml@
+      
+    @endpoint.xml@
+
+    @condition.xml@
+
+    @terminus.xml@
+  </group>
+
+  <group name="configuration">
+    @configuration.xml@
+  </group>
+
+  <group name="events">
+    @events.xml@
+  </group>
+
+  <group name="security">
+    @security.xml@
+  </group>
+
+  <group name="errors">
+    @errors.xml@
+  </group>
+</module>

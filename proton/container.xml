@@ -1,0 +1,208 @@
+<class name="container">
+  A top-level container of connections, sessions, and links.
+
+  A container gives a unique identity to each communicating
+  peer.  It is often a process-level object.
+
+  It serves as an entry point to the API, allowing connections
+  and links to be established.  It can be supplied with an event
+  handler in order to intercept important events, such as newly
+  received messages or newly issued link credit for sending
+  messages.
+
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">AMQP definition</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/container_8h.html">C</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1container.html">C++</link>
+  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.reactor.Container-class.html">Python</link>
+  
+  <group name="basic">
+    <property name="id" value="[generated]" type="string">
+      A globally unique container identifier.  It is used to
+      identify this container in any connections it establishes.
+    </property>
+
+    <method name="[constructor]">
+      Create a new container.
+
+      <input name="handler" type="@handler" nullable="true">
+        The main event handler for this container.
+      </input>
+      
+      <input name="id" value="[generated]" type="string" nullable="true">
+        Identifiers should be unique.  By default a UUID will be
+        used.
+      </input>
+
+      <output name="container" type="@container"/>
+    </method>
+
+    <method name="run">
+      Start processing events.  It returns when all connections
+      and acceptors are closed or the container is stopped.
+
+      <link node="@/proton/core/connection/close"/>
+      <link node="@acceptor"/>
+    </method>
+
+    <method name="stop" proposed="true">
+      Shutdown open connections and stop processing events.
+
+      The operation is complete when on-stop fires.
+
+      <link node="@/proton/core/handler/on-stop"/>
+    </method>
+  </group>
+
+  <group name="configuration">
+    <property name="client-connection-options" value="[instance]" type="@connection-options" mutable="true">
+      Default options for new outbound connections.
+    </property>
+
+    <property name="server-connection-options" value="[instance]" type="@connection-options" mutable="true">
+      Default options for new inbound connections.
+    </property>
+
+    <property name="session-options" value="[instance]" type="@session-options" mutable="true">
+      Default options for new sessions.
+    </property>
+
+    <property name="link-options" value="[instance]" type="@link-options" mutable="true">
+      Default options for new links.
+    </property>
+  </group>
+
+  <group name="message-operations">
+    <method name="send" proposed="true">
+      Send a message.
+
+      <input name="message" type="@message"/>
+      <input name="url" type="url"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+
+    <method name="send-request" proposed="true">
+      Send a request message.  The message reply-to property is
+      set automatically.
+
+      <link node="@/proton/core/message/reply-to"/>
+
+      <input name="message" type="@message"/>
+      <input name="url" type="url"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+
+    <method name="send-response" proposed="true">
+      Send a response message.  The message address and
+      correlation-id properties are set automatically.
+
+      <link node="@/proton/core/message/address"/>
+      <link node="@/proton/core/message/correlation-id"/>
+
+      <input name="message" type="@message"/>
+      <input name="request" type="@message"/>
+      <output name="delivery" type="@delivery"/>
+    </method>
+  </group>
+
+  <group name="connection-operations">
+    <method name="connect">
+      Create and open an outbound connection.
+
+      The operation is complete when on-connection-open fires.
+
+      <link node="@/proton/core/handler/on-connection-open"/>
+      
+      <input name="url" type="url"/>
+      <input name="options" value="[empty list]" type="@connection-options"/>
+      <output name="connection" type="@connection"/>
+    </method>
+    
+    <method name="listen">
+      Listen for incoming connections.
+      
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+      
+      <input name="url" type="url"/>
+      <input name="options" value="[empty list]" type="@connection-options"/>
+      <output name="acceptor" type="@acceptor"/>
+    </method>
+  </group>
+
+  <group name="link-operations">
+    <method name="open-receiver">
+      Create and open a receiving link.
+      
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+      
+      <input name="url" type="url"/>
+      <input name="options" type="@link-options" nullable="true"/>
+      <output name="receiver" type="@receiver"/>
+    </method>
+
+    <method name="open-sender">
+      Create and open a sending link.
+
+      The operation is complete when on-link-open fires.
+
+      <link node="@/proton/core/handler/on-link-open"/>
+      
+      <input name="url" type="url"/>
+      <input name="options" type="@link-options"/>
+      <output name="sender" type="@sender"/>
+    </method>
+  </group>
+</class>
+
+<class name="client" type="@container" hidden="true">
+  A container that connects to a server.
+  
+  <group name="basic">
+    <method name="[constructor]">
+      Create a new client.
+
+      <input name="url" type="url">
+        The host and port to connect to.
+      </input>
+
+      <input name="handler" type="@handler" nullable="true">
+        The main event handler for this container.
+      </input>
+      
+      <input name="id" value="[generated]" type="string" nullable="true">
+        Identifiers should be unique.  By default a UUID will be
+        used.
+      </input>
+
+      <output name="client" type="@client"/>
+    </method>
+  </group>
+</class>
+
+<class name="server" type="@container" hidden="true">
+  A container that listens for client connections.
+  
+  <group name="basic">
+    <method name="[constructor]">
+      Create a new server.
+
+      <input name="url" type="url">
+        The host and port to listen on.
+      </input>
+
+      <input name="handler" type="@handler" nullable="true">
+        The main event handler for this container.
+      </input>
+      
+      <input name="id" value="[generated]" type="string" nullable="true">
+        Identifiers should be unique.  By default a UUID will be
+        used.
+      </input>
+
+      <output name="server" type="@server"/>
+    </method>
+  </group>
+</class>
