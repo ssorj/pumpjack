@@ -21,8 +21,8 @@ from .html import *
 from .python import *
 
 import os as _os
-
-from xml.etree.ElementTree import ElementTree
+import re as _re
+import xml.etree.ElementTree as _et
 
 class Pumpjack(object):
     def __init__(self, input_dir):
@@ -30,22 +30,55 @@ class Pumpjack(object):
 
         self.model = None
 
+    def merge_content(self, content, input_dir):
+        input_files = _os.listdir(input_dir)
+        
+        out = list()
+        tokens = _re.split("({{.+?}})", content)
+
+        for token in tokens:
+            if token[:2] != "{{" or token[-2:] != "}}":
+                out.append(token)
+                continue
+            
+            file_name = token[2:-2]
+
+            if file_name in input_files:
+                file_path = _os.path.join(input_dir, file_name)
+                
+                with open(file_path, "r") as f:
+                    file_content = f.read()
+                    
+                out.append(self.merge_content(file_content, input_dir))
+                continue
+
+        return "".join(out)
+    
     def load(self):
-        input_path = _os.path.join(self.input_dir, "model.xml")
+        path = _os.path.join(self.input_dir, "model.xml")
+
+        with open(path) as f:
+            content = f.read()
+
+        content = self.merge_content(content, self.input_dir)
+        elem = _et.fromstring(content)
+
+        self.model = Model(elem)
+        
+        self.model.process()
+        self.model.process_references()
+
+    def _load_file(self, path):
+        assert _os.path.isfile(path)
+        
         tree = ElementTree()
 
-        if not _os.path.isfile(input_path):
-            msg = "File '{}' is missing"
-            raise PumpjackException(msg)
-
-        with open(input_path) as f:
+        with open(path) as f:
             tree.parse(f)
 
         elem = tree.getroot()
-
-        self.model = Model(elem)
-        self.model.process()
-        self.model.process_references()
+            
+        return Model(elem)
 
     def render(self, output_dir, renderer_name):
         assert self.model is not None

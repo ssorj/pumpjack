@@ -1,0 +1,48 @@
+<module name="io" experimental="true">
+  IO integration
+
+  <group name="io-interfaces" title="IO interfaces">
+    <class name="connection-engine" experimental="true">
+      An event loop for integrating with an existing IO framework.
+      
+      A connection-engine is an `event-loop` that manages a single
+      AMQP connection.  It provides a simple bytes in/bytes out
+      interface. Incoming AMQP bytes from any kind of data
+      connection are fed into the engine and processed to dispatch
+      events to an `handler`. The resulting AMQP output data
+      is available from the engine and can sent back over the
+      connection.
+
+      The engine does no IO of its own. It assumes a two-way flow of
+      bytes over some externally-managed "connection". The
+      "connection" could be a socket managed by `select`, `poll`,
+      `epoll` or some other mechanism, or it could be something else
+      such as an RDMA connection, a shared-memory buffer or a Unix
+      pipe.
+
+      The engine is an alternative `event-loop` to the container
+      **[XXX revisit: substitute reactor?]**. The container is
+      easier to use in single-threaded, standalone applications that
+      want to use standard socket connections. The engine can be
+      embedding into any existing IO framework for any type of IO.
+
+      The application is coded the same way for engine or container:
+      you implement `handler`. Handlers attached to an engine
+      will receive `transport`, `connection`, `session`, `link`, and
+      `message` events. They will not receive `reactor`,
+      `selectable`, or `timer` events, the engine assumes those are
+      managed externally.
+
+      *Thread safety* - A single engine instance cannot be called
+      concurrently, but different engine instances can be processed
+      concurrently in separate threads.
+    </class>
+
+    <class name="io-adapter" experimental="true"></class>
+  </group>
+
+  <group name="io-implementations" title="IO implementations">
+    <class name="posix-io" experimental="true"></class>
+    <class name="windows-io" experimental="true"></class>
+  </group>
+</module>

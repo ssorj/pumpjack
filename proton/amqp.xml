@@ -1,0 +1,51 @@
+<module name="amqp" experimental="true">
+  AMQP data encoding and decoding. For typical Proton-based
+  applications, these classes will not be used directly.
+
+  <annotation name="class-link-text-template">AMQP definition</annotation>
+  <annotation name="class-link-href-template">https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#type-{}</annotation>
+  <annotation name="class-link-function">_gen_amqp_type_link</annotation>
+
+  <group name="basic-scalar-types" title="Scalar data types">
+    <class name="null">An empty value.</class>
+    <class name="boolean">A true or false value.</class>
+    <class name="char">A single Unicode character.</class>
+    <class name="string">A sequence of Unicode characters.</class>
+    <class name="binary">A sequence of bytes.</class>
+    <class name="float">A 32-bit floating point number.</class>
+    <class name="double">A 64-bit floating point number.</class>
+    <class name="byte">A signed 8-bit integer.</class>
+    <class name="short">A signed 16-bit integer.</class>
+    <class name="int">A signed 32-bit integer.</class>
+    <class name="long">A signed 64-bit integer.</class>
+    <class name="ubyte">An unsigned 8-bit integer.</class>
+    <class name="ushort">An unsigned 16-bit integer.</class>
+    <class name="uint">An unsigned 32-bit integer.</class>
+    <class name="ulong">An unsigned 64-bit integer.</class>
+  </group>
+
+  <group name="composite-types" title="Composite data types">
+    <class name="array">A sequence of values of a single type.</class>
+    <class name="list">A sequence of values of variable type.</class>
+    <class name="map">A mapping from distinct keys to values.</class>
+  </group>
+
+  <group name="semantic-types" title="Semantic data types">
+    <class name="symbol">A symbolic value from a constrained domain.</class>
+    <class name="timestamp">An absolute point in time.</class>
+    <class name="uuid">A universally unique identifier.</class>
+  </group>
+
+  <group name="decimal-types" title="Decimal floating point data types">
+    <link href="https://en.wikipedia.org/wiki/Decimal_floating_point">Decimal floating point</link>
+    
+    <class name="decimal32">A 32-bit decimal floating point number.</class>
+    <class name="decimal64">A 64-bit decimal floating point number.</class>
+    <class name="decimal128">A 128-bit decimal floating point number.</class>
+  </group>
+
+  <group name="codec">
+    <class name="encoder" experimental="true"></class>
+    <class name="decoder" experimental="true"></class>
+  </group>
+</module>
