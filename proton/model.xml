@@ -78,6 +78,9 @@
   <group-definition name="configuration" title="Configuration">
   </group-definition>
 
+  <group-definition name="network" title="Network">
+  </group-definition>
+
   <group-definition name="message-operations" title="Message operations">
   </group-definition>
 

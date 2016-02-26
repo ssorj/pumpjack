@@ -17,10 +17,6 @@
 
     @delivery.xml@
 
-    @transport.xml@
-    
-    @acceptor.xml@
-      
     @endpoint.xml@
 
     @condition.xml@
@@ -36,8 +32,8 @@
     @events.xml@
   </group>
 
-  <group name="security">
-    @security.xml@
+  <group name="network">
+    @network.xml@
   </group>
 
   <group name="errors">

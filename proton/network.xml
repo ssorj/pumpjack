@@ -1,0 +1,54 @@
+<class name="transport">
+  A network channel supporting an AMQP connection.
+
+  <group name="basic">
+    <property name="ssl" type="@ssl" value="[instance]">
+      Get SSL connection information.
+    </property>
+    
+    <property name="sasl" type="@sasl" value="[instance]">
+      Get SASL connection information.
+    </property>
+    
+    <property name="condition" type="@condition" value="[instance]">
+      Get the error condition.
+    </property>
+  </group>
+</class>
+    
+<class name="acceptor">
+  A context for accepting inbound connections.
+
+  <link node="@/proton/core/container/listen"/>
+
+  <group name="basic">
+    <method name="close">
+      Close the acceptor.
+    </method>
+  </group>
+  
+  <group name="configuration">
+    <property name="connection-options" type="@connection-options" mutable="true">
+      Default options for new inbound connections.
+    </property>
+  </group>
+</class>
+
+<class name="sasl">
+  SASL properties for a connection.
+</class>
+
+<class name="ssl">
+  SSL properties for a connection.
+
+  <property name="verify-mode"></property>
+  <property name="resume-status"></property>
+</class>
+
+<class name="ssl-client-options">
+  SSL configuration for outbound connections.
+</class>
+
+<class name="ssl-server-options">
+  SSL configuration for inbound connections.
+</class>
