@@ -324,6 +324,15 @@ class _Parameter(_Node):
         self.value = self.element.attrib.get("value")
         self.nullable = self.element.attrib.get("nullable", False)
 
+    def process_properties(self):
+        super().process_properties()
+
+        if self.value is None:
+            if self.nullable:
+                self.value = "null"
+            else:
+                self.value = "[instance]"
+        
     def process_references(self):
         super().process_references()
 

@@ -111,6 +111,9 @@
   <group-definition name="security" title="Security">
   </group-definition>
 
+  <group-definition name="resource-limits" title="Resource limits">
+  </group-definition>
+
   <group-definition name="transactions" title="Transactions">
   </group-definition>
 

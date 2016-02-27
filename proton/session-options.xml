@@ -1,0 +1,22 @@
+<class name="session-options" type="@endpoint-options">
+  Options for new sessions.
+  
+  <link node="@/proton/core/session"/>
+  <link node="@/proton/core/connection/open-session"/>
+
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">AMQP definition</link>
+  
+  <group name="flow-control">
+    <property name="incoming-capacity" type="integer" mutable="true" nullable="true">
+      Limit the number of incoming bytes the session will buffer.
+    </property>
+    
+    <property name="incoming-window" type="integer" mutable="true" nullable="true">
+      Limit the number of incoming transfer frames.
+    </property>
+    
+    <property name="outgoing-window" type="integer" mutable="true" nullable="true">
+      Limit the number of outgoing transfer frames.
+    </property>
+  </group>
+</class>

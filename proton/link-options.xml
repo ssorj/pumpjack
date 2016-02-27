@@ -1,0 +1,88 @@
+<class name="link-options" type="@endpoint-options">
+  Options for new links.
+  
+  <link node="@/proton/core/link"/>
+  <link node="@/proton/core/container/open-receiver"/>
+  <link node="@/proton/core/container/open-sender"/>
+
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">AMQP definition</link>
+
+  <group name="basic">
+    <property name="name" type="string" value="[generated]" mutable="true">
+      Set the link name.
+    </property>
+
+    <property name="filter" type="string" mutable="true" nullable="true" hidden="true">
+      Select messages by criteria.
+    </property>
+      
+    <property name="max-message-size" type="integer" mutable="true" nullable="true">
+      Limit the size of messages on the link.
+    </property>
+    
+    <property name="delivery-mode" type="@delivery-mode" value="AT-LEAST-ONCE" mutable="true">
+      Control the message delivery guarantee.
+    </property>
+    
+    <property name="distribution-mode" type="@distribution-mode" value="MOVE" mutable="true">
+      Control whether messsages are browsed or consumed.  This
+      is a receiver-only option.
+    </property>
+
+    <property name="durable" type="boolean" value="false" mutable="true">
+      Create a persistent receiver.  This is a receiver-only
+      option.
+    </property>
+    
+    <property name="dynamic" type="boolean" value="false" mutable="true">
+      Request a dynamically created node at the peer.
+    </property>
+    
+    <property name="dynamic-node-properties" type="map" item-type="symbol" internal="true">
+      Control the properties of nodes created on demand.
+
+      XXX lifetime-policy, supported-dist-modes
+
+      <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">XXX</link>
+    </property>
+  </group>
+</class>
+
+<enumeration name="delivery-mode">
+  <value name="AT-MOST-ONCE">
+    Unreliable delivery.  The sender settles the message as
+    soon as it sends it.  If the connection is lost before the
+    message is received, the message will not be delivered.
+
+    <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  </value>
+
+  <value name="AT-LEAST-ONCE">
+    Reliable delivery.  The receiver accepts and settles the
+    message on receipt.  If the connection is lost before the
+    sender is informed of the settlement, then the delivery is
+    considered in-doubt and will be retried.  This will ensure
+    it eventually gets delivered, provided the connection and
+    link can be reestablished.  It may, however, be delivered
+    multiple times.
+
+    <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  </value>
+
+  <value name="EXACTLY-ONCE">
+    Reliable delivery with no duplicates.  The receiver
+    accepts the message but doesn't settle it.  The sender
+    settles once it is aware that the receiver accepted it.
+    In this way the receiver retains knowledge of an accepted
+    message until it is sure the sender knows it has been
+    accepted.  If the connection is lost before settlement,
+    the receiver informs the sender of all the unsettled
+    deliveries it knows about, and from this the sender can
+    deduce which need to be redelivered. The sender likewise
+    informs the receiver which deliveries it knows about, from
+    which the receiver can deduce which have already been
+    settled.
+
+    <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  </value>
+</enumeration>

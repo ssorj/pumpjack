@@ -8,11 +8,6 @@
   which in turn contain zero or more link objects.  Each link
   object contains an ordered sequence of delivery objects.
 
-  <!--
-  The connection is the basis for discovering endpoint and
-  delivery state changes.
-  -->
-
   <!-- What behaviors do you get by default? -->
 
   <link node="@connection-options"/>
@@ -26,15 +21,11 @@
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 
   <group name="basic">
-    <property name="container" type="@container" value="[instance]">
-      The container which holds this connection.
-    </property>
-
-    <property name="transport" type="@transport" value="[instance]">
+    <property name="transport" type="@transport">
       The associated transport.
     </property>
 
-    <method name="open" experimental="true">
+    <method name="open">
       Open the connection.
 
       The operation is complete when on-connection-open fires.

@@ -25,15 +25,29 @@
   </group>
 
   <group name="configuration">
-    @configuration.xml@
+    @endpoint-options.xml@
+
+    @connection-options.xml@
+    
+    @session-options.xml@
+    
+    @link-options.xml@
   </group>
 
   <group name="events">
-    @events.xml@
+    @event.xml@
+
+    @handler.xml@
   </group>
 
   <group name="network">
-    @network.xml@
+    @transport.xml@
+    
+    @acceptor.xml@
+    
+    @sasl.xml@
+    
+    @ssl.xml@
   </group>
 
   <group name="errors">
