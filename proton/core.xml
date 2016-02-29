@@ -20,8 +20,6 @@
     @endpoint.xml@
 
     @condition.xml@
-
-    @terminus.xml@
   </group>
 
   <group name="configuration">

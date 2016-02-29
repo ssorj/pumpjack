@@ -1,4 +1,4 @@
-<class name="link" type="@endpoint">
+<class name="link" type="@endpoint" experimental="true">
   A named channel for sending or receiving messages.  A link can
   be a sender or a receiver, but never both.  A link contains an
   ordered sequence of delivery objects.
@@ -24,7 +24,7 @@
       The containing session.
     </property>
 
-    <method name="open" experimental="true">
+    <method name="open">
       Open the link.
 
       The operation is complete when on-link-open fires.
@@ -57,24 +57,6 @@
     </method>
   </group>
 
-  <group name="termini" title="Source and target">
-    <property name="local-source" type="@terminus" value="[instance]">
-      The source terminus of the local peer.
-    </property>
-
-    <property name="local-target" type="@terminus" value="[instance]">
-      The target terminus of the local peer.
-    </property>
-
-    <property name="remote-source" type="@terminus" value="[instance]">
-      The source terminus of the remote peer.
-    </property>
-
-    <property name="remote-target" type="@terminus" value="[instance]">
-      The target terminus of the remote peer.
-    </property>
-  </group>
-
   <group name="flow-control">
     <property name="local-credit" type="integer" value="[discovered]">
       The local view of the total outstanding credit on the link.
@@ -87,6 +69,40 @@
 
       Each whole integer of credit permits one message transfer.
     </property>
+  </group>
+
+  <group name="source-and-target-state" title="Source and target state">
+    <property name="remote-source-address" type="string" value="[discovered]">
+    </property>
+
+    <property name="remote-target-address" type="string" value="[discovered]">
+    </property>
+
+    <property name="remote-source-durable" type="boolean" value="[discovered]">
+    </property>
+
+    <property name="remote-target-durable" type="boolean" value="[discovered]">
+    </property>
+
+    <property name="remote-source-dynamic-node" type="boolean" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-target-dynamic-node" type="boolean" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-source-node-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-target-node-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-source-delivery-mode" type="@delivery-mode" value="[discovered]">
+    </property>
+    
+    <property name="remote-source-filters" type="list" item-type="string" value="[discovered]" proposed="true">
+    </property>
+
+    <!-- source and target: capabilities, expiry policy, timeout -->
   </group>
 
   <group name="events" internal="true">

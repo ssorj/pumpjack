@@ -30,7 +30,7 @@
     </method>
     
     <method name="clear">
-      Clear the content of the message.  All fields are reset to
+      Delete the content of the message.  All fields are reset to
       their default values.
     </method>
   </group>

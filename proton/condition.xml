@@ -1,23 +1,37 @@
 <class name="condition" experimental="true">
   An endpoint error state.
 
+  **XXX Should this not take a condition type, an enumeration of the
+  allowed AMQP conditions?**
+
+  **XXX condition.clear()?**
+
   <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-amqp-error">AMQP definition</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/condition_8h.html">C</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Condition-class.html">Python</link>
 
   <group name="basic">
-    <property name="name" type="symbol" mutable="true">
+    <method name="[constructor]" proposed="true">
+      Create a new condition.
+
+      <input name="name" type="string"/>
+      <output name="condition" type="@condition"/>
+    </method>
+    
+    <method name="clear" proposed="true">
+      Delete the content of the condition.
+    </method>
+    
+    <property name="name" type="string" mutable="true">
       The AMQP condition name.
     </property>
     
     <property name="description" type="string" mutable="true" nullable="true">
-      A longer message about the condition.
+      A message describing the condition.
     </property>
 
-    <property name="info" type="map" key-type="symbol" mutable="true" nullable="true">
-      XXX Check types
-      
-      Extra information about the condition.
+    <property name="properties" type="map" key-type="string" item-type="object" mutable="true" nullable="true" proposed="true">
+      Extra properties of the condition.
     </property>
   </group>
 </class>

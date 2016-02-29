@@ -44,11 +44,11 @@
       The local and remote endpoint states are CLOSED.
     </property>
     
-    <property name="local-condition" type="@condition" value="[instance]">
+    <property name="local-condition" type="@condition" value="[discovered]">
       The error condition of the local peer.
     </property>
     
-    <property name="remote-condition" type="@condition" value="[instance]">
+    <property name="remote-condition" type="@condition" value="[discovered]">
       The error condition of the remote peer.
     </property>
   </group>
