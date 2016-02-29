@@ -38,6 +38,10 @@ span.flag {
     padding: 0.1em 0.3em;
 }
 
+span.optional {
+    font-style: italic;
+}
+
 table.pumpjack {
     width: 100%;
     table-layout: fixed;

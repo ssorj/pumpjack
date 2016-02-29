@@ -16,7 +16,7 @@
   <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.reactor.Container-class.html">Python</link>
   
   <group name="basic">
-    <property name="id" value="[generated]" type="string">
+    <property name="id" type="string" value="[generated]">
       A globally unique container identifier.  It is used to
       identify this container in any connections it establishes.
     </property>
@@ -24,11 +24,11 @@
     <method name="[constructor]">
       Create a new container.
 
-      <input name="handler" type="@handler" nullable="true">
+      <input name="handler" type="@handler" optional="true">
         The main event handler for this container.
       </input>
       
-      <input name="id" value="[generated]" type="string" nullable="true">
+      <input name="id" type="string" value="[generated]" optional="true">
         Identifiers should be unique.  By default a UUID will be
         used.
       </input>
@@ -71,7 +71,7 @@
     </property>
   </group>
 
-  <group name="message-operations">
+  <group name="message-operations" hidden="true">
     <method name="send" proposed="true">
       Send a message.
 
@@ -113,7 +113,7 @@
       <link node="@/proton/core/handler/on-connection-open"/>
       
       <input name="url" type="url"/>
-      <input name="options" value="[empty list]" type="@connection-options"/>
+      <input name="options" type="@connection-options" optional="true"/>
       <output name="connection" type="@connection"/>
     </method>
     
@@ -125,7 +125,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
       
       <input name="url" type="url"/>
-      <input name="options" value="[empty list]" type="@connection-options"/>
+      <input name="options" type="@connection-options" optional="true"/>
       <output name="acceptor" type="@acceptor"/>
     </method>
   </group>
@@ -139,7 +139,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
       
       <input name="url" type="url"/>
-      <input name="options" type="@link-options" nullable="true"/>
+      <input name="options" type="@link-options" optional="true"/>
       <output name="receiver" type="@receiver"/>
     </method>
 
@@ -151,7 +151,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
       
       <input name="url" type="url"/>
-      <input name="options" type="@link-options"/>
+      <input name="options" type="@link-options" optional="true"/>
       <output name="sender" type="@sender"/>
     </method>
   </group>
@@ -168,11 +168,11 @@
         The host and port to connect to.
       </input>
 
-      <input name="handler" type="@handler" nullable="true">
+      <input name="handler" type="@handler" optional="true">
         The main event handler for this container.
       </input>
       
-      <input name="id" value="[generated]" type="string" nullable="true">
+      <input name="id" value="[generated]" type="string" optional="true">
         Identifiers should be unique.  By default a UUID will be
         used.
       </input>
@@ -193,11 +193,11 @@
         The host and port to listen on.
       </input>
 
-      <input name="handler" type="@handler" nullable="true">
+      <input name="handler" type="@handler" optional="true">
         The main event handler for this container.
       </input>
       
-      <input name="id" value="[generated]" type="string" nullable="true">
+      <input name="id" value="[generated]" type="string" optional="true">
         Identifiers should be unique.  By default a UUID will be
         used.
       </input>

@@ -23,7 +23,7 @@
 
       <link node="@/proton/core/handler/on-session-open"/>
 
-      <input name="options" type="@session-options" nullable="true"/>
+      <input name="options" type="@session-options" optional="true"/>
     </method>
 
     <method name="close">
@@ -33,7 +33,7 @@
       
       <link node="@/proton/core/handler/on-session-close"/>
 
-      <input name="condition" type="@condition" nullable="true"/>
+      <input name="condition" type="@condition" optional="true"/>
     </method>
   </group>
 
@@ -42,7 +42,6 @@
       Send a message on a link with the given address.
 
       <input name="message" type="@message"/>
-      <input name="address" type="string"/>
       <output name="delivery" type="@delivery"/>
     </method>
 
@@ -51,7 +50,6 @@
       set automatically.
 
       <input name="message" type="@message"/>
-      <input name="address" type="string"/>
       <output name="delivery" type="@delivery"/>
     </method>
     
@@ -59,8 +57,8 @@
       Send a response message.  The message.to property is set
       automatically.
 
-      <input name="response" type="@message"/>
-      <input name="request" type="@message"/>
+      <input name="response-message" type="@message"/>
+      <input name="request-message" type="@message"/>
       <output name="delivery" type="@delivery"/>
     </method>
   </group>
@@ -74,7 +72,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
       
       <input name="address" type="string"/>
-      <input name="options" type="@link-options" nullable="true"/>
+      <input name="options" type="@link-options" optional="true"/>
       <output name="receiver" type="@receiver"/>
     </method>
 
@@ -86,7 +84,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
 
       <input name="address" type="string"/>
-      <input name="options" type="@link-options" nullable="true"/>
+      <input name="options" type="@link-options" optional="true"/>
       <output name="sender" type="@sender"/>
     </method>
   </group>

@@ -32,7 +32,7 @@
 
       <link node="@/proton/core/handler/on-connection-open"/>
 
-      <input name="options" type="@connection-options" nullable="true"/>
+      <input name="options" type="@connection-options" optional="true"/>
     </method>
 
     <method name="close">
@@ -42,7 +42,7 @@
       
       <link node="@/proton/core/handler/on-connection-close"/>
     
-      <input name="condition" type="@condition" nullable="true"/>
+      <input name="condition" type="@condition" optional="true"/>
     </method>
   </group>
   
@@ -51,7 +51,6 @@
       Send a message on the default session.
 
       <input name="message" type="@message"/>
-      <input name="address" type="string"/>
       <output name="delivery" type="@delivery"/>
     </method>
 
@@ -62,7 +61,6 @@
       <link node="@/proton/core/message/reply-to"/>
 
       <input name="message" type="@message"/>
-      <input name="address" type="string"/>
       <output name="delivery" type="@delivery"/>
     </method>
 
@@ -73,8 +71,8 @@
       <link node="@/proton/core/message/address"/>
       <link node="@/proton/core/message/correlation-id"/>
 
-      <input name="message" type="@message"/>
-      <input name="request" type="@message"/>
+      <input name="response-message" type="@message"/>
+      <input name="request-message" type="@message"/>
       <output name="delivery" type="@delivery"/>
     </method>
   </group>
@@ -88,7 +86,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
 
       <input name="address" type="string"/>
-      <input name="options" type="@link-options" nullable="true"/>
+      <input name="options" type="@link-options" optional="true"/>
       <output name="sender" type="@sender"/>
     </method>
 
@@ -100,7 +98,7 @@
       <link node="@/proton/core/handler/on-link-open"/>
 
       <input name="address" type="string"/>
-      <input name="options" type="@link-options" nullable="true"/>
+      <input name="options" type="@link-options" optional="true"/>
       <output name="receiver" type="@receiver"/>
     </method>
   </group>
@@ -111,14 +109,14 @@
     </property>
 
     <method name="open-session">
-      Create and initiate opening the session.
+      Create and open a session.
 
-      <input name="options" type="@session-options" nullable="true"/>
+      <input name="options" type="@session-options" optional="true"/>
       <output name="session" type="@session"/>
     </method>
   </group>
   
-  <group name="endpoint-state-group">
+  <group name="connection-state" title="Connection state">
     <property name="remote-container-id" type="string" value="[discovered]">
       The unique identity of the remote container.
     </property>
@@ -133,26 +131,20 @@
   </group>
 
   <group name="extended-attributes">
-    <property name="remote-properties" type="map" value="[discovered]">
-      XXX check types
-      
+    <property name="remote-properties" type="map" key-type="string" item-type="object" value="[discovered]">
       Application properties defined by the remote peer.
     </property>
 
-    <property name="remote-offered-capabilities" value="[discovered]" type="list">
-      XXX check types
-      
+    <property name="remote-offered-capabilities" type="list" item-type="string" value="[discovered]">
       Extensions the remote peer supports.
     </property>
     
-    <property name="remote-desired-capabilities" value="[discovered]" type="list">
-      XXX check types
-      
+    <property name="remote-desired-capabilities" type="list" item-type="string" value="[discovered]">
       Extensions the remote peer can use.
     </property>
   </group>
 
-  <group name="events">
+  <group name="events" internal="true">
     <method name="find-sessions" internal="true">
       Find session endpoints in the specified states.  The
       results are scoped to sessions on this connection.

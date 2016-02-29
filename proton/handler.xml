@@ -9,21 +9,21 @@
       The event loop is started.
       
       <input name="event" type="@event"/>
-      <input name="container" type="@container" value="[instance]" nullable="true"/>
+      <input name="container" type="@container"/>
     </method>
 
     <method name="on-stop" proposed="true">
       The event loop is stopped.
       
       <input name="event" type="@event"/>
-      <input name="container" type="@container" value="[instance]" nullable="true"/>
+      <input name="container" type="@container"/>
     </method>
 
     <method name="on-message">
       A message is received.
       
       <input name="event" type="@event"/>
-      <input name="message" type="@message" value="[instance]" nullable="true"/>
+      <input name="message" type="@message"/>
     </method>
 
     <method name="on-sendable">
@@ -33,7 +33,7 @@
       transferred.
       
       <input name="event" type="@event"/>
-      <input name="sender" type="@sender" value="[instance]" nullable="true"/>
+      <input name="sender" type="@sender"/>
     </method>
 
     <method name="on-unhandled">
@@ -52,7 +52,7 @@
       handle an error.
       
       <input name="event" type="@event"/>
-      <input name="condition" type="@condition" value="[instance]" nullable="true"/>
+      <input name="condition" type="@condition"/>
     </method>
   </group>
 
@@ -61,14 +61,14 @@
       The remote peer opened the connection.
       
       <input name="event" type="@event"/>
-      <input name="connection" type="@connection" value="[instance]" nullable="true"/>
+      <input name="connection" type="@connection"/>
     </method>
 
     <method name="on-connection-close">
       The remote peer closed the connection.
       
       <input name="event" type="@event"/>
-      <input name="connection" type="@connection" value="[instance]" nullable="true"/>
+      <input name="connection" type="@connection"/>
     </method>
       
     <method name="on-connection-error">
@@ -76,21 +76,21 @@
       condition.
       
       <input name="event" type="@event"/>
-      <input name="connection" type="@connection" value="[instance]" nullable="true"/>
+      <input name="connection" type="@connection"/>
     </method>
 
     <method name="on-session-open">
       The remote peer opened the session.
       
       <input name="event" type="@event"/>
-      <input name="session" type="@session" value="[instance]" nullable="true"/>
+      <input name="session" type="@session"/>
     </method>
     
     <method name="on-session-close">
       The remote peer closed the session.
       
       <input name="event" type="@event"/>
-      <input name="session" type="@session" value="[instance]" nullable="true"/>
+      <input name="session" type="@session"/>
     </method>
 
     <method name="on-session-error">
@@ -98,35 +98,35 @@
       condition.
       
       <input name="event" type="@event"/>
-      <input name="session" type="@session" value="[instance]" nullable="true"/>
+      <input name="session" type="@session"/>
     </method>
 
     <method name="on-link-open">
       The remote peer opened the link.
       
       <input name="event" type="@event"/>
-      <input name="link" type="@link" value="[instance]" nullable="true"/>
+      <input name="link" type="@link"/>
     </method>
 
     <method name="on-link-detach" proposed="true">
       The remote peer detached the link.
       
       <input name="event" type="@event"/>
-      <input name="link" type="@link" value="[instance]" nullable="true"/>
+      <input name="link" type="@link"/>
     </method>
      
     <method name="on-link-close">
       The remote peer closed the link.
       
       <input name="event" type="@event"/>
-      <input name="link" type="@link" value="[instance]" nullable="true"/>
+      <input name="link" type="@link"/>
     </method>
      
     <method name="on-link-error">
       The remote peer closed the link with an error condition.
       
       <input name="event" type="@event"/>
-      <input name="link" type="@link" value="[instance]" nullable="true"/>
+      <input name="link" type="@link"/>
     </method>
   </group>
 
@@ -138,14 +138,14 @@
       The remote end of the sender requested flushing.
 
       <input name="event" type="@event"/>
-      <input name="sender" type="@sender" value="[instance]" nullable="true"/>
+      <input name="sender" type="@sender"/>
     </method>
     
     <method name="on-receiver-flush" proposed="true">
       The remote end of the receiver finished flushing.
       
       <input name="event" type="@event"/>
-      <input name="receiver" type="@receiver" value="[instance]" nullable="true"/>
+      <input name="receiver" type="@receiver"/>
     </method>
   </group>
 
@@ -154,7 +154,7 @@
       The remote peer accepted an outgoing message.
       
       <input name="event" type="@event"/>
-      <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
+      <input name="delivery" type="@delivery"/>
     </method>
     
     <method name="on-delivery-reject">
@@ -163,7 +163,7 @@
       XXX error condition
       
       <input name="event" type="@event"/>
-      <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
+      <input name="delivery" type="@delivery"/>
     </method>
     
     <method name="on-delivery-release">
@@ -172,7 +172,7 @@
       state as defined by the AMQP specification.
       
       <input name="event" type="@event"/>
-      <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
+      <input name="delivery" type="@delivery"/>
     </method>
     
     <method name="on-delivery-settle">
@@ -180,16 +180,23 @@
       point at which it should never be retransmitted.
       
       <input name="event" type="@event"/>
-      <input name="delivery" type="@delivery" value="[instance]" nullable="true"/>
+      <input name="delivery" type="@delivery"/>
     </method>
   </group>
 
   <group name="transport-state">
+    <method name="on-transport-open">
+      The underlying network channel opened.
+      
+      <input name="event" type="@event"/>
+      <input name="transport" type="@transport"/>
+    </method>
+    
     <method name="on-transport-close">
       The underlying network channel closed.
       
       <input name="event" type="@event"/>
-      <input name="transport" type="@transport" value="[instance]" nullable="true"/>
+      <input name="transport" type="@transport"/>
     </method>
       
     <method name="on-transport-error">
@@ -197,7 +204,7 @@
       condition.
       
       <input name="event" type="@event"/>
-      <input name="transport" type="@transport" value="[instance]" nullable="true"/>
+      <input name="transport" type="@transport"/>
     </method>
   </group>
 

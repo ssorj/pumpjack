@@ -17,7 +17,7 @@
       The delivery identifier.
     </property>
 
-    <property name="link" value="[instance]" type="@link">
+    <property name="link" type="@link" value="[instance]">
       The link on which the delivery was sent or received.
     </property>
   </group>
@@ -27,11 +27,11 @@
     tracked at the local and remote peers, and when each can
     safely consider the transfer resolved, that is "settled".
     
-    <property name="local-settled" value="false" type="boolean">
+    <property name="local-settled" type="boolean" value="false">
       True if the delivery has been settled locally.
     </property>
     
-    <property name="remote-settled" value="false" type="boolean">
+    <property name="remote-settled" type="boolean" value="false">
       True if the delivery has been settled by the remote peer.
     </property>
 
@@ -49,11 +49,11 @@
     
     <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">AMQP definition</link>
     
-    <property name="local-state" value="NONE" type="@delivery-state">
+    <property name="local-state" type="@delivery-state" value="NONE">
       The local delivery state.
     </property>
     
-    <property name="remote-state" value="NONE" type="@delivery-state">
+    <property name="remote-state" type="@delivery-state" value="NONE">
       The delivery state at the remote peer.
     </property>
     

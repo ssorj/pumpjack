@@ -25,7 +25,7 @@
     <method name="[constructor]">
       Create a new message.
 
-      <input name="body" type="object"/>
+      <input name="body" type="object" optional="true"/>
       <output name="message" type="@message"/>
     </method>
     

@@ -322,7 +322,7 @@ class _Parameter(_Node):
         self.type = self.element.attrib.get("type")
         self.item_type = self.element.attrib.get("item-type")
         self.value = self.element.attrib.get("value")
-        self.nullable = self.element.attrib.get("nullable", False)
+        self.nullable = self.element.attrib.get("nullable", "false") == "true"
 
     def process_properties(self):
         super().process_properties()
@@ -348,6 +348,12 @@ class _Property(_ClassMember, _Parameter):
 
         self.mutable = self.element.attrib.get("mutable", "false") == "true"
 
+class _Input(_Parameter):
+    def __init__(self, element, parent):
+        super().__init__(element, parent)
+
+        self.optional = self.element.attrib.get("optional", "false") == "true"
+                
 class _Method(_ClassMember):
     def __init__(self, element, parent):
         super().__init__(element, parent)
@@ -358,7 +364,7 @@ class _Method(_ClassMember):
 
     def process(self):
         for child in self.element.findall("input"):
-            input = _Parameter(child, self)
+            input = _Input(child, self)
             self.inputs.append(input)
 
         for child in self.element.findall("output"):

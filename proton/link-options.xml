@@ -1,4 +1,4 @@
-<class name="link-options" type="@endpoint-options" experimental="true">
+<class name="link-options" type="@endpoint-options">
   Options for new links.
   
   <link node="@/proton/core/link"/>

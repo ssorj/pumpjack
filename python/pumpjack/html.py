@@ -269,15 +269,16 @@ class HtmlRenderer(PumpjackRenderer):
 
     def render_method_inputs(self, out, meth):
         items = list()
-        items.append(("Input", "Type", "Default value", "Nullable"))
+        items.append(("Input", "Type", "Default value", "Nullable", "Optional"))
         
         for input in meth.inputs:
             name = input.name
             type = _html_parameter_type(input)
             value = _html_parameter_value(input)
             nullable = _html_boolean_tick_box(input.nullable)
+            optional = _html_boolean_tick_box(input.optional)
             
-            items.append((name, type, value, nullable))
+            items.append((name, type, value, nullable, optional))
 
         out.write(html_table(items, class_="parameters"))
 
@@ -404,7 +405,13 @@ def _html_input(input):
     if input.type in input.model.external_types_by_name:
         return input.name
 
-    return _html_parameter_type(input)
+    html = _html_parameter_type(input)
+
+    if input.optional:
+        html = "[{}]".format(html)
+        html = html_span(html, _class="optional")
+    
+    return html
 
 def _html_parameter_value(param):
     return _html_special(param.value)
