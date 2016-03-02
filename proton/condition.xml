@@ -11,7 +11,7 @@
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Condition-class.html">Python</link>
 
   <group name="basic">
-    <method name="[constructor]" proposed="true">
+    <method name="constructor" special="true" proposed="true">
       Create a new condition.
 
       <input name="name" type="string"/>

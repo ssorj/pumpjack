@@ -1,8 +1,8 @@
 export PYTHONPATH = ${PWD}/python
 
-.PHONY: render-html
-render-html: clean
-	PYTHONPATH=${PWD}/python scripts/pumpjack -r html -i proton -o input
+.PHONY: render
+render: clean
+	scripts/pumpjack -r html -i proton -o input
 	transom input output --site-url "file://${PWD}/output"
 
 .PHONY: render-python
@@ -20,11 +20,17 @@ clean:
 
 .PHONY: publish
 publish: temp_dir := $(shell mktemp -d)
-publish:
+publish: temp_script := $(shell mktemp)
+publish: render
 	chmod 755 ${temp_dir}
 	transom input ${temp_dir} --site-url "/~jross/pumpjack"
-	rsync -av ${temp_dir}/ jross@people.apache.org:public_html/pumpjack
+#	rsync -av ${temp_dir}/ jross@people.apache.org:public_html/pumpjack
+	echo 'lcd ${temp_dir}' >> ${temp_script}
+	cd ${temp_dir} && find * -type d -exec echo '-mkdir {}' \; >> ${temp_script}
+	cd ${temp_dir} && find * -type f -exec echo 'put {} {}' \; >> ${temp_script}
+	sftp -b ${temp_script} jross@home.apache.org:public_html/pumpjack
 	rm -rf ${temp_dir}
+	rm ${temp_script}
 
 .PHONY: update-pencil
 update-pencil:

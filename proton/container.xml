@@ -21,7 +21,7 @@
       identify this container in any connections it establishes.
     </property>
 
-    <method name="[constructor]">
+    <method name="constructor" special="true">
       Create a new container.
 
       <input name="handler" type="@handler" optional="true">
@@ -161,7 +161,7 @@
   A container that connects to a server.
   
   <group name="basic">
-    <method name="[constructor]">
+    <method name="constructor" special="true">
       Create a new client.
 
       <input name="url" type="url">
@@ -186,7 +186,7 @@
   A container that listens for client connections.
   
   <group name="basic">
-    <method name="[constructor]">
+    <method name="constructor" special="true">
       Create a new server.
 
       <input name="url" type="url">

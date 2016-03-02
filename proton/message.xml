@@ -22,7 +22,7 @@
       The identity of the user producing the message.
     </property>
     
-    <method name="[constructor]">
+    <method name="constructor" special="true">
       Create a new message.
 
       <input name="body" type="object" optional="true"/>
