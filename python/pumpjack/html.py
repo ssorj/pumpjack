@@ -86,8 +86,10 @@ class HtmlRenderer(PumpjackRenderer):
                     self.render_enumeration(out, enum)
 
     def render_class_group(self, out, group):
+        id = group.title.lower().replace(" ", "-")
+        
         out.write(html_open("section"))
-        out.write(html_h(group.title))
+        out.write(html_h(group.title, id=id))
         out.write(_html_node_text(group))
         out.write(_html_node_links(group))
 
@@ -149,8 +151,10 @@ class HtmlRenderer(PumpjackRenderer):
         if group.hidden or group.internal:
             return
         
+        id = group.title.lower().replace(" ", "-")
+        
         out.write(html_open("section"))
-        out.write(html_h(group.title))
+        out.write(html_h(group.title, id=id))
         out.write(_html_node_text(group))
         out.write(_html_node_links(group))
 
@@ -370,7 +374,10 @@ def _html_node_summary(node):
     
     return first_sentence(node.text)
 
-_markdown_extras = {}
+_markdown_extras = {
+    "header-ids": True,
+}
+
 _markdown = _markdown2.Markdown(extras=_markdown_extras)
 
 def _html_node_text(node):
