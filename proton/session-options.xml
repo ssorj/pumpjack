@@ -4,7 +4,9 @@
   <link node="/proton/core/session"/>
   <link node="/proton/core/connection/open-session"/>
 
-  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">AMQP definition</link>
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
   
   <group name="flow-control">
     <property name="incoming-capacity" type="int" mutable="true" nullable="true">

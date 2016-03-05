@@ -386,12 +386,32 @@ def _html_node_text(node):
 def _html_node_links(node):
     assert isinstance(node, _Node), node
     
+    out = list()
+
+    links = _html_node_links_for_relation(node, None)
+
+    if links:
+        out.append(html_p("See also: {}".format(", ".join(links))))
+
+    links = _html_node_links_for_relation(node, "impl")
+
+    if links:
+        out.append(html_p("Implementations: {}".format(", ".join(links))))
+
+    links = _html_node_links_for_relation(node, "amqp")
+
+    if links:
+        out.append(html_p("AMQP: {}".format(", ".join(links))))
+
+    return "".join(out)
+
+def _html_node_links_for_relation(node, relation):
     items = list()
     
-    for link in node.links:
+    for link in node.links_by_relation[relation]:
         items.append(html_a(link[0], link[1]))
 
-    return html_ul(items, class_="pumpjack links")
+    return items
 
 def _html_parameter_type(param):
     type = _html_reference(param, param.type)

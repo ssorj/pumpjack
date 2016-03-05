@@ -5,11 +5,14 @@
   <link node="connection"/>
   <link node="link"/>
   
-  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">AMQP definition</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Session.html">Java</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
+  
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Session.html">Java</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
   
   <group name="basic">
     <property name="connection" type="connection" value="[instance]">

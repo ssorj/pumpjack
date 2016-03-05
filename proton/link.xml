@@ -9,11 +9,17 @@
   <link node="receiver"/>
   <link node="delivery"/>
 
-  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
-  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Link.html">Java</link>
-  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-detach">Detach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-flow">Flow performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
+
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
+  <link relation="impl" href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1link.html">C++</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Link.html">Java</link>
+  <link relation="impl" href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
 
   <group name="basic">
     <property name="name" type="string" value="[generated]">
@@ -78,66 +84,82 @@
   </group>
 
   <group name="source-and-target-state" title="Source and target state">
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+
     <property name="remote-source-address" type="string" value="[discovered]">
+      The address of the message source      
     </property>
 
     <property name="remote-target-address" type="string" value="[discovered]">
+      The address of the message target
     </property>
 
     <property name="remote-source-durability" type="durability" value="[discovered]">
+      The persistence mode of the source node
     </property>
 
     <property name="remote-target-durability" type="durability" value="[discovered]">
+      The persistence mode of the target node
     </property>
 
     <property name="remote-source-expiry-policy" type="expiry-policy" value="[discovered]">
-      XXX Control when the clock for expiration begins.
+      When expiration of the source node begins.
     </property>
     
     <property name="remote-target-expiry-policy" type="expiry-policy" value="[discovered]">
-      XXX Control when the clock for expiration begins.
+      When expiration of the target node begins.
     </property>
     
     <property name="remote-source-timeout" type="duration" value="[discovered]">
-      XXX The period after which the source terminus is discarded.
+      The period after which the source terminus is discarded.
     </property>
 
     <property name="remote-target-timeout" type="duration" value="[discovered]">
-      XXX The period after which the target terminus discarded.
+      The period after which the target terminus discarded.
     </property>
     
-    <property name="remote-source-dynamic" type="boolean" value="[discovered]" proposed="true">
+    <property name="remote-source-dynamic" type="boolean" value="[discovered]">
+      On-demand creation of a source node at the remote peer.
     </property>
 
-    <property name="remote-target-dynamic" type="boolean" value="[discovered]" proposed="true">
+    <property name="remote-target-dynamic" type="boolean" value="[discovered]">
+      On-demand creation of a target node at the remote peer.
     </property>
 
-    <property name="remote-source-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
+    <property name="remote-source-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" proposed="true">
+      The properties of a dynamic source node.
     </property>
 
-    <property name="remote-target-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
+    <property name="remote-target-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" proposed="true">
+      The properties of a dynamic target node.
     </property>
 
     <property name="remote-source-capabilities" type="array" item-type="symbol" value="[discovered]">
-      XXX Extensions supported or desired.
+      Extensions supported or desired.
     </property>
 
     <property name="remote-target-capabilities" type="array" item-type="symbol" value="[discovered]">
-      XXX Extensions supported or desired.
+      Extensions supported or desired.
     </property>
   </group>
 
   <group name="endpoint-state-group">
     <property name="remote-delivery-mode" type="delivery-mode" value="[discovered]">
+      The message delivery guarantee at the remote peer.
     </property>
     
     <property name="remote-distribution-mode" type="distribution-mode" value="[discovered]">
+      The message distribution mode at the remote peer.
     </property>
     
     <property name="remote-filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true">
+      Filters set by the remote peer.
     </property>
 
     <property name="remote-max-message-size" type="ulong" value="[discovered]" nullable="true">
+      The maximum message size allowed by the remote peer.
     </property>
   </group>
 

@@ -43,13 +43,17 @@
   - [Protocol engines](protocol-engines.html)
   - [Implementation guide](implementation-guide.html)
  
-  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html">AMQP specification</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++</link>
-  <link href="https://github.com/apache/qpid-proton/tree/master/proton-c/bindings/go">Go</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/book/overview.html">Python overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-overview-v1.0-os.html#toc">Overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#toc">Transport layer</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#toc">Messaging layer</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#toc">Transactions</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-security-v1.0-os.html#toc">Security layers</link>
+  
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python</link>
 
   @core.xml@
 

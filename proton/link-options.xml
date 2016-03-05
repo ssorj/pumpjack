@@ -1,12 +1,14 @@
 <class name="link-options" type="endpoint-options">
   Options for new links.
   
-  <link node="/proton/core/link"/>
+  <link node="link"/>
   <link node="/proton/core/container/open-receiver"/>
   <link node="/proton/core/container/open-sender"/>
 
-  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">AMQP definition</link>
-
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-detach">Detach performative</link>
+  
   <group name="basic">
     <property name="name" type="string" value="[generated]" mutable="true">
       The name of the link.
@@ -34,7 +36,9 @@
   </group>
 
   <group name="source-and-target-options" title="Source and target options">
-    <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">AMQP definition</link>
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
 
     <property name="source-address" type="string" mutable="true" nullable="true">
       The address of the message source.
@@ -68,24 +72,24 @@
       The period after which the target terminus discarded.
     </property>
     
-    <property name="source-dynamic" type="boolean" value="false" mutable="true" proposed="true">
+    <property name="source-dynamic" type="boolean" value="false" mutable="true">
       Request on-demand creation of a node at the peer.
     </property>
     
-    <property name="target-dynamic" type="boolean" value="false" mutable="true" proposed="true">
+    <property name="target-dynamic" type="boolean" value="false" mutable="true">
       Request on-demand creation of a node at the peer.
     </property>
     
     <property name="source-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
       Control the properties of nodes created on demand.
 
-      <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">AMQP definition</link>
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">Type</link>
     </property>
     
     <property name="target-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
       Control the properties of nodes created on demand.
 
-      <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">AMQP definition</link>
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">Type</link>
     </property>
     
     <property name="source-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">

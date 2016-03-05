@@ -33,6 +33,7 @@ class _Node:
         self.title = None
         self.text = None
         self.links = list()
+        self.links_by_relation = _defaultdict(list)
         self.annotations = dict()
 
         self.hidden = False
@@ -127,15 +128,18 @@ class _Node:
         print("Processing references for {}".format(self))
 
         for child in self.element.findall("link"):
+            relation = child.attrib.get("relation")
+            
             if "node" in child.attrib:
                 node = self.resolve_reference(child.attrib["node"])
-                text = "{}.{}".format(node.parent.parent.name, node.name) # XXX
+                text = "{} {}".format(init_cap(node.node_type), node.name)
                 href = node.url
             else:
                 text = child.text
                 href = child.attrib["href"]
                 
             self.links.append((text, href))
+            self.links_by_relation[relation].append((text, href))
 
         for child in self.children:
             child.process_references()
