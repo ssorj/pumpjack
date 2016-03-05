@@ -1,9 +1,9 @@
-<class name="link-options" type="@endpoint-options">
+<class name="link-options" type="endpoint-options">
   Options for new links.
   
-  <link node="@/proton/core/link"/>
-  <link node="@/proton/core/container/open-receiver"/>
-  <link node="@/proton/core/container/open-sender"/>
+  <link node="/proton/core/link"/>
+  <link node="/proton/core/container/open-receiver"/>
+  <link node="/proton/core/container/open-sender"/>
 
   <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">AMQP definition</link>
 
@@ -11,37 +11,31 @@
     <property name="name" type="string" value="[generated]" mutable="true">
       The name of the link.
     </property>
-    
+
+    <!--
     <property name="durable" type="boolean" value="false" mutable="true">
       Create a persistent receiver.  This is a receiver-only
       option.
     </property>
+    -->
     
-    <property name="delivery-mode" type="@delivery-mode" value="AT-LEAST-ONCE" mutable="true">
+    <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true">
       Control the message delivery guarantee.
     </property>
     
-    <property name="distribution-mode" type="@distribution-mode" value="MOVE" mutable="true">
+    <property name="distribution-mode" type="distribution-mode" value="MOVE" mutable="true">
       Control whether messsages are browsed or consumed.  This
       is a receiver-only option.
     </property>
 
-    <property name="dynamic-node" type="boolean" value="false" mutable="true" proposed="true">
-      Request on-demand creation of a node at the peer.
-    </property>
-    
-    <property name="node-properties" type="map" key-type="string" item-type="object" mutable="true" nullable="true" proposed="true">
-      Control the properties of nodes created on demand.
-
-      <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">AMQP definition</link>
-    </property>
-    
-    <property name="filters" type="map" key-type="string" item-type="string" mutable="true" nullable="true" proposed="true">
+    <property name="filters" type="map" key-type="symbol" item-type="string" mutable="true" nullable="true" proposed="true">
       Select messages by criteria.
     </property>
   </group>
 
   <group name="source-and-target-options" title="Source and target options">
+    <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">AMQP definition</link>
+
     <property name="source-address" type="string" mutable="true" nullable="true">
       The address of the message source.
     </property>
@@ -50,13 +44,19 @@
       The address of the message target.
     </property>
     
-    <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">AMQP definition</link>
+    <property name="source-durability" type="durability" value="NONE" mutable="true">
+      Request a persistent source node.
+    </property>
     
-    <property name="source-expiry-policy" type="@expiry-policy" value="LINK-CLOSE" mutable="true">
+    <property name="target-durability" type="durability" value="NONE" mutable="true">
+      Request a persistent target node.
+    </property>
+    
+    <property name="source-expiry-policy" type="expiry-policy" value="SESSION-CLOSE" mutable="true">
       Control when the clock for expiration begins.
     </property>
     
-    <property name="target-expiry-policy" type="@expiry-policy" value="LINK-CLOSE" mutable="true">
+    <property name="target-expiry-policy" type="expiry-policy" value="SESSION-CLOSE" mutable="true">
       Control when the clock for expiration begins.
     </property>
     
@@ -68,17 +68,37 @@
       The period after which the target terminus discarded.
     </property>
     
-    <property name="source-capabilities" type="list" item-type="symbol" mutable="true" nullable="true">
+    <property name="source-dynamic" type="boolean" value="false" mutable="true" proposed="true">
+      Request on-demand creation of a node at the peer.
+    </property>
+    
+    <property name="target-dynamic" type="boolean" value="false" mutable="true" proposed="true">
+      Request on-demand creation of a node at the peer.
+    </property>
+    
+    <property name="source-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
+      Control the properties of nodes created on demand.
+
+      <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">AMQP definition</link>
+    </property>
+    
+    <property name="target-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
+      Control the properties of nodes created on demand.
+
+      <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">AMQP definition</link>
+    </property>
+    
+    <property name="source-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
       Extensions supported or desired.
     </property>
 
-    <property name="target-capabilities" type="list" item-type="symbol" mutable="true" nullable="true">
+    <property name="target-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
       Extensions supported or desired.
     </property>
   </group>
 
   <group name="resource-limits">
-    <property name="max-message-size" type="integer" mutable="true" nullable="true">
+    <property name="max-message-size" type="ulong" mutable="true" nullable="true">
       Limit the size of messages on the link.
     </property>
   </group>
@@ -129,6 +149,16 @@
   <value name="COPY"/>
   <value name="MOVE"/>
 </enumeration>
+
+<enumeration name="durability">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-durability">AMQP definition</link>
+  
+  <value name="NONE"/>
+  <value name="CONFIGURATION"/>
+  <value name="UNSETTLED-STATE"/>
+</enumeration>
+
+
 
 <enumeration name="expiry-policy">
   <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-expiry-policy">AMQP definition</link>

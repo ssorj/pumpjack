@@ -24,7 +24,7 @@
     <method name="constructor" special="true">
       Create a new container.
 
-      <input name="handler" type="@handler" optional="true">
+      <input name="handler" type="handler" optional="true">
         The main event handler for this container.
       </input>
       
@@ -33,15 +33,15 @@
         used.
       </input>
 
-      <output name="container" type="@container"/>
+      <output name="container" type="container"/>
     </method>
 
     <method name="run">
       Start processing events.  It returns when all connections
       and acceptors are closed or the container is stopped.
 
-      <link node="@/proton/core/connection/close"/>
-      <link node="@acceptor"/>
+      <link node="/proton/core/connection/close"/>
+      <link node="acceptor"/>
     </method>
 
     <method name="stop" proposed="true">
@@ -49,24 +49,24 @@
 
       The operation is complete when on-stop fires.
 
-      <link node="@/proton/core/handler/on-stop"/>
+      <link node="/proton/core/handler/on-stop"/>
     </method>
   </group>
 
   <group name="configuration">
-    <property name="client-connection-options" value="[instance]" type="@connection-options" mutable="true">
+    <property name="client-connection-options" value="[instance]" type="connection-options">
       Default options for new outbound connections.
     </property>
 
-    <property name="server-connection-options" value="[instance]" type="@connection-options" mutable="true">
+    <property name="server-connection-options" value="[instance]" type="connection-options">
       Default options for new inbound connections.
     </property>
 
-    <property name="session-options" value="[instance]" type="@session-options" mutable="true">
+    <property name="session-options" value="[instance]" type="session-options">
       Default options for new sessions.
     </property>
 
-    <property name="link-options" value="[instance]" type="@link-options" mutable="true">
+    <property name="link-options" value="[instance]" type="link-options">
       Default options for new links.
     </property>
   </group>
@@ -75,32 +75,32 @@
     <method name="send" proposed="true">
       Send a message.
 
-      <input name="message" type="@message"/>
-      <input name="url" type="url"/>
-      <output name="delivery" type="@delivery"/>
+      <input name="message" type="message"/>
+      <input name="url" type="string"/>
+      <output name="delivery" type="delivery"/>
     </method>
 
     <method name="send-request" proposed="true">
       Send a request message.  The message reply-to property is
       set automatically.
 
-      <link node="@/proton/core/message/reply-to"/>
+      <link node="/proton/core/message/reply-to"/>
 
-      <input name="message" type="@message"/>
-      <input name="url" type="url"/>
-      <output name="delivery" type="@delivery"/>
+      <input name="message" type="message"/>
+      <input name="url" type="string"/>
+      <output name="delivery" type="delivery"/>
     </method>
 
     <method name="send-response" proposed="true">
-      Send a response message.  The message address and
+      Send a response message.  The message to and
       correlation-id properties are set automatically.
 
-      <link node="@/proton/core/message/address"/>
-      <link node="@/proton/core/message/correlation-id"/>
+      <link node="/proton/core/message/to"/>
+      <link node="/proton/core/message/correlation-id"/>
 
-      <input name="message" type="@message"/>
-      <input name="request" type="@message"/>
-      <output name="delivery" type="@delivery"/>
+      <input name="message" type="message"/>
+      <input name="request" type="message"/>
+      <output name="delivery" type="delivery"/>
     </method>
   </group>
 
@@ -110,11 +110,11 @@
 
       The operation is complete when on-connection-open fires.
 
-      <link node="@/proton/core/handler/on-connection-open"/>
+      <link node="/proton/core/handler/on-connection-open"/>
       
-      <input name="url" type="url"/>
-      <input name="options" type="@connection-options" optional="true"/>
-      <output name="connection" type="@connection"/>
+      <input name="url" type="string"/>
+      <input name="options" type="connection-options" optional="true"/>
+      <output name="connection" type="connection"/>
     </method>
     
     <method name="listen">
@@ -122,11 +122,11 @@
       
       The operation is complete when on-link-open fires.
 
-      <link node="@/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-link-open"/>
       
-      <input name="url" type="url"/>
-      <input name="options" type="@connection-options" optional="true"/>
-      <output name="acceptor" type="@acceptor"/>
+      <input name="url" type="string"/>
+      <input name="options" type="connection-options" optional="true"/>
+      <output name="acceptor" type="acceptor"/>
     </method>
   </group>
 
@@ -136,11 +136,11 @@
       
       The operation is complete when on-link-open fires.
 
-      <link node="@/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-link-open"/>
       
-      <input name="url" type="url"/>
-      <input name="options" type="@link-options" optional="true"/>
-      <output name="receiver" type="@receiver"/>
+      <input name="url" type="string"/>
+      <input name="options" type="link-options" optional="true"/>
+      <output name="receiver" type="receiver"/>
     </method>
 
     <method name="open-sender">
@@ -148,27 +148,35 @@
 
       The operation is complete when on-link-open fires.
 
-      <link node="@/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-link-open"/>
       
-      <input name="url" type="url"/>
-      <input name="options" type="@link-options" optional="true"/>
-      <output name="sender" type="@sender"/>
+      <input name="url" type="string"/>
+      <input name="options" type="link-options" optional="true"/>
+      <output name="sender" type="sender"/>
+    </method>
+  </group>
+
+  <group name="events">
+    <method name="connections">
+      Get the connections inside this container.
+      
+      <output name="connections" type="iterator" item-type="connection"/>
     </method>
   </group>
 </class>
 
-<class name="client" type="@container" hidden="true">
+<class name="client" type="container" hidden="true">
   A container that connects to a server.
   
   <group name="basic">
     <method name="constructor" special="true">
       Create a new client.
 
-      <input name="url" type="url">
+      <input name="url" type="string">
         The host and port to connect to.
       </input>
 
-      <input name="handler" type="@handler" optional="true">
+      <input name="handler" type="handler" optional="true">
         The main event handler for this container.
       </input>
       
@@ -177,23 +185,23 @@
         used.
       </input>
 
-      <output name="client" type="@client"/>
+      <output name="client" type="client"/>
     </method>
   </group>
 </class>
 
-<class name="server" type="@container" hidden="true">
+<class name="server" type="container" hidden="true">
   A container that listens for client connections.
   
   <group name="basic">
     <method name="constructor" special="true">
       Create a new server.
 
-      <input name="url" type="url">
+      <input name="url" type="string">
         The host and port to listen on.
       </input>
 
-      <input name="handler" type="@handler" optional="true">
+      <input name="handler" type="handler" optional="true">
         The main event handler for this container.
       </input>
       
@@ -202,7 +210,7 @@
         used.
       </input>
 
-      <output name="server" type="@server"/>
+      <output name="server" type="server"/>
     </method>
   </group>
 </class>

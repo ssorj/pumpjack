@@ -12,10 +12,11 @@
   and reconciles remote endpoint state changes as they are
   communicated over the wire.
 
-  <link node="@/proton/core/connection"/>
-  <link node="@/proton/core/session"/>
-  <link node="@/proton/core/sender"/>
-  <link node="@/proton/core/receiver"/>
+  <link node="endpoint-options"/>
+  <link node="connection"/>
+  <link node="session"/>
+  <link node="sender"/>
+  <link node="receiver"/>
 
   <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">AMQP definition</link>
   <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
@@ -24,14 +25,6 @@
   <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
 
   <group name="endpoint-state-group">
-    <property name="local-state" type="@endpoint-state" value="UNINITIALIZED">
-      Local endpoint state.
-    </property>
-
-    <property name="remote-state" type="@endpoint-state" value="UNINITIALIZED">
-      Remote endpoint state.
-    </property>
-
     <property name="uninitialized" type="boolean" value="[discovered]" proposed="true">
       The local and remote endpoint states are UNINITIALIZED.
     </property>
@@ -44,12 +37,32 @@
       The local and remote endpoint states are CLOSED.
     </property>
     
-    <property name="local-condition" type="@condition" value="[discovered]">
+    <property name="local-state" type="endpoint-state" value="UNINITIALIZED">
+      Local endpoint state.
+    </property>
+
+    <property name="remote-state" type="endpoint-state" value="[discovered]">
+      Remote endpoint state.
+    </property>
+
+    <property name="local-condition" type="condition" nullable="true">
       The error condition of the local peer.
     </property>
     
-    <property name="remote-condition" type="@condition" value="[discovered]">
+    <property name="remote-condition" type="condition" value="[discovered]" nullable="true">
       The error condition of the remote peer.
+    </property>
+    
+    <property name="remote-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
+      Application properties defined by the remote peer.
+    </property>
+
+    <property name="remote-offered-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
+      Extensions the remote peer supports.
+    </property>
+    
+    <property name="remote-desired-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
+      Extensions the remote peer can use.
     </property>
   </group>
 </class>

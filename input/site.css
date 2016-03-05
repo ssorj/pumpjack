@@ -1,9 +1,7 @@
-@import url({{site_url}}/transom/site.css);
-
 #-head-content,
 #-body-content,
 #-foot-content {
-    max-width: inherit;
+    max-width: 1600px;
 }
 
 h1.pumpjack {
@@ -79,11 +77,11 @@ table.pumpjack.properties th:nth-child(1) {
 }
 
 table.pumpjack.properties th:nth-child(3) {
-    width: 15%;
+    width: 16.5%;
 }
 
 table.pumpjack.properties th:nth-child(4) {
-    width: 12.5%;
+    width: 11%;
 }
 
 table.pumpjack.properties th:nth-child(5),

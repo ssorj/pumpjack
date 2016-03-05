@@ -4,7 +4,7 @@
 
 | Namespace                  | Content                                       | Depends on                   |
 |----------------------------|-----------------------------------------------|------------------------------|
-| [proton/core][1]           | AMQP model, event processing, error handling  | proton/amqp, proton/io       |
+| [proton/core][1]           | AMQP model, event processing, types           | proton/amqp, proton/io       |
 | [proton/amqp][2]           | AMQP data encoding and decoding               | proton/internal if needed    |
 | [proton/io][3]             | IO integration                                | proton/internal if needed    |
 | [proton/internal][4]       | API internals and language extensions         | -                            |
@@ -36,14 +36,7 @@ include 'qpid', as in org.apache.qpid.proton.
 
 The API should operate in terms of language-native data types whenever
 possible.  If a type is not available in the language or its standard
-library, the implementer should introduce it in either 'proton/core'
-namespace or the 'proton/amqp' namespace.
-
-**API data types.** Data types that are featured in elements of the
-core API should go in the 'proton/core' namespace.
-
-**Codec data types.** Data types that will find their principle use in
-low-level codec operations should reside in the 'proton/amqp'
+library, the implementer should introduce it in the 'proton/core'
 namespace.
 
 ## Namespace 'proton/core'
@@ -51,8 +44,8 @@ namespace.
 This is the primary user entry point for the event-driven API.  Most
 programs will import only this namespace.
 
-Because of their centrality, the APIs here may sometimes be placed
-instead directly in the 'proton' namespace.
+Because of their centrality, the APIs here can be placed directly in
+the 'proton' namespace instead.
 
 ### AMQP model entities
 
@@ -96,22 +89,34 @@ instead directly in the 'proton' namespace.
  - timeout-error or -exception
  - conversion-error or -exception
 
-### API data types
+### Data types
 
 <div class="four-column" markdown="1">
 
  - binary
  - boolean
+ - byte
+ - char
+ - decimal32
+ - decimal64
+ - decimal128
+ - double
  - duration
- - float (float, double)
- - integer (short, int, long)
+ - float
+ - int
  - list
+ - long
  - map
  - null
+ - short
  - string
  - symbol
  - timestamp
+ - ubyte
+ - uint
+ - ulong
  - url 
+ - ushort
  - uuid
 
 </div>
@@ -122,21 +127,8 @@ AMQP data encoding and decoding.  These interfaces are available to
 the user but won't typically be necessary when building a Proton-based
 application.
 
-### Codec data types
-
-<div class="four-column" markdown="1">
-
- - byte
- - char
- - decimal128
- - decimal32
- - decimal64
- - ubyte
- - uint
- - ulong
- - ushort
-
-</div>
+ - encoder
+ - decoder
 
 ## Namespace 'proton/io'
 

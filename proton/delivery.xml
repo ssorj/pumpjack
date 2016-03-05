@@ -13,11 +13,11 @@
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Delivery-class.html">Python</link>
   
   <group name="basic">
-    <property name="id" type="bytes" value="[generated]">
+    <property name="id" type="binary" value="[generated]">
       The delivery identifier.
     </property>
 
-    <property name="link" type="@link" value="[instance]">
+    <property name="link" type="link" value="[instance]">
       The link on which the delivery was sent or received.
     </property>
   </group>
@@ -49,11 +49,11 @@
     
     <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">AMQP definition</link>
     
-    <property name="local-state" type="@delivery-state" value="NONE">
+    <property name="local-state" type="delivery-state" value="NONE">
       The local delivery state.
     </property>
     
-    <property name="remote-state" type="@delivery-state" value="NONE">
+    <property name="remote-state" type="delivery-state" value="NONE">
       The delivery state at the remote peer.
     </property>
     

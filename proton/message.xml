@@ -10,12 +10,12 @@
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
 
   <group name="basic">
-    <property name="id" type="scalar" mutable="true" nullable="true">
+    <property name="id" type="message-id" mutable="true" nullable="true">
       A globally unique message identifier.
 
-      XXX Check type
+      **XXX List legal types**
       
-      <!-- XXX used to remove duplicates -->
+      **XXX Used to remove duplicates**
     </property>
 
     <property name="user" type="string" mutable="true" nullable="true">
@@ -26,7 +26,7 @@
       Create a new message.
 
       <input name="body" type="object" optional="true"/>
-      <output name="message" type="@message"/>
+      <output name="message" type="message"/>
     </method>
     
     <method name="clear">
@@ -36,15 +36,15 @@
   </group>
 
   <group name="routing" title="Routing">
-    <property name="address" type="string" mutable="true" nullable="true">
-      The message destination.
+    <property name="to" type="string" mutable="true" nullable="true" proposed="true">
+      The destination address.
     </property>
   
     <property name="reply-to" type="string" mutable="true" nullable="true">
       The address for replies.
     </property>
   
-    <property name="correlation-id" type="string" mutable="true" nullable="true">
+    <property name="correlation-id" type="message-id" mutable="true" nullable="true">
       An identifier for matching related messages.
     </property>
   </group>
@@ -90,8 +90,8 @@
       unexpectedly terminated and restarted.
     </property>
 
-    <property name="priority" type="integer" value="4" mutable="true" nullable="true">
-      Relative message priority.  Higher numbers indciate higher
+    <property name="priority" type="ubyte" value="4" mutable="true" nullable="true">
+      Relative message priority.  Higher numbers indicate higher
       priority.
     </property>
 
@@ -104,7 +104,7 @@
       The recipient is first to acquire the message.
     </property>
 
-    <property name="delivery-count" type="integer" value="0" mutable="true">
+    <property name="delivery-count" type="uint" value="0" mutable="true">
       The number of prior unsuccessful delivery attempts.
     </property>
   </group>
@@ -114,7 +114,7 @@
       The identifier of the group the message belongs to.
     </property>
 
-    <property name="group-sequence" type="integer" mutable="true" nullable="true">
+    <property name="group-sequence" type="uint" mutable="true" nullable="true">
       The relative position of this message within its group.
     </property>
 
@@ -124,19 +124,19 @@
   </group>
 
   <group name="extended-attributes">
-    <property name="application-properties" type="map" key-type="string" item-type="scalar">
+    <property name="properties" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
       Application-defined message attributes.
     </property>
 
-    <property name="delivery-annotations" type="map" key-type="symbol" item-type="object">
+    <property name="delivery-annotations" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
       Delivery-specific transport attributes.
     </property>
 
-    <property name="message-annotations" type="map" key-type="symbol" item-type="object">
+    <property name="message-annotations" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
       Message-specific transport attributes.
     </property>
 
-    <property name="footer" type="map" hidden="true" key-type="symbol" item-type="object">
+    <property name="footer" type="map" hidden="true" key-type="string" item-type="object" mutable="true" nullable="true">
       Transport attributes that can only be evaluated after the
       whole message has been seen.
     </property>
@@ -146,13 +146,13 @@
     <method name="encode">
       Encode the message to bytes.
 
-      <output name="bytes" type="bytes"/>
+      <output name="bytes" type="binary"/>
     </method>
     
     <method name="decode">
       Decode the message from bytes.
       
-      <input name="bytes" type="bytes"/>
+      <input name="bytes" type="binary"/>
     </method>
   </group>
 </class>

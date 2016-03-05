@@ -68,7 +68,7 @@ class _Node:
 
             self.model = node
 
-            self.reference = "@/{}".format("/".join(reversed(reference_items)))
+            self.reference = "/{}".format("/".join(reversed(reference_items)))
             self.model.nodes_by_reference[self.reference] = self
         
     def __repr__(self):
@@ -141,17 +141,9 @@ class _Node:
             child.process_references()
 
     def resolve_reference(self, ref):
-        # Find external types by name
-        
-        if not ref.startswith("@"):
-            try:
-                return self.model.external_types_by_name[ref]
-            except KeyError:
-                raise Exception("Cannot find external type '{}'".format(ref))
-
         # Find nodes by fully qualified paths
-        
-        if ref.startswith("@/"):
+
+        if ref.startswith("/"):
             try:
                 return self.model.nodes_by_reference[ref]
             except KeyError:
@@ -160,16 +152,15 @@ class _Node:
         module = self.find_ancestor(_Module)
 
         if module:
-            name = ref[1:]
             node = None
 
             for group in module.groups:
-                if name in group.children_by_name:
-                    node = group.children_by_name[name]
+                if ref in group.children_by_name:
+                    node = group.children_by_name[ref]
                     break
             else:
                 msg = "Cannot find child '{}' on module '{}'"
-                raise Exception(msg.format(name, module.name))
+                raise Exception(msg.format(ref, module.name))
 
             return node
 
@@ -320,6 +311,7 @@ class _Parameter(_Node):
         super().__init__(element, parent)
 
         self.type = self.element.attrib.get("type")
+        self.key_type = self.element.attrib.get("key-type")
         self.item_type = self.element.attrib.get("item-type")
         self.value = self.element.attrib.get("value")
         self.nullable = self.element.attrib.get("nullable", "false") == "true"
@@ -338,6 +330,9 @@ class _Parameter(_Node):
 
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
+
+        if self.key_type is not None:
+            self.key_type = self.resolve_reference(self.key_type)
 
         if self.item_type is not None:
             self.item_type = self.resolve_reference(self.item_type)
@@ -404,10 +399,6 @@ class _Value(_Node):
 
         self.enumeration = self.parent
     
-class _ExternalType(_Type):
-    def __init__(self, element, parent):
-        super().__init__(element, parent)
-
 class _ErrorCondition(_Node):
     def __init__(self, element, parent):
         super(_ErrorCondition, self).__init__(element, parent)
@@ -428,8 +419,6 @@ class Model(_Node):
         super().__init__(element, None)
 
         self.modules = list()
-        self.external_types = list()
-        self.external_types_by_name = dict()
         self.group_definitions_by_name = dict()
 
         self.nodes_by_reference = dict()
@@ -442,11 +431,6 @@ class Model(_Node):
         for child in self.element.findall("module"):
             module = _Module(child, self)
             self.modules.append(module)
-
-        for child in self.element.findall("external-type"):
-            type_ = _ExternalType(child, self)
-            self.external_types.append(type_)
-            self.external_types_by_name[type_.name] = type_
 
         for child in self.element.findall("group-definition"):
             definition = _GroupDefinition(child, self)

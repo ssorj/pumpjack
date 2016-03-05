@@ -2,10 +2,10 @@
   The base class for Proton errors.
 </class>
 
-<class name="timeout-error" type="@proton-error">
+<class name="timeout-error" type="proton-error">
   An operation timed out.
 </class>
 
-<class name="conversion-error" type="@proton-error">
+<class name="conversion-error" type="proton-error">
   A type conversion failed.
 </class>

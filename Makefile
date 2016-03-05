@@ -32,6 +32,10 @@ publish: render
 	rm -rf ${temp_dir}
 	rm ${temp_script}
 
+.PHONY: update-markdown2
+update-markdown2:
+	curl "https://raw.githubusercontent.com/ssorj/transom/master/python/markdown2.py" -o python/markdown2.py
+
 .PHONY: update-pencil
 update-pencil:
 	curl "https://raw.githubusercontent.com/ssorj/pencil/master/python/pencil.py" -o python/pencil.py

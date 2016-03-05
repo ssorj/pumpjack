@@ -57,21 +57,6 @@
   
   @io.xml@
   
-  <external-type name="boolean"/>
-  <external-type name="bytes"/>
-  <external-type name="duration"/>
-  <external-type name="integer"/>
-  <external-type name="iterator"/>
-  <external-type name="list"/>
-  <external-type name="map"/>
-  <external-type name="object"/>
-  <external-type name="scalar"/>
-  <external-type name="string"/>
-  <external-type name="symbol"/>
-  <external-type name="timestamp"/>
-  <external-type name="url"/>
-  <external-type name="uuid"/>
-
   <group-definition name="basic" title="Basic properties and methods">
   </group-definition>
 

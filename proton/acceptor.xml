@@ -1,7 +1,7 @@
 <class name="acceptor">
   A context for accepting inbound connections.
 
-  <link node="@/proton/core/container/listen"/>
+  <link node="/proton/core/container/listen"/>
 
   <group name="basic">
     <method name="close">
@@ -10,7 +10,7 @@
   </group>
   
   <group name="configuration">
-    <property name="connection-options" type="@connection-options" mutable="true">
+    <property name="connection-options" type="connection-options" mutable="true">
       Default options for new inbound connections.
     </property>
   </group>

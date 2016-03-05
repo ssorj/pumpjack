@@ -1,13 +1,13 @@
-<class name="link" type="@endpoint">
+<class name="link" type="endpoint">
   A named channel for sending or receiving messages.  A link can
   be a sender or a receiver, but never both.  A link contains an
   ordered sequence of delivery objects.
 
-  <link node="@link-options"/>
-  <link node="@session"/>
-  <link node="@sender"/>
-  <link node="@receiver"/>
-  <link node="@delivery"/>
+  <link node="link-options"/>
+  <link node="session"/>
+  <link node="sender"/>
+  <link node="receiver"/>
+  <link node="delivery"/>
 
   <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">AMQP definition</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
@@ -20,7 +20,7 @@
       The link name.
     </property>
 
-    <property name="session" type="@session" value="[instance]">
+    <property name="session" type="session" value="[instance]">
       The containing session.
     </property>
 
@@ -29,9 +29,9 @@
 
       The operation is complete when on-link-open fires.
 
-      <link node="@/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-link-open"/>
 
-      <input name="options" type="@link-options" optional="true"/>
+      <input name="options" type="link-options" optional="true"/>
     </method>
     
     <method name="close">
@@ -39,9 +39,9 @@
 
       The operation is complete when on-link-close fires.
       
-      <link node="@/proton/core/handler/on-link-close"/>
+      <link node="/proton/core/handler/on-link-close"/>
       
-      <input name="condition" type="@condition" optional="true"/>
+      <input name="condition" type="condition" optional="true"/>
     </method>
 
     <method name="detach">
@@ -51,24 +51,30 @@
       
       The operation is complete when on-link-detach fires.
       
-      <link node="@/proton/core/handler/on-link-detach"/>
+      <link node="/proton/core/handler/on-link-detach"/>
       
-      <input name="condition" type="@condition" optional="true"/>
+      <input name="condition" type="condition" optional="true"/>
     </method>
   </group>
 
   <group name="flow-control">
-    <property name="local-credit" type="integer" value="[discovered]">
+    <property name="credit" type="uint" value="[discovered]" proposed="true">
+      The number of messages the receiving end can accept.
+    </property>
+
+    <!--
+    <property name="local-credit" type="long" value="[discovered]">
       The local view of the total outstanding credit on the link.
 
       Each whole integer of credit permits one message transfer.
     </property>
 
-    <property name="remote-credit" type="integer" value="[discovered]">
+    <property name="remote-credit" type="long" value="[discovered]">
       The remote view of the total outstanding credit on the link.
 
       Each whole integer of credit permits one message transfer.
     </property>
+    -->
   </group>
 
   <group name="source-and-target-state" title="Source and target state">
@@ -78,120 +84,131 @@
     <property name="remote-target-address" type="string" value="[discovered]">
     </property>
 
-    <property name="remote-source-durable" type="boolean" value="[discovered]">
+    <property name="remote-source-durability" type="durability" value="[discovered]">
     </property>
 
-    <property name="remote-target-durable" type="boolean" value="[discovered]">
+    <property name="remote-target-durability" type="durability" value="[discovered]">
     </property>
 
-    <property name="remote-source-dynamic-node" type="boolean" value="[discovered]" proposed="true">
-    </property>
-
-    <property name="remote-target-dynamic-node" type="boolean" value="[discovered]" proposed="true">
-    </property>
-
-    <property name="remote-source-node-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
-    </property>
-
-    <property name="remote-target-node-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
-    </property>
-
-    <property name="remote-source-delivery-mode" type="@delivery-mode" value="[discovered]">
+    <property name="remote-source-expiry-policy" type="expiry-policy" value="[discovered]">
+      XXX Control when the clock for expiration begins.
     </property>
     
-    <property name="remote-source-filters" type="list" item-type="string" value="[discovered]" proposed="true">
+    <property name="remote-target-expiry-policy" type="expiry-policy" value="[discovered]">
+      XXX Control when the clock for expiration begins.
+    </property>
+    
+    <property name="remote-source-timeout" type="duration" value="[discovered]">
+      XXX The period after which the source terminus is discarded.
     </property>
 
-    <!-- source and target: capabilities, expiry policy, timeout -->
+    <property name="remote-target-timeout" type="duration" value="[discovered]">
+      XXX The period after which the target terminus discarded.
+    </property>
+    
+    <property name="remote-source-dynamic" type="boolean" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-target-dynamic" type="boolean" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-source-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-target-properties" type="map" key-type="string" item-type="object" value="[discovered]" proposed="true">
+    </property>
+
+    <property name="remote-source-capabilities" type="array" item-type="symbol" value="[discovered]">
+      XXX Extensions supported or desired.
+    </property>
+
+    <property name="remote-target-capabilities" type="array" item-type="symbol" value="[discovered]">
+      XXX Extensions supported or desired.
+    </property>
   </group>
 
-  <group name="events" internal="true">
-    <method name="find-deliveries" internal="true">
-      Find deliveries in the specified states.  The results
-      are scoped to deliveries on this session.
+  <group name="endpoint-state-group">
+    <property name="remote-delivery-mode" type="delivery-mode" value="[discovered]">
+    </property>
+    
+    <property name="remote-distribution-mode" type="distribution-mode" value="[discovered]">
+    </property>
+    
+    <property name="remote-filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true">
+    </property>
 
-      <input name="updated" type="boolean"/>
-      <input name="readable" type="boolean"/>
-      <input name="writable" type="boolean"/>
-      <output name="results" type="iterator" item-type="@delivery"/>
+    <property name="remote-max-message-size" type="ulong" value="[discovered]" nullable="true">
+    </property>
+  </group>
+
+  <group name="events">
+    <method name="deliveries">
+      Get the deliveries contained in this link.
+      
+      <output name="deliveries" type="iterator" item-type="delivery"/>
     </method>
   </group>
-
-  <!-- XXX queued -->
 </class>
 
-<class name="receiver" type="@link">
+<class name="receiver" type="link">
   A link for receiving messages.
 
-  <link node="@sender"/>
+  <link node="sender"/>
 
   <group name="basic">
   </group>
   
   <group name="flow-control">
     <method name="add-credit" proposed="true">
-      Issue credit on the link.  This increases the credit
-      issued to the remote sender by the specified number of
-      messages.
+      Issue credit to the sending end.  This increases the credit
+      issued to the remote sender by the specified number of messages.
 
-      <input name="count" type="integer"/>
+      <input name="count" type="uint"/>
     </method>
 
     <method name="flush" proposed="true">
-      Request all available messages.  This tells the sender to
-      use all existing credit immediately to send deliveries and
-      then discard any excess credit.
+      Request any messages available at the sending end.  This tells
+      the sender to use all existing credit immediately to send
+      deliveries and then discard any excess credit.
 
-      The operation is complete when the on-receiver-flush event
-      fires.
+      The sending end is notified of the flush request by the
+      *on-sender-flush* event.  The operation is complete when
+      *on-receiver-flush* fires.
 
-      <link node="@/proton/core/handler/on-receiver-flush"/>
+      <link node="/proton/core/handler/on-sender-flush"/>
+      <link node="/proton/core/handler/on-receiver-flush"/>
     </method>
   </group>
 </class>
 
-<class name="sender" type="@link">
+<class name="sender" type="link">
   A link for sending messages.
 
-  <link node="@receiver"/>
+  <link node="receiver"/>
   
   <group name="message-operations">
     <method name="send">
       Send a message on the link.
 
-      <input name="message" type="@message"/>
-      <output name="delivery" type="@delivery"/>
+      <input name="message" type="message"/>
+      <output name="delivery" type="delivery"/>
     </method>
 
     <method name="send-request" proposed="true">
       Send a request message.  The message reply-to property is
       set automatically.
 
-      <input name="message" type="@message"/>
-      <output name="delivery" type="@delivery"/>
+      <input name="message" type="message"/>
+      <output name="delivery" type="delivery"/>
     </method>
     
     <method name="send-response" proposed="true">
       Send a response message.  The message address and
       correlation-id properties are set automatically.
 
-      <input name="response" type="@message"/>
-      <input name="request" type="@message"/>
-      <output name="delivery" type="@delivery"/>
+      <input name="response" type="message"/>
+      <input name="request" type="message"/>
+      <output name="delivery" type="delivery"/>
     </method>
-  </group>
-
-  <group name="flow-control">
-    <property name="sendable" type="integer" value="[discovered]" proposed="true">
-      The number of messages that can be sent with current credit.
-    </property>
-
-    <property name="queued" type="integer" value="[discovered]" proposed="true">
-      The number of messages already queued for transfer.
-    </property>
-
-    <property name="flushing" type="boolean" value="[discovered]" mutable="true" proposed="true">
-      The receiving end has activated flushing mode.
-    </property>
   </group>
 </class>

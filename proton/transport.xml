@@ -2,15 +2,15 @@
   A network channel supporting an AMQP connection.
 
   <group name="basic">
-    <property name="ssl" type="@ssl" value="[instance]">
+    <property name="ssl" type="ssl">
       Get SSL connection information.
     </property>
     
-    <property name="sasl" type="@sasl" value="[instance]">
+    <property name="sasl" type="sasl">
       Get SASL connection information.
     </property>
     
-    <property name="condition" type="@condition" value="[instance]">
+    <property name="condition" type="condition">
       Get the error condition.
     </property>
   </group>

@@ -51,4 +51,6 @@
   <group name="errors">
     @errors.xml@
   </group>
+
+  @types.xml@
 </module>

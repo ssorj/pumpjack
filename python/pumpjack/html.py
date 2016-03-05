@@ -18,7 +18,7 @@
 #
 
 from .render import *
-from .model import _Enumeration, _ExternalType, _Node
+from .model import _Enumeration, _Node
 
 import collections as _collections
 import markdown2 as _markdown2
@@ -395,23 +395,30 @@ def _html_node_links(node):
 
 def _html_parameter_type(param):
     type = _html_reference(param, param.type)
+    key_type = None
+    item_type = None
+
+    if param.key_type is not None:
+        key_type = _html_reference(param, param.key_type)
 
     if param.item_type is not None:
-        type = "{} of {}".format(type, _html_reference(param, param.item_type))
+        item_type = _html_reference(param, param.item_type)
+
+    if key_type is not None:
+        type = "{} of {} &#8658; {}".format(type, key_type, item_type)
+    elif item_type is not None:
+        type = "{} of {}".format(type, item_type)
 
     return type
 
 def _html_input(input):
-    if input.type in input.model.external_types_by_name:
-        return input.name
-
-    html = _html_parameter_type(input)
+    name = input.name
 
     if input.optional:
-        html = "[{}]".format(html)
-        html = html_span(html, _class="optional")
-    
-    return html
+        name = "[{}]".format(name)
+        name = html_span(name, _class="optional")
+
+    return html_a(name, input.type.url)
 
 def _html_parameter_value(param):
     return _html_special(param.value)
@@ -419,9 +426,6 @@ def _html_parameter_value(param):
 def _html_reference(node, ref):
     assert isinstance(node, _Node), node
     assert isinstance(ref, _Node), ref
-    
-    if isinstance(ref, _ExternalType):
-        return ref.name
     
     return html_a(ref.name, ref.url)
 

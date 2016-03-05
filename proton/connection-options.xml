@@ -1,9 +1,9 @@
-<class name="connection-options" type="@endpoint-options">
+<class name="connection-options" type="endpoint-options">
   Options for new connections.
   
-  <link node="@/proton/core/connection"/>
-  <link node="@/proton/core/container/connect"/>
-  <link node="@/proton/core/container/listen"/>
+  <link node="/proton/core/connection"/>
+  <link node="/proton/core/container/connect"/>
+  <link node="/proton/core/container/listen"/>
 
   <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-open">AMQP definition</link>
 
@@ -12,8 +12,8 @@
       The connection container identifier.
     </property>
     
-    <property name="host" type="string" mutable="true" nullable="true">
-      The connection host name.
+    <property name="virtual-host" type="string" mutable="true" nullable="true">
+      The virtual host name.
     </property>
   </group>
 
@@ -35,9 +35,8 @@
     </property>
     
     <property name="sasl-allowed-mechs" type="string" value="[discovered]" mutable="true">
-      The SASL mechanisms the local peer permits.
-
-      **XXX Should this be a list of string?**
+      The SASL mechanisms the local peer permits.  The value is a
+      space-separated string of mechanism names.
     </property>
 
     <!--
@@ -50,10 +49,10 @@
     -->
 
     <!--
-    <property name="ssl-client-options" type="@ssl-client-options" value="[instance]">
+    <property name="ssl-client-options" type="ssl-client-options" value="[instance]">
     </property>
     
-    <property name="ssl-server-options" type="@ssl-server-options" value="[instance]">
+    <property name="ssl-server-options" type="ssl-server-options" value="[instance]">
     </property>
     -->
   </group>
@@ -63,11 +62,11 @@
       Expire the connection after a period of inactivity.
     </property>
 
-    <property name="max-sessions" type="integer" mutable="true" nullable="true" proposed="true">
+    <property name="max-sessions" type="ushort" mutable="true" nullable="true">
       Limit the number of active sessions.
     </property>
 
-    <property name="max-frame-size" type="integer" mutable="true" nullable="true">
+    <property name="max-frame-size" type="uint" mutable="true" nullable="true">
       Limit the size of AMQP frames.
     </property>
   </group>
