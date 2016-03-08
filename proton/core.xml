@@ -1,10 +1,11 @@
 <module name="core">
-  The primary entry point for the event-driven API. Many
-  applications will import only this module.
+  The API entry point.
+  
+  Many applications will import only this module.
 
-  <annotation name="requires">amqp, io</annotation>
+  <annotation name="requires">types, codec, io</annotation>
 
-  <group name="model" title="AMQP model">
+  <group name="model" title="Core model">
     @container.xml@
 
     @connection.xml@
@@ -51,6 +52,4 @@
   <group name="errors">
     @errors.xml@
   </group>
-
-  @types.xml@
 </module>

@@ -153,20 +153,28 @@ class _Node:
             except KeyError:
                 raise Exception("Cannot find reference '{}'".format(ref))
 
+        node = None
         module = self.find_ancestor(_Module)
 
+        # Search the current module
+        
         if module:
-            node = None
+            node = module.find_member(ref)
 
-            for group in module.groups:
-                if ref in group.children_by_name:
-                    node = group.children_by_name[ref]
+        # Search all the modules
+            
+        if node is None:
+            for module in self.model.modules:
+                node = module.find_member(ref)
+
+                if node is not None:
                     break
-            else:
-                msg = "Cannot find child '{}' on module '{}'"
-                raise Exception(msg.format(ref, module.name))
 
-            return node
+        if node is None:
+            msg = "Cannot find member '{}' on module '{}'"
+            raise Exception(msg.format(ref, module.name))
+
+        return node
 
     def find_ancestor(self, cls):
         for ancestor in self.ancestors:
@@ -205,6 +213,13 @@ class _Module(_Node):
             self.groups.append(group)
 
         super(_Module, self).process()
+
+    def find_member(self, ref):
+        assert not ref.startswith("/")
+        
+        for group in self.groups:
+            if ref in group.children_by_name:
+                return group.children_by_name[ref]
 
 class _ModuleGroup(_Group):
     def __init__(self, element, parent):

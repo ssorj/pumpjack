@@ -1,5 +1,5 @@
 <module name="io" experimental="true">
-  IO integration
+  An SPI for IO integration
 
   <group name="io-interfaces" title="IO interfaces">
     <class name="connection-engine" experimental="true">

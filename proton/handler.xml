@@ -4,7 +4,7 @@
 
   <link node="event"/>
 
-  <group name="common" title="Common application events">
+  <group name="common" title="Common-case application events">
     <method name="on-start">
       The event loop is started.
       
