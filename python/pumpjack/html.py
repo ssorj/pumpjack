@@ -18,7 +18,6 @@
 #
 
 from .render import *
-from .model import _Enumeration, _Node
 
 import collections as _collections
 import markdown2 as _markdown2
@@ -246,7 +245,7 @@ class HtmlRenderer(PumpjackRenderer):
 
             out.write(html_table(items, False, True, class_="props"))
             
-            if isinstance(prop.type, _Enumeration):
+            if type(prop.type) is Enumeration:
                 text = "Enumeration {}".format(prop.type.name)
 
                 out.write(html_elem("h2", text))
@@ -328,7 +327,7 @@ class HtmlRenderer(PumpjackRenderer):
 add_renderer("html", HtmlRenderer)
 
 def _html_node_title(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
     
     type = init_cap(node.node_type)
     name = html_span(node.name, class_="name")
@@ -338,12 +337,12 @@ def _html_node_title(node):
     return html_h(title, class_="pumpjack")
 
 def _html_node_link(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
 
     return html_a(_html_special(node.name), node.url)
 
 def _html_node_flags(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
 
     flags = list()
 
@@ -362,7 +361,7 @@ def _html_node_flags(node):
     return " ".join(flags)
 
 def _html_node_table_link(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
     
     link = _html_node_link(node)
     flags = _html_node_flags(node)
@@ -370,7 +369,7 @@ def _html_node_table_link(node):
     return "{} {}".format(link, flags)
 
 def _html_node_summary(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
     
     return first_sentence(node.text)
 
@@ -381,7 +380,7 @@ _markdown_extras = {
 _markdown = _markdown2.Markdown(extras=_markdown_extras)
 
 def _html_node_text(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
     
     if not node.text:
         return ""
@@ -391,7 +390,7 @@ def _html_node_text(node):
     return _markdown.convert(text)
 
 def _html_node_links(node):
-    assert isinstance(node, _Node), node
+    assert isinstance(node, Node), node
     
     out = list()
 
@@ -451,8 +450,8 @@ def _html_parameter_value(param):
     return _html_special(param.value)
 
 def _html_reference(node, ref):
-    assert isinstance(node, _Node), node
-    assert isinstance(ref, _Node), ref
+    assert isinstance(node, Node), node
+    assert isinstance(ref, Node), ref
     
     return html_a(ref.name, ref.url)
 

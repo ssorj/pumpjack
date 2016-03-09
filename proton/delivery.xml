@@ -8,7 +8,6 @@
   <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
   <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">AMQP definition</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/group__delivery.html">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1delivery.html">C++</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Delivery.html">Java</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Delivery-class.html">Python</link>
   

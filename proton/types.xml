@@ -1,11 +1,7 @@
 <module name="types">
   Data types.
 
-  <!--
-  <annotation name="class-link-text-template">AMQP definition</annotation>
-  <annotation name="class-link-href-template">https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#type-{}</annotation>
-  <annotation name="class-link-function">_gen_amqp_type_link</annotation>
-  -->
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
 
   <group name="basic-scalar-types" title="Scalar data types">
     <class name="null">An empty value.</class>
@@ -48,7 +44,7 @@
   </group>
 
   <group name="decimal-types" title="Decimal floating-point data types">
-    <link href="https://en.wikipedia.org/wiki/Decimal_floating_point">Decimal floating point</link>
+    <link href="https://en.wikipedia.org/wiki/Decimal_floating_point">Decimal floating point arithmetic</link>
     
     <class name="decimal32">A 32-bit decimal floating point number.</class>
     <class name="decimal64">A 64-bit decimal floating point number.</class>

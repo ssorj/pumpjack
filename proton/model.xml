@@ -23,6 +23,12 @@
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python</link>
 
+  <link-generator function="gen_amqp_type_link"/>
+  <link-generator function="gen_c_class_link"/>
+  <link-generator function="gen_c_module_link"/>
+  <link-generator function="gen_cpp_class_link"/>
+  <link-generator function="gen_cpp_module_link"/>
+  
   @core.xml@
 
   @types.xml@

@@ -19,7 +19,6 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-close">Close performative</link>
   
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1connection.html">C++</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Connection.html">Java</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Connection-class.html">Python</link>
 

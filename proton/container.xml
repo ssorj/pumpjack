@@ -14,7 +14,6 @@
   <link node="session"/>
   <link node="link"/>
   
-  <link relation="impl" href="http://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1container.html">C++</link>
   <link relation="impl" href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.reactor.Container-class.html">Python</link>
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">Conceptual overview</link>

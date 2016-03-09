@@ -5,7 +5,6 @@
 
   <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">AMQP definition</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/message_8h.html">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1message.html">C++</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/message/Message.html">Java</link>
   <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
 

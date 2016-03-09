@@ -17,13 +17,12 @@
 # under the License.
 #
 
+from collections import defaultdict as _defaultdict
 from pencil import *
 
 import os as _os
 
-from collections import defaultdict as _defaultdict
-
-class _Node:
+class Node:
     def __init__(self, element, parent):
         self.element = element
 
@@ -32,7 +31,6 @@ class _Node:
         
         self.title = None
         self.text = None
-        self.links = list()
         self.links_by_relation = _defaultdict(list)
         self.annotations = dict()
 
@@ -138,8 +136,11 @@ class _Node:
                 text = child.text
                 href = child.attrib["href"]
                 
-            self.links.append((text, href))
             self.links_by_relation[relation].append((text, href))
+
+        if self.model is not None:
+            for func in self.model.link_generators:
+                func(self)
 
         for child in self.children:
             child.process_references()
@@ -154,7 +155,7 @@ class _Node:
                 raise Exception("Cannot find reference '{}'".format(ref))
 
         node = None
-        module = self.find_ancestor(_Module)
+        module = self.find_ancestor(Module)
 
         # Search the current module
         
@@ -181,7 +182,7 @@ class _Node:
             if isinstance(ancestor, cls):
                 return ancestor
 
-class _Group(_Node):
+class _Group(Node):
     def process_references(self):
         super().process_references()
 
@@ -194,10 +195,10 @@ class _Group(_Node):
             if self.text is None:
                 self.text = definition.text
         
-class _GroupDefinition(_Node):
+class _GroupDefinition(Node):
     pass
 
-class _Module(_Node):
+class Module(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -209,10 +210,10 @@ class _Module(_Node):
 
     def process(self):
         for child in self.element.findall("group"):
-            group = _ModuleGroup(child, self)
+            group = ModuleGroup(child, self)
             self.groups.append(group)
 
-        super(_Module, self).process()
+        super(Module, self).process()
 
     def find_member(self, ref):
         assert not ref.startswith("/")
@@ -221,7 +222,7 @@ class _Module(_Node):
             if ref in group.children_by_name:
                 return group.children_by_name[ref]
 
-class _ModuleGroup(_Group):
+class ModuleGroup(_Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -232,20 +233,20 @@ class _ModuleGroup(_Group):
 
     def process(self):
         for child in self.element.findall("class"):
-            cls = _Class(child, self)
+            cls = Class(child, self)
             self.classes.append(cls)
 
         for child in self.element.findall("enumeration"):
-            enum = _Enumeration(child, self)
+            enum = Enumeration(child, self)
             self.enumerations.append(enum)
 
         super().process()
 
-class _Type(_Node):
+class ModuleMember(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
-class _Class(_Type):
+class Class(ModuleMember):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -268,7 +269,7 @@ class _Class(_Type):
         
     def process(self):
         for child in self.element.findall("group"):
-            group = _ClassGroup(child, self)
+            group = ClassGroup(child, self)
             self.groups.append(group)
             self.groups_by_name[group.name] = group
 
@@ -280,19 +281,7 @@ class _Class(_Type):
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
 
-        annotations = self.module.annotations
-        
-        if "class-link-function" in annotations:
-            text_template = annotations["class-link-text-template"]
-            href_template = annotations["class-link-href-template"]
-            func = globals()[annotations["class-link-function"]]
-            
-            link = func(self, text_template, href_template)
-
-            if link is not None:
-                self.links.append(link)
-
-class _ClassGroup(_Group):
+class ClassGroup(_Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -304,16 +293,16 @@ class _ClassGroup(_Group):
 
     def process(self):
         for child in self.element.findall("property"):
-            attr = _Property(child, self)
+            attr = Property(child, self)
             self.properties.append(attr)
 
         for child in self.element.findall("method"):
-            meth = _Method(child, self)
+            meth = Method(child, self)
             self.methods.append(meth)
 
         super().process()
         
-class _ClassMember(_Node):
+class ClassMember(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -325,7 +314,7 @@ class _ClassMember(_Node):
         name = "{}.html".format(self.name)
         return (self.class_.module.name, self.class_.name, name)
 
-class _Parameter(_Node):
+class Parameter(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -356,19 +345,13 @@ class _Parameter(_Node):
         if self.item_type is not None:
             self.item_type = self.resolve_reference(self.item_type)
 
-class _Property(_ClassMember, _Parameter):
+class Property(ClassMember, Parameter):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
         self.mutable = self.element.attrib.get("mutable", "false") == "true"
 
-class _Input(_Parameter):
-    def __init__(self, element, parent):
-        super().__init__(element, parent)
-
-        self.optional = self.element.attrib.get("optional", "false") == "true"
-                
-class _Method(_ClassMember):
+class Method(ClassMember):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -378,20 +361,26 @@ class _Method(_ClassMember):
 
     def process(self):
         for child in self.element.findall("input"):
-            input = _Input(child, self)
+            input = MethodInput(child, self)
             self.inputs.append(input)
 
         for child in self.element.findall("output"):
-            output = _Parameter(child, self)
+            output = Parameter(child, self)
             self.outputs.append(output)
 
         for child in self.element.findall("error-condition"):
-            cond = _ErrorCondition(child, self)
+            cond = ErrorCondition(child, self)
             self.error_conditions.append(cond)
 
         super().process()
 
-class _Enumeration(_Type):
+class MethodInput(Parameter):
+    def __init__(self, element, parent):
+        super().__init__(element, parent)
+
+        self.optional = self.element.attrib.get("optional", "false") == "true"
+                
+class Enumeration(ModuleMember):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -407,20 +396,20 @@ class _Enumeration(_Type):
 
     def process(self):
         for child in self.element.findall("value"):
-            value = _Value(child, self)
+            value = EnumerationValue(child, self)
             self.values.append(value)
         
         super().process()
 
-class _Value(_Node):
+class EnumerationValue(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
         self.enumeration = self.parent
     
-class _ErrorCondition(_Node):
+class ErrorCondition(Node):
     def __init__(self, element, parent):
-        super(_ErrorCondition, self).__init__(element, parent)
+        super(ErrorCondition, self).__init__(element, parent)
         self.error_ref = self.element.attrib["error"]
         self.error = None
 
@@ -429,16 +418,17 @@ class _ErrorCondition(_Node):
 
         super().process_references()
 
-class _Error(_Node):
+class Error(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
-class Model(_Node):
+class Model(Node):
     def __init__(self, element):
         super().__init__(element, None)
 
         self.modules = list()
         self.group_definitions_by_name = dict()
+        self.link_generators = list()
 
         self.nodes_by_reference = dict()
         
@@ -448,20 +438,19 @@ class Model(_Node):
 
     def process(self):
         for child in self.element.findall("module"):
-            module = _Module(child, self)
+            module = Module(child, self)
             self.modules.append(module)
 
         for child in self.element.findall("group-definition"):
             definition = _GroupDefinition(child, self)
             self.group_definitions_by_name[definition.name] = definition
 
+        for child in self.element.findall("link-generator"):
+            func_name = child.attrib["function"]
+            func = globals()[func_name]
+
+            self.link_generators.append(func)
+
         super().process()
 
-def _gen_amqp_type_link(class_, text_template, href_template):
-    if not class_.name.startswith("amqp-"):
-        return
-    
-    text = text_template
-    href = href_template.format(class_.name[5:])
-
-    return text, href
+from .linkgenerators import *

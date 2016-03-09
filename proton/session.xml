@@ -10,7 +10,6 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
   
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/session_8h.html">C</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/classproton_1_1session.html">C++</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Session.html">Java</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Session-class.html">Python</link>
   
