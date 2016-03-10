@@ -62,7 +62,7 @@ class Node:
                 node = node.parent
                 self.ancestors.append(node)
 
-                if not isinstance(node, _Group):
+                if not isinstance(node, Group):
                     reference_items.append(node.name)
 
             self.model = node
@@ -182,7 +182,7 @@ class Node:
             if isinstance(ancestor, cls):
                 return ancestor
 
-class _Group(Node):
+class Group(Node):
     def process_references(self):
         super().process_references()
 
@@ -195,7 +195,7 @@ class _Group(Node):
             if self.text is None:
                 self.text = definition.text
         
-class _GroupDefinition(Node):
+class GroupDefinition(Node):
     pass
 
 class Module(Node):
@@ -222,7 +222,7 @@ class Module(Node):
             if ref in group.children_by_name:
                 return group.children_by_name[ref]
 
-class ModuleGroup(_Group):
+class ModuleGroup(Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -281,7 +281,7 @@ class Class(ModuleMember):
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
 
-class ClassGroup(_Group):
+class ClassGroup(Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -442,7 +442,7 @@ class Model(Node):
             self.modules.append(module)
 
         for child in self.element.findall("group-definition"):
-            definition = _GroupDefinition(child, self)
+            definition = GroupDefinition(child, self)
             self.group_definitions_by_name[definition.name] = definition
 
         for child in self.element.findall("link-generator"):

@@ -19,10 +19,6 @@
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">Conceptual overview</link>
   
-  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/c/api/connection_8h.html">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Endpoint.html">Java</link>
-  <link href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Endpoint-class.html">Python</link>
-
   <group name="endpoint-state-group">
     <property name="uninitialized" type="boolean" value="[discovered]" proposed="true">
       The local and remote endpoint states are UNINITIALIZED.

@@ -3,11 +3,8 @@
 
   <!-- XXX a message is a value object -->
 
-  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">AMQP definition</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/message_8h.html">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/message/Message.html">Java</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Message-class.html">Python</link>
-
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">Definition</link>
+  
   <group name="basic">
     <property name="id" type="message-id" mutable="true" nullable="true">
       A globally unique message identifier.

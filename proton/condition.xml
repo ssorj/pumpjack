@@ -4,9 +4,7 @@
   **XXX Should this take a condition type, from an enumeration of the
   allowed AMQP conditions?**
 
-  <link href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-amqp-error">AMQP definition</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/condition_8h.html">C</link>
-  <link href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Condition-class.html">Python</link>
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-error">Type definition</link>
 
   <group name="basic">
     <method name="constructor" special="true">
@@ -28,7 +26,7 @@
       A message describing the condition.
     </property>
 
-    <property name="properties" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
+    <property name="properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">
       Extra properties of the condition.
     </property>
   </group>

@@ -3,6 +3,9 @@
   link-options.
 
   <link node="endpoint"/>
+  <link node="connection-options"/>
+  <link node="session-options"/>
+  <link node="link-options"/>
   
   <group name="extended-attributes">
     <property name="properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">

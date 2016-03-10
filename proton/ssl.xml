@@ -1,8 +1,12 @@
 <class name="ssl">
   SSL properties for a connection.
 
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-security-v1.0-os.html#section-tls">Conceptual overview</link>
+
+  <!--
   <property name="verify-mode"></property>
   <property name="resume-status"></property>
+  -->
 </class>
 
 <!--

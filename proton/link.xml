@@ -1,7 +1,7 @@
 <class name="link" type="endpoint">
-  A named channel for sending or receiving messages.  A link can
-  be a sender or a receiver, but never both.  A link contains an
-  ordered sequence of delivery objects.
+  A channel for sending or receiving messages.  A link can be a sender
+  or a receiver, but never both.  A link contains an ordered sequence
+  of delivery objects.
 
   <link node="link-options"/>
   <link node="session"/>
@@ -15,10 +15,6 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-flow">Flow performative</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
-
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/link_8h.html">C</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/org/apache/qpid/proton/engine/Link.html">Java</link>
-  <link relation="impl" href="http://qpid.apache.org/releases/qpid-proton-master/proton/python/api/proton.Link-class.html">Python</link>
 
   <group name="basic">
     <property name="name" type="string" value="[generated]">

@@ -3,6 +3,8 @@
   change Proton behaviors.
 
   <link node="event"/>
+  <link node="/proton/core/container/constructor"/>
+  <link node="/proton/core/endpoint-options/handler"/>
 
   <group name="common" title="Common-case application events">
     <method name="on-start">

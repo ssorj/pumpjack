@@ -13,6 +13,8 @@ two uniquely identified **containers**.  Though a connection can have
 multiple sessions, often this is not needed.  The container API allows
 you to ignore sessions unless you require them.
 
+;; XXX Mention endpoint in the above
+
 A connection operates using a **transport**.  A transport is a network
 communication channel, such as a TCP connection.
 
@@ -28,9 +30,11 @@ receiver can also indicate whether they accept or reject the message.
 
 - [AMQP conceptual model](http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176)
 
+<!--
+
 ## Containers
 
-## Connections, sessions, and links
+## Endpoints
 
 - Lifecycle
 - Local and remote state
@@ -76,3 +80,4 @@ at-most-once, at-least-once, or exactly-once.
 - IO
 - [Implementation guide](implementation-guide.html)
 
+-->

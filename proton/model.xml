@@ -11,6 +11,8 @@
   programming languages.
 
   For more information see the [Proton API overview](overview.html).
+  If you are developing a new implementation, take a look at the
+  [implementation guide](implementation-guide.html).
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#toc">Transport layer</link>
@@ -18,16 +20,20 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#toc">Transactions</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-security-v1.0-os.html#toc">Security layers</link>
   
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python</link>
-
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C API reference</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++ API reference</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java API reference</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python API reference</link>
+  
   <link-generator function="gen_amqp_type_link"/>
-  <link-generator function="gen_c_class_link"/>
   <link-generator function="gen_c_module_link"/>
-  <link-generator function="gen_cpp_class_link"/>
+  <link-generator function="gen_c_class_link"/>
   <link-generator function="gen_cpp_module_link"/>
+  <link-generator function="gen_cpp_class_link"/>
+  <link-generator function="gen_java_module_link"/>
+  <link-generator function="gen_java_class_link"/>
+  <link-generator function="gen_python_module_link"/>
+  <link-generator function="gen_python_class_link"/>
   
   @core.xml@
 
