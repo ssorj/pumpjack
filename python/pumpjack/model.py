@@ -130,14 +130,13 @@ class Node:
             relation = child.attrib.get("relation")
             
             if "node" in child.attrib:
-                node = self.resolve_reference(child.attrib["node"])
-                text = "{} {}".format(init_cap(node.node_type), node.name)
-                href = node.url
+                link = self.resolve_reference(child.attrib["node"]) # -> node
             else:
                 text = child.text
                 href = child.attrib["href"]
+                link = (text, href)
                 
-            self.links_by_relation[relation].append((text, href))
+            self.links_by_relation[relation].append(link)
 
         if self.model is not None:
             for func in self.model.link_generators:

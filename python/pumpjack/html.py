@@ -323,14 +323,18 @@ class HtmlRenderer(PumpjackRenderer):
                     
 add_renderer("html", HtmlRenderer)
 
-def _html_node_title(node):
-    assert isinstance(node, Node), node
-
+def _qualified_node_name(node):
     name = node.name
 
     if type(node) in (Property, Method):
         name = "{}.{}".format(node.class_.name, node.name)
-    
+
+    return name
+
+def _html_node_title(node):
+    assert isinstance(node, Node), node
+
+    name = _qualified_node_name(node)
     name = html_span(name, class_="name")
     
     type_ = init_cap(node.node_type)
@@ -423,6 +427,11 @@ def _html_node_links_for_relation(node, relation):
     items = list()
     
     for link in node.links_by_relation[relation]:
+        if isinstance(link, Node):
+            text = _qualified_node_name(link)
+            href = link.url
+            link = text, href
+
         items.append(html_a(link[0], link[1]))
 
     return items
