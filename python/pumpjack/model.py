@@ -101,6 +101,7 @@ class Node:
     def process_properties(self):
         self.title = self.element.attrib.get("title")
 
+        self.special = self.element.attrib.get("special", "false") == "true"
         self.hidden = self.element.attrib.get("hidden", "false") == "true"
         self.internal = self.element.attrib.get("internal", "false") == "true"
         self.proposed = self.element.attrib.get("proposed", "false") == "true"

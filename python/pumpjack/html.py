@@ -50,7 +50,7 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Module", "Content", "Depends on"))
 
         for module in model.modules:
-            link = _html_node_table_link(module)
+            link = _html_node_link_with_flags(module)
             summary = _html_node_summary(module)
             requires = module.annotations.get("requires")
             
@@ -96,7 +96,7 @@ class HtmlRenderer(PumpjackRenderer):
         items.append(("Class", "Summary"))
                         
         for cls in group.classes:
-            link = _html_node_table_link(cls)
+            link = _html_node_link_with_flags(cls)
             summary = first_sentence(cls.text)
 
             if cls.hidden or cls.internal:
@@ -180,16 +180,13 @@ class HtmlRenderer(PumpjackRenderer):
                 if prop.hidden or prop.internal:
                     continue
                 
-                link = _html_node_table_link(prop)
+                link = _html_node_link_with_flags(prop)
                 summary = _html_node_summary(prop)
                 type = _html_parameter_type(prop)
                 value = _html_parameter_value(prop)
                 mutable = _html_boolean_tick_box(prop.mutable)
                 nullable = _html_boolean_tick_box(prop.nullable)
 
-                if value and value.startswith("[") and value.endswith("]"):
-                    value = html_span(value[1:-1], class_="special")
-                
                 items.append((link, summary, type, value, mutable, nullable))
 
             out.write(html_table(items, class_="pumpjack properties"))
@@ -202,7 +199,7 @@ class HtmlRenderer(PumpjackRenderer):
                 if meth.hidden or meth.internal:
                     continue
                 
-                link = _html_node_table_link(meth)
+                link = _html_node_link_with_flags(meth)
                 summary = _html_node_summary(meth)
 
                 inputs = list()
@@ -328,18 +325,29 @@ add_renderer("html", HtmlRenderer)
 
 def _html_node_title(node):
     assert isinstance(node, Node), node
+
+    name = node.name
+
+    if type(node) in (Property, Method):
+        name = "{}.{}".format(node.class_.name, node.name)
     
-    type = init_cap(node.node_type)
-    name = html_span(node.name, class_="name")
+    name = html_span(name, class_="name")
+    
+    type_ = init_cap(node.node_type)
     flags = _html_node_flags(node)
-    title = "{} {} {}".format(type, name, flags)
+    title = "{} {} {}".format(type_, name, flags)
 
     return html_h(title, class_="pumpjack")
 
 def _html_node_link(node):
     assert isinstance(node, Node), node
 
-    return html_a(_html_special(node.name), node.url)
+    class_ = None
+    
+    if node.special:
+        class_ = "special"
+    
+    return html_a(_html_special(node.name), node.url, class_=class_)
 
 def _html_node_flags(node):
     assert isinstance(node, Node), node
@@ -360,9 +368,9 @@ def _html_node_flags(node):
 
     return " ".join(flags)
 
-def _html_node_table_link(node):
+def _html_node_link_with_flags(node):
     assert isinstance(node, Node), node
-    
+
     link = _html_node_link(node)
     flags = _html_node_flags(node)
     
