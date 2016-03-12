@@ -8,6 +8,7 @@
   <link node="sender"/>
   <link node="receiver"/>
   <link node="delivery"/>
+  <link node="terminus"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
@@ -17,12 +18,10 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
 
   <group name="basic">
-    <property name="address" type="string" nullable="true">
-      The source or target address.  This is a convenience for
-      accessing the remote source or target address for a receiver or
-      sender, respectively.
+    <property name="type" type="link-type" value="[discovered]">
+      SENDER or RECEIVER.
     </property>
-
+    
     <property name="session" type="session" value="[instance]">
       The containing session.
     </property>
@@ -183,3 +182,8 @@
     </method>
   </group>
 </class>
+
+<enumeration name="link-type">
+  <value name="SENDER"/>
+  <value name="RECEIVER"/>
+</enumeration>

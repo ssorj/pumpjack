@@ -5,6 +5,8 @@
   A delivery attempt can fail.  As a result, a particular
   message may correspond to multiple deliveries.
 
+  <link node="link"/>
+
   <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp438000">Conceptual overview</link>
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>

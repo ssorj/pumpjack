@@ -4,6 +4,7 @@
   <link node="link"/>
   <link node="/proton/core/container/open-receiver"/>
   <link node="/proton/core/container/open-sender"/>
+  <link node="terminus-options"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
@@ -17,13 +18,6 @@
       Options for the link target.
     </property>
     
-    <property name="message-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">
-      Maintain credit for the given number of messages.
-
-      <link node="/proton/core/link/credit"/>
-      <link node="/proton/core/receiver/add-credit"/>
-    </property>
-
     <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">
       Control the message delivery guarantee.
     </property>
@@ -39,73 +33,14 @@
     </method>
   </group>
 
-  <!--
-  <group name="source-and-target-options" title="Source and target options">
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+  <group name="flow-control">
+    <property name="message-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">
+      Maintain credit for the given number of messages.
 
-    <property name="source-address" type="string" mutable="true" nullable="true">
-      The address of the message source.
-    </property>
-    
-    <property name="target-address" type="string" mutable="true" nullable="true">
-      The address of the message target.
-    </property>
-    
-    <property name="source-durability" type="durability" value="NONE" mutable="true">
-      Request a persistent source node.
-    </property>
-    
-    <property name="target-durability" type="durability" value="NONE" mutable="true">
-      Request a persistent target node.
-    </property>
-    
-    <property name="source-expiry-policy" type="expiry-policy" value="SESSION-CLOSE" mutable="true">
-      Control when the clock for expiration begins.
-    </property>
-    
-    <property name="target-expiry-policy" type="expiry-policy" value="SESSION-CLOSE" mutable="true">
-      Control when the clock for expiration begins.
-    </property>
-    
-    <property name="source-timeout" type="duration" mutable="true" nullable="true">
-      The period after which the source terminus is discarded.
-    </property>
-
-    <property name="target-timeout" type="duration" mutable="true" nullable="true">
-      The period after which the target terminus discarded.
-    </property>
-    
-    <property name="source-dynamic" type="boolean" value="false" mutable="true">
-      Request on-demand creation of a node at the peer.
-    </property>
-    
-    <property name="target-dynamic" type="boolean" value="false" mutable="true">
-      Request on-demand creation of a node at the peer.
-    </property>
-    
-    <property name="source-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
-      Control the properties of nodes created on demand.
-
-      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">Type</link>
-    </property>
-    
-    <property name="target-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
-      Control the properties of nodes created on demand.
-
-      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">Type</link>
-    </property>
-    
-    <property name="source-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
-      Extensions supported or desired.
-    </property>
-
-    <property name="target-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
-      Extensions supported or desired.
+      <link node="/proton/core/link/credit"/>
+      <link node="/proton/core/receiver/add-credit"/>
     </property>
   </group>
-  -->
 
   <group name="resource-limits">
     <property name="max-message-size" type="ulong" mutable="true" nullable="true">
