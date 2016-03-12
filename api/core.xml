@@ -8,17 +8,19 @@
   <group name="model" title="Core model">
     @container.xml@
 
+    @endpoint.xml@
+
     @connection.xml@
 
     @session.xml@
 
     @link.xml@
 
+    @terminus.xml@
+
     @message.xml@
 
     @delivery.xml@
-
-    @endpoint.xml@
 
     @condition.xml@
   </group>
@@ -31,6 +33,8 @@
     @session-options.xml@
     
     @link-options.xml@
+
+    @terminus-options.xml@
   </group>
 
   <group name="events">

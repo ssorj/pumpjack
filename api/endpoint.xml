@@ -20,29 +20,35 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">Conceptual overview</link>
   
   <group name="endpoint-state-group">
-    <property name="uninitialized" type="boolean" value="[discovered]" proposed="true">
-      The local and remote endpoint states are UNINITIALIZED.
+    <property name="local-uninitialized" type="boolean" value="[discovered]">
+      The local endpoint is uninitialized.
     </property>
 
-    <property name="active" type="boolean" value="[discovered]" proposed="true">
-      The local and remote endpoint states are ACTIVE.
+    <property name="remote-uninitialized" type="boolean" value="[discovered]">
+      The remote endpoint is uninitialized.
     </property>
 
-    <property name="closed" type="boolean" value="[discovered]" proposed="true">
-      The local and remote endpoint states are CLOSED.
+    <property name="local-active" type="boolean" value="[discovered]">
+      The local endpoint is active.
+    </property>
+
+    <property name="remote-active" type="boolean" value="[discovered]">
+      The remote endpoint is active.
+    </property>
+
+    <property name="local-closed" type="boolean" value="[discovered]">
+      The local endpoint is closed.
     </property>
     
-    <property name="local-state" type="endpoint-state" value="UNINITIALIZED">
-      Local endpoint state.
+    <property name="remote-closed" type="boolean" value="[discovered]">
+      The remote endpoint is closed.
     </property>
 
-    <property name="remote-state" type="endpoint-state" value="[discovered]">
-      Remote endpoint state.
-    </property>
-
+    <!--
     <property name="local-condition" type="condition" nullable="true">
       The error condition of the local peer.
     </property>
+    -->
     
     <property name="remote-condition" type="condition" value="[discovered]" nullable="true">
       The error condition of the remote peer.
@@ -61,19 +67,3 @@
     </property>
   </group>
 </class>
-
-<enumeration name="endpoint-state">
-  Endpoint state values.
-
-  <value name="UNINITIALIZED">
-    The endpoint is uninitialized.
-  </value>
-
-  <value name="ACTIVE">
-    The endpoint is active.
-  </value>
-
-  <value name="CLOSED">
-    The endpoint is closed.
-  </value>
-</enumeration>

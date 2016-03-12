@@ -1,0 +1,59 @@
+<class name="terminus">
+  A source or target for messages.
+
+  <link node="terminus-options"/>
+
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+    
+  <group name="basic">
+    <property name="address" type="string" value="[discovered]">
+      The address of the message source or target.
+    </property>
+
+    <property name="type" type="terminus-type" value="[discovered]">
+      Source or target.
+    </property>
+
+    <property name="durability" type="durability" value="[discovered]">
+      The persistence mode of the source or target.
+    </property>
+
+    <property name="expiry-policy" type="expiry-policy" value="[discovered]">
+      When expiration of the source or target begins.
+    </property>
+    
+    <property name="timeout" type="duration" value="[discovered]">
+      The period after which the source or target is discarded.
+    </property>
+
+    <property name="dynamic" type="boolean" value="[discovered]">
+      On-demand creation of a source or target at the remote peer.
+    </property>
+
+    <property name="properties" type="map" key-type="symbol" item-type="object" value="[discovered]" proposed="true">
+      The properties of a dynamic source or target.
+    </property>
+
+    <property name="distribution-mode" type="distribution-mode" value="[discovered]">
+      The message distribution mode at the remote peer.  This is a
+      source-only option.
+    </property>
+    
+    <property name="filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true">
+      Filters set by the remote peer.  This is a source-only option.
+      
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
+    </property>
+    
+    <property name="capabilities" type="array" item-type="symbol" value="[discovered]">
+      Extensions supported or desired.
+    </property>
+  </group>
+</class>
+
+<enumeration name="terminus-type">
+  <value name="SOURCE"/>
+  <value name="TARGET"/>
+</enumeration>

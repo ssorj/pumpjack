@@ -6,6 +6,14 @@
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
+
+  <group name="basic">
+    <method name="constructor" special="true">
+      Create a new session-options instance.
+      
+      <output type="session-options"/>
+    </method>
+  </group>
   
   <group name="flow-control">
     <property name="incoming-capacity" type="int" mutable="true" nullable="true">

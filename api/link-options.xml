@@ -9,31 +9,37 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
   
   <group name="basic">
+    <property name="source" type="terminus-options">
+      Options for the link source.
+    </property>
+    
+    <property name="target" type="terminus-options">
+      Options for the link target.
+    </property>
+    
+    <property name="message-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">
+      Maintain credit for the given number of messages.
+
+      <link node="/proton/core/link/credit"/>
+      <link node="/proton/core/receiver/add-credit"/>
+    </property>
+
+    <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">
+      Control the message delivery guarantee.
+    </property>
+
     <property name="name" type="string" value="[generated]" mutable="true">
       The name of the link.
     </property>
 
-    <!--
-    <property name="durable" type="boolean" value="false" mutable="true">
-      Create a persistent receiver.  This is a receiver-only
-      option.
-    </property>
-    -->
-    
-    <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true">
-      Control the message delivery guarantee.
-    </property>
-    
-    <property name="distribution-mode" type="distribution-mode" value="MOVE" mutable="true">
-      Control whether messsages are browsed or consumed.  This
-      is a receiver-only option.
-    </property>
-
-    <property name="filters" type="map" key-type="symbol" item-type="string" mutable="true" nullable="true" proposed="true">
-      Select messages by criteria.
-    </property>
+    <method name="constructor" special="true">
+      Create a new link-options instance.
+      
+      <output type="link-options"/>
+    </method>
   </group>
 
+  <!--
   <group name="source-and-target-options" title="Source and target options">
     <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
     <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
@@ -99,6 +105,7 @@
       Extensions supported or desired.
     </property>
   </group>
+  -->
 
   <group name="resource-limits">
     <property name="max-message-size" type="ulong" mutable="true" nullable="true">

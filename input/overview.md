@@ -61,6 +61,10 @@ at-most-once, at-least-once, or exactly-once.
 
 ## Events and handlers
 
+## Error handling
+
+;; Two kinds, protocol and transport level (condition) and api level (error)
+
 ## Flow control
 
 - Flow control

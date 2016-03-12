@@ -232,6 +232,7 @@ class HtmlRenderer(PumpjackRenderer):
                 
             out.write(_html_node_title(prop))
             out.write(_html_node_text(prop))
+            out.write(_html_node_links(prop))
 
             items = (
                 ("Type", _html_parameter_type(prop)),
@@ -409,7 +410,7 @@ def _html_node_links(node):
     links = _html_node_links_for_relation(node, None)
 
     if links:
-        out.append(html_p("See also: {}".format(", ".join(links))))
+        out.append(html_p("Related: {}".format(", ".join(links))))
 
     links = _html_node_links_for_relation(node, "impl")
 
@@ -428,7 +429,8 @@ def _html_node_links_for_relation(node, relation):
     
     for link in node.links_by_relation[relation]:
         if isinstance(link, Node):
-            text = _qualified_node_name(link)
+            name = _qualified_node_name(link)
+            text = "{} {}".format(init_cap(node.node_type), name)
             href = link.url
             link = text, href
 

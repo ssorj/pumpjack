@@ -1,8 +1,5 @@
-<class name="condition" experimental="true">
+<class name="condition">
   An endpoint error state.
-
-  **XXX Should this take a condition type, from an enumeration of the
-  allowed AMQP conditions?**
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-error">Type definition</link>
 
@@ -11,11 +8,9 @@
       Create a new condition.
 
       <input name="name" type="symbol"/>
-      <output name="condition" type="condition"/>
-    </method>
-    
-    <method name="clear" proposed="true">
-      Delete the content of the condition.
+      <input name="description" type="string" optional="true"/>
+      <input name="properties" type="map" key-type="symbol" item-type="object" optional="true"/>
+      <output type="condition"/>
     </method>
     
     <property name="name" type="symbol" mutable="true">

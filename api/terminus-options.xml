@@ -1,0 +1,53 @@
+<class name="terminus-options">
+  Source and target options.
+
+  <link node="terminus"/>
+  <link node="link-options"/>
+    
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+
+  <group name="basic">
+    <property name="address" type="string" mutable="true" nullable="true">
+      The address of the message source or target.
+    </property>
+    
+    <property name="durability" type="durability" value="NONE" mutable="true">
+      Control the persistence of source or target state.
+    </property>
+    
+    <property name="timeout" type="duration" mutable="true" nullable="true">
+      The period after which the source or target is discarded.
+    </property>
+
+    <property name="expiry-policy" type="expiry-policy" value="SESSION-CLOSE" mutable="true">
+      Control when the clock for expiration begins.
+    </property>
+    
+    <property name="dynamic" type="boolean" value="false" mutable="true">
+      Request on-demand creation of a node at the remote peer.
+    </property>
+    
+    <property name="properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
+      Control the properties of nodes created on demand.
+
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">Type</link>
+    </property>
+    
+    <property name="capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
+      Extensions supported or desired.
+    </property>
+    
+    <property name="filters" type="map" key-type="symbol" item-type="string" mutable="true" nullable="true" proposed="true">
+      Select messages by criteria.
+      
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
+    </property>
+
+    <property name="distribution-mode" type="distribution-mode" value="MOVE" mutable="true">
+      Control whether messsages are browsed or consumed.  This
+      is a receiver-only option.
+    </property>
+  </group>
+</class>

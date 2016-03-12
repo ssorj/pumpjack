@@ -27,7 +27,11 @@ class Node:
         self.element = element
 
         self.node_type = self.element.tag
-        self.name = self.element.attrib["name"]
+
+        type_name = self.element.attrib.get("type")
+        self.name = self.element.attrib.get("name", type_name)
+
+        assert self.name is not None
         
         self.title = None
         self.text = None

@@ -6,7 +6,7 @@
   <link node="connection-options"/>
   <link node="session-options"/>
   <link node="link-options"/>
-  
+
   <group name="extended-attributes">
     <property name="properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">
       Application properties defined by the local endpoint.

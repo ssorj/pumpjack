@@ -17,12 +17,18 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
 
   <group name="basic">
-    <property name="name" type="string" value="[generated]">
-      The link name.
+    <property name="address" type="string" nullable="true">
+      The source or target address.  This is a convenience for
+      accessing the remote source or target address for a receiver or
+      sender, respectively.
     </property>
 
     <property name="session" type="session" value="[instance]">
       The containing session.
+    </property>
+
+    <property name="name" type="string" value="[generated]">
+      The link name.
     </property>
 
     <method name="open">
@@ -61,6 +67,9 @@
   <group name="flow-control">
     <property name="credit" type="uint" value="[discovered]" proposed="true">
       The number of messages the receiving end can accept.
+
+      <link node="/proton/core/receiver/add-credit"/>
+      <link node="/proton/core/link-options/message-window"/>
     </property>
 
     <!--
@@ -78,81 +87,19 @@
     -->
   </group>
 
-  <group name="source-and-target-state" title="Source and target state">
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
-
-    <property name="remote-source-address" type="string" value="[discovered]">
-      The address of the message source      
-    </property>
-
-    <property name="remote-target-address" type="string" value="[discovered]">
-      The address of the message target
-    </property>
-
-    <property name="remote-source-durability" type="durability" value="[discovered]">
-      The persistence mode of the source node
-    </property>
-
-    <property name="remote-target-durability" type="durability" value="[discovered]">
-      The persistence mode of the target node
-    </property>
-
-    <property name="remote-source-expiry-policy" type="expiry-policy" value="[discovered]">
-      When expiration of the source node begins.
-    </property>
-    
-    <property name="remote-target-expiry-policy" type="expiry-policy" value="[discovered]">
-      When expiration of the target node begins.
-    </property>
-    
-    <property name="remote-source-timeout" type="duration" value="[discovered]">
-      The period after which the source terminus is discarded.
-    </property>
-
-    <property name="remote-target-timeout" type="duration" value="[discovered]">
-      The period after which the target terminus discarded.
-    </property>
-    
-    <property name="remote-source-dynamic" type="boolean" value="[discovered]">
-      On-demand creation of a source node at the remote peer.
-    </property>
-
-    <property name="remote-target-dynamic" type="boolean" value="[discovered]">
-      On-demand creation of a target node at the remote peer.
-    </property>
-
-    <property name="remote-source-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" proposed="true">
-      The properties of a dynamic source node.
-    </property>
-
-    <property name="remote-target-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" proposed="true">
-      The properties of a dynamic target node.
-    </property>
-
-    <property name="remote-source-capabilities" type="array" item-type="symbol" value="[discovered]">
-      Extensions supported or desired.
-    </property>
-
-    <property name="remote-target-capabilities" type="array" item-type="symbol" value="[discovered]">
-      Extensions supported or desired.
-    </property>
-  </group>
-
   <group name="endpoint-state-group">
+    <property name="remote-source" type="terminus" value="[discovered]">
+      The properties of the link source at the remote peer.
+    </property>
+    
+    <property name="remote-target" type="terminus" value="[discovered]">
+      The properties of the link target at the remote peer.
+    </property>
+    
     <property name="remote-delivery-mode" type="delivery-mode" value="[discovered]">
       The message delivery guarantee at the remote peer.
     </property>
     
-    <property name="remote-distribution-mode" type="distribution-mode" value="[discovered]">
-      The message distribution mode at the remote peer.
-    </property>
-    
-    <property name="remote-filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true">
-      Filters set by the remote peer.
-    </property>
-
     <property name="remote-max-message-size" type="ulong" value="[discovered]" nullable="true">
       The maximum message size allowed by the remote peer.
     </property>
@@ -171,6 +118,8 @@
   A link for receiving messages.
 
   <link node="sender"/>
+  <link node="link"/>
+  <link node="link-options"/>
 
   <group name="basic">
   </group>
@@ -180,6 +129,9 @@
       Issue credit to the sending end.  This increases the credit
       issued to the remote sender by the specified number of messages.
 
+      <link node="/proton/core/link/credit"/>
+      <link node="/proton/core/link-options/message-window"/>
+      
       <input name="count" type="uint"/>
     </method>
 
@@ -202,6 +154,8 @@
   A link for sending messages.
 
   <link node="receiver"/>
+  <link node="link"/>
+  <link node="link-options"/>
   
   <group name="message-operations">
     <method name="send">
