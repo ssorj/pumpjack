@@ -21,9 +21,9 @@ from .render import *
 
 import os as _os
 
-class PythonRenderer(PumpjackRenderer):
+class PythonRenderer(Renderer):
     def __init__(self, output_dir):
-        super(PythonRenderer, self).__init__(output_dir)
+        super().__init__(output_dir)
 
         self.type_literals["string"] = "str"
         self.type_literals["boolean"] = "bool"
@@ -46,15 +46,10 @@ class PythonRenderer(PumpjackRenderer):
         
         return meth.name.replace("-", "_")
 
-    def render_var_name(self, var):
-        return var.name.replace("-", "_")
+    def render_parameter_name(self, param):
+        return param.name.replace("-", "_")
 
     def render_model(self, out, model):
-        # for type in model.types:
-        #     self.render_type(out, type)
-
-        # out.write()
-
         for module in model.modules:
             self.render_module(out, module)
 
@@ -63,7 +58,7 @@ class PythonRenderer(PumpjackRenderer):
         module_name = "{}.py".format(module.name)
         path = _os.path.join(self.output_dir, model_name, module_name)
 
-        with PumpjackOutput(path) as out:
+        with OutputWriter(path) as out:
             out.write("# Module {}", module.name)
             out.write()
 
@@ -87,7 +82,7 @@ class PythonRenderer(PumpjackRenderer):
         text = ""
 
         if cls.text is not None:
-            text = _dedent_text(cls.text)
+            text = dedent_text(cls.text)
             text = text.replace("\n", "\n    ")
             
         out.write("class {}({}):", name, type)
@@ -161,7 +156,7 @@ class PythonRenderer(PumpjackRenderer):
         text = ""
 
         if meth.text is not None:
-            text = _dedent_text(meth.text)
+            text = dedent_text(meth.text)
             text = text.replace("\n", "\n        ")
         
         out.write("        \"\"\"")
@@ -214,6 +209,8 @@ class PythonRenderer(PumpjackRenderer):
     def render_type(self, out, type):
         out.write("# type {} -> {}", type.name, self.type_literals[type.name])
 
+add_renderer("python", PythonRenderer)
+
 def _studly_name(name):
     assert name
 
@@ -233,31 +230,3 @@ def _studly_name(name):
         prev = curr
 
     return "".join(chars)
-
-def _dedent_text(text):
-    if text[0] == "\n":
-        text = text[1:]
-
-    lines = text.splitlines(True)
-
-    if len(lines) == 1:
-        return text
-
-    for line in lines[1:]:
-        if line == "\n":
-            continue
-        
-        for i, c in enumerate(line):
-            if not c == ' ':
-                break
-
-        trim_index = i
-
-        break
-
-    out = [lines[0]]
-    out += [l if l == "\n" else l[trim_index:] for l in lines[1:]]
-    
-    return "".join(out)
-
-add_renderer("python", PythonRenderer)

@@ -24,16 +24,14 @@ import markdown2 as _markdown2
 import os as _os
 import re as _re
 
-class HtmlRenderer(PumpjackRenderer):
+class HtmlRenderer(Renderer):
     def __init__(self, output_dir):
-        super(HtmlRenderer, self).__init__(output_dir)
+        super().__init__(output_dir)
 
     def render(self, model):
-        output_path = model.output_path(self.output_dir)
-        
-        with _open_output(output_path) as f:
-            out = PumpjackWriter(f)
+        path = model.output_path(self.output_dir)
 
+        with OutputWriter(path) as out:
             self.render_model(out, model)
     
     def render_model(self, out, model):
@@ -63,13 +61,11 @@ class HtmlRenderer(PumpjackRenderer):
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        output_path = module.output_path(self.output_dir)
+        path = module.output_path(self.output_dir)
         
-        print("Rendering {} to {}".format(module, output_path))
-        
-        with _open_output(output_path) as f:
-            out = PumpjackWriter(f)
+        print("Rendering {} to {}".format(module, path))
 
+        with OutputWriter(path) as out:
             out.write(_html_node_title(module))
             out.write(_html_node_text(module))
             out.write(_html_node_links(module))
@@ -108,9 +104,9 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_close("section"))
 
     def render_class(self, out, cls):
-        output_path = cls.output_path(self.output_dir)
+        path = cls.output_path(self.output_dir)
         
-        print("Rendering {} to {}".format(cls, output_path))
+        print("Rendering {} to {}".format(cls, path))
 
         classes = _get_classes(cls)
         groups = _collections.OrderedDict()
@@ -129,9 +125,7 @@ class HtmlRenderer(PumpjackRenderer):
         if basic_group is not None:
             groups.insert(0, basic_group)
 
-        with _open_output(output_path) as f:
-            out = PumpjackWriter(f)
-
+        with OutputWriter(path) as out:
             out.write(_html_node_title(cls))
             out.write(_html_node_text(cls))
             out.write(_html_node_links(cls))
@@ -223,13 +217,11 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_close("section"))
 
     def render_property(self, out, prop):
-        output_path = prop.output_path(self.output_dir)
+        path = prop.output_path(self.output_dir)
         
-        print("Rendering {} to {}".format(prop, output_path))
+        print("Rendering {} to {}".format(prop, path))
 
-        with _open_output(output_path) as f:
-            out = PumpjackWriter(f)
-                
+        with OutputWriter(path) as out:
             out.write(_html_node_title(prop))
             out.write(_html_node_text(prop))
             out.write(_html_node_links(prop))
@@ -251,13 +243,11 @@ class HtmlRenderer(PumpjackRenderer):
                 self.render_enumeration_table(out, prop.type)
 
     def render_method(self, out, meth):
-        output_path = meth.output_path(self.output_dir)
+        path = meth.output_path(self.output_dir)
         
-        print("Rendering {} to {}".format(meth, output_path))
+        print("Rendering {} to {}".format(meth, path))
 
-        with _open_output(output_path) as f:
-            out = PumpjackWriter(f)
-
+        with OutputWriter(path) as out:
             out.write(_html_node_title(meth))
             out.write(_html_node_text(meth))
             out.write(_html_node_links(meth))
@@ -297,13 +287,11 @@ class HtmlRenderer(PumpjackRenderer):
         out.write(html_table(items, class_="parameters"))
 
     def render_enumeration(self, out, enum):
-        output_path = enum.output_path(self.output_dir)
+        path = enum.output_path(self.output_dir)
 
-        print("Rendering {} to {}".format(enum, output_path))
+        print("Rendering {} to {}".format(enum, path))
 
-        with _open_output(output_path) as f:
-            out = PumpjackWriter(f)
-            
+        with OutputWriter(path) as out:
             out.write(_html_node_title(enum))
             out.write(_html_node_text(enum))
             out.write(_html_node_links(enum))
@@ -398,7 +386,7 @@ def _html_node_text(node):
     if not node.text:
         return ""
 
-    text = _dedent_text(node.text)
+    text = dedent_text(node.text)
     
     return _markdown.convert(text)
 
@@ -491,40 +479,6 @@ def _html_boolean_text(value):
         value = value == "true"
     
     return "Yes" if value else "No"
-
-def _dedent_text(text):
-    if text[0] == "\n":
-        text = text[1:]
-
-    lines = text.splitlines(True)
-
-    if len(lines) == 1:
-        return text
-
-    for line in lines[1:]:
-        if line == "\n":
-            continue
-        
-        for i, c in enumerate(line):
-            if not c == ' ':
-                break
-
-        trim_index = i
-
-        break
-
-    out = [lines[0]]
-    out += [l if l == "\n" else l[trim_index:] for l in lines[1:]]
-    
-    return "".join(out)
-
-def _open_output(path):
-    parent, child = _os.path.split(path)
-
-    if not _os.path.exists(parent):
-        _os.makedirs(parent)
-    
-    return open(path, "w")
 
 def _get_classes(cls):
     classes = list()

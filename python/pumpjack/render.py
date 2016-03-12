@@ -28,7 +28,7 @@ def add_renderer(name, cls):
     renderer_classes_by_name[name] = cls
     renderer_names_by_class[cls] = name
 
-class PumpjackRenderer(object):
+class Renderer(object):
     def __init__(self, output_dir):
         self.output_dir = output_dir
 
@@ -55,8 +55,8 @@ class PumpjackRenderer(object):
     def render_method_name(self, meth):
         return meth.name
 
-    def render_var_name(self, var):
-        return var.name
+    def render_parameter_name(self, param):
+        return param.name
 
     def render_model(self, out, model):
         raise NotImplementedError()
@@ -82,17 +82,7 @@ class PumpjackRenderer(object):
     def render_exception(self, out, exc):
         raise NotImplementedError()
 
-class PumpjackWriter(object):
-    def __init__(self, out):
-        self.out = out
-
-    def write(self, s=None, *args):
-        if s is not None:
-            self.out.write(s.format(*args))
-
-        self.out.write("\n")
-
-class PumpjackOutput(object):
+class OutputWriter(object):
     def __init__(self, path):
         assert path is not None
         
@@ -120,3 +110,29 @@ class PumpjackOutput(object):
         
     def __exit__(self, type, value, traceback):
         self.file.__exit__(type, value, traceback)
+
+def dedent_text(text):
+    if text[0] == "\n":
+        text = text[1:]
+
+    lines = text.splitlines(True)
+
+    if len(lines) == 1:
+        return text
+
+    for line in lines[1:]:
+        if line == "\n":
+            continue
+        
+        for i, c in enumerate(line):
+            if not c == ' ':
+                break
+
+        trim_index = i
+
+        break
+
+    out = [lines[0]]
+    out += [l if l == "\n" else l[trim_index:] for l in lines[1:]]
+    
+    return "".join(out)
