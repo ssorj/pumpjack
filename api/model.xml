@@ -14,6 +14,8 @@
   If you are developing a new implementation, take a look at the
   [implementation guide](implementation-guide.html).
 
+  <annotation name="python-name">qpid_proton</annotation>
+
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#toc">Transport layer</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#toc">Messaging layer</link>

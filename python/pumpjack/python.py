@@ -19,6 +19,8 @@
 
 from .render import *
 
+import os as _os
+
 class PythonRenderer(PumpjackRenderer):
     def __init__(self, output_dir):
         super(PythonRenderer, self).__init__(output_dir)
@@ -32,11 +34,14 @@ class PythonRenderer(PumpjackRenderer):
         self.type_literals["map"] = "dict"
         self.type_literals["iterator"] = "iterator" # XXX
 
+    def render(self, model):
+        self.render_model(None, model)
+
     def render_class_name(self, cls):
-        return init_cap(studly_name(cls.name))
+        return init_cap(_studly_name(cls.name))
 
     def render_method_name(self, meth):
-        if meth.name == "[constructor]":
+        if meth.name == "constructor":
             return "__init__"
         
         return meth.name.replace("-", "_")
@@ -45,24 +50,32 @@ class PythonRenderer(PumpjackRenderer):
         return var.name.replace("-", "_")
 
     def render_model(self, out, model):
-        for type in model.types:
-            self.render_type(out, type)
+        # for type in model.types:
+        #     self.render_type(out, type)
 
-        out.write()
+        # out.write()
 
         for module in model.modules:
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        out.write("# Module {}", module.name)
-        out.write()
+        model_name = module.model.annotations.get("python-name", module.model.name)
+        module_name = "{}.py".format(module.name)
+        path = _os.path.join(self.output_dir, model_name, module_name)
 
-        for group in module.groups:
-            for cls in group.classes:
-                self.render_class(out, cls)
+        with PumpjackOutput(path) as out:
+            out.write("# Module {}", module.name)
+            out.write()
+
+            for group in module.groups:
+                out.write("# {}", group.title)
                 out.write()
+                
+                for cls in group.classes:
+                    self.render_class(out, cls)
+                    out.write()
 
-        out.write("# End of module {}", module.name)
+            out.write("# End of module {}", module.name)
 
     def render_class(self, out, cls):
         name = self.render_class_name(cls)
@@ -71,19 +84,19 @@ class PythonRenderer(PumpjackRenderer):
         if cls.type is not None:
             type = self.render_class_name(cls.type)
 
-        # XXX functionify
         text = ""
+
         if cls.text is not None:
-            text = cls.text.replace("\n        ", "\n    ")
-        
+            text = _dedent_text(cls.text)
+            text = text.replace("\n", "\n    ")
+            
         out.write("class {}({}):", name, type)
         out.write("    \"\"\"")
         out.write("    {}", text)
-        out.write()
 
-        for group in cls.groups:
-            names = [self.render_method_name(x) for x in group.methods]
-            out.write("    @group {}: {}", group.name, ", ".join(names))
+        #for group in cls.groups:
+        #    names = [self.render_method_name(x) for x in group.methods]
+        #    out.write("    :group {}: {}", group.name, ", ".join(names))
 
         out.write("    \"\"\"")
         out.write()
@@ -135,7 +148,7 @@ class PythonRenderer(PumpjackRenderer):
         for input in meth.inputs:
             var = self.render_var_name(input)
 
-            if input.nullable:
+            if input.optional:
                 inputs.append("{}=None".format(var))
             else:
                 inputs.append(var)
@@ -145,10 +158,11 @@ class PythonRenderer(PumpjackRenderer):
         self.render_method_body(out, meth)
 
     def render_method_body(self, out, meth):
-        # XXX functionify
         text = ""
+
         if meth.text is not None:
-            text = meth.text.replace("\n            ", "\n        ")
+            text = _dedent_text(meth.text)
+            text = text.replace("\n", "\n        ")
         
         out.write("        \"\"\"")
         out.write("        {}", text)
@@ -158,20 +172,20 @@ class PythonRenderer(PumpjackRenderer):
             name = self.render_var_name(input)
 
             if input.text:
-                out.write("        @param {}: {}", name, input.text)
+                out.write("        :param {}: {}", name, input.text)
 
             literal = self.get_type_literal(meth, input.type)
-            out.write("        @type {}: {}", name, literal)
+            out.write("        :type {}: {}", name, literal)
 
         if meth.outputs:
             output = meth.outputs[0]
             name = self.render_var_name(output)
 
             if output.text:
-                out.write("        @return: {}", name, output.text)
+                out.write("        :returns: {}", name, output.text)
 
             literal = self.get_type_literal(meth, output.type)
-            out.write("        @rtype: {}", literal)
+            out.write("        :rtype: {}", literal)
 
         # for cond in meth.exception_conditions:
         #     cls = self.render_class_name(cond.exception)
@@ -200,7 +214,7 @@ class PythonRenderer(PumpjackRenderer):
     def render_type(self, out, type):
         out.write("# type {} -> {}", type.name, self.type_literals[type.name])
 
-def studly_name(name):
+def _studly_name(name):
     assert name
 
     chars = list()
@@ -219,5 +233,31 @@ def studly_name(name):
         prev = curr
 
     return "".join(chars)
+
+def _dedent_text(text):
+    if text[0] == "\n":
+        text = text[1:]
+
+    lines = text.splitlines(True)
+
+    if len(lines) == 1:
+        return text
+
+    for line in lines[1:]:
+        if line == "\n":
+            continue
+        
+        for i, c in enumerate(line):
+            if not c == ' ':
+                break
+
+        trim_index = i
+
+        break
+
+    out = [lines[0]]
+    out += [l if l == "\n" else l[trim_index:] for l in lines[1:]]
+    
+    return "".join(out)
 
 add_renderer("python", PythonRenderer)

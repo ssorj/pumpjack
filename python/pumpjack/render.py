@@ -32,30 +32,22 @@ class PumpjackRenderer(object):
     def __init__(self, output_dir):
         self.output_dir = output_dir
 
-        self.type_literals = dict()
+        self.type_literals = dict() # XXX
 
     def render(self, model):
-        renderer_name = renderer_names_by_class[self.__class__]
-        output_name = "model.{}.in".format(renderer_name)
-        output_path = _os.path.join(self.output_dir, output_name)
-
-        if not _os.path.exists(self.output_dir):
-            _os.makedirs(self.output_dir)
-        
-        with open(output_path, "w") as f:
-            out = PumpjackWriter(f)
-            self.render_model(out, model)
+        raise NotImplementedError()
 
     def get_type_literal(self, node, ref):
         # XXX
         if ref is None:
             return
-        
-        if ref.startswith("@"):
-            cls = node.resolve_reference(ref)
-            return self.render_class_name(cls)
+
+        if isinstance(ref, Node):
+            cls = ref
         else:
-            return self.type_literals.get(ref, ref) # XXX
+            cls = node.resolve_reference(ref)
+            
+        return self.render_class_name(cls)
 
     def render_class_name(self, cls):
         return cls.name
@@ -67,28 +59,28 @@ class PumpjackRenderer(object):
         return var.name
 
     def render_model(self, out, model):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_module(self, out, module):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_class(self, out, cls):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_constant(self, out, const):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_constructor(self, out, ctor):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_attribute(self, out, attr):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_method(self, out, meth):
-        raise NotImplemented()
+        raise NotImplementedError()
 
     def render_exception(self, out, exc):
-        raise NotImplemented()
+        raise NotImplementedError()
 
 class PumpjackWriter(object):
     def __init__(self, out):
@@ -99,3 +91,32 @@ class PumpjackWriter(object):
             self.out.write(s.format(*args))
 
         self.out.write("\n")
+
+class PumpjackOutput(object):
+    def __init__(self, path):
+        assert path is not None
+        
+        self.path = path
+        self.file = None
+
+    def __enter__(self):
+        assert self.file is None, self.file
+
+        parent, child = _os.path.split(self.path)
+
+        if not _os.path.exists(parent):
+            _os.makedirs(parent)
+    
+        self.file = open(self.path, "w")
+        self.file.__enter__()
+
+        return self
+
+    def write(self, s=None, *args):
+        if s is not None:
+            self.file.write(s.format(*args))
+
+        self.file.write(_os.linesep)
+        
+    def __exit__(self, type, value, traceback):
+        self.file.__exit__(type, value, traceback)

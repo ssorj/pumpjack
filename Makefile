@@ -7,7 +7,8 @@ render: clean
 
 .PHONY: render-python
 render-python: 
-	scripts/pumpjack -r python -i api -o output
+	scripts/pumpjack -r python -i api -o input/python
+	transom input output
 
 .PHONY: help
 help:
