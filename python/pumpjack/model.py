@@ -23,31 +23,30 @@ from pencil import *
 import os as _os
 
 class Node:
-    def __init__(self, element, parent):
+    def __init__(self, element, parent, name=None):
         self.element = element
+        self.parent = parent
+        self.name = name
 
-        self.node_type = self.element.tag
-
-        type_name = self.element.attrib.get("type")
-        self.name = self.element.attrib.get("name", type_name)
-
-        assert self.name is not None
+        if self.name is None:
+            self.name = self.element.attrib["name"]
         
+        self.type_name = self.element.tag
+
         self.title = None
         self.text = None
-        self.links_by_relation = _defaultdict(list)
-        self.annotations = dict()
-
         self.hidden = False
         self.internal = False
         self.proposed = False
         self.deprecated = False
         self.experimental = False
         
-        self.parent = parent
         self.ancestors = list()
         self.children = list()
         self.children_by_name = dict()
+        
+        self.links_by_relation = _defaultdict(list)
+        self.annotations = dict()
 
         self.model = None
         self.reference = None
@@ -80,17 +79,6 @@ class Node:
     @property
     def abstract_path(self):
         raise NotImplementedError()
-
-    @property
-    def url(self): 
-        site_url="{{{{site_url}}}}" # XXX why doubled?
-        elems = [site_url] + list(self.abstract_path)
-        return "/".join(elems)
-
-    def output_path(self, output_dir):
-        path = _os.path.join(output_dir, *self.abstract_path)
-
-        return "{}.in".format(path)
 
     def process(self):
         print("Processing {}".format(self))
@@ -210,14 +198,14 @@ class Module(Node):
 
     @property
     def abstract_path(self):
-        return (self.name, "index.html")
+        return (self.name,)
 
     def process(self):
         for child in self.element.findall("group"):
             group = ModuleGroup(child, self)
             self.groups.append(group)
 
-        super(Module, self).process()
+        super().process()
 
     def find_member(self, ref):
         assert not ref.startswith("/")
@@ -264,7 +252,7 @@ class Class(ModuleMember):
 
     @property
     def abstract_path(self):
-        return (self.module.name, self.name, "index.html")
+        return (self.module.name, self.name)
         
     def process_properties(self):
         super().process_properties()
@@ -315,12 +303,14 @@ class ClassMember(Node):
 
     @property
     def abstract_path(self):
-        name = "{}.html".format(self.name)
-        return (self.class_.module.name, self.class_.name, name)
+        return (self.class_.module.name, self.class_.name, self.name)
 
 class Parameter(Node):
     def __init__(self, element, parent):
-        super().__init__(element, parent)
+        type_name = element.attrib.get("type")
+        name = element.attrib.get("name", type_name)
+        
+        super().__init__(element, parent, name)
 
         self.type = self.element.attrib.get("type")
         self.key_type = self.element.attrib.get("key-type")
@@ -395,8 +385,7 @@ class Enumeration(ModuleMember):
 
     @property
     def abstract_path(self):
-        name = "{}.html".format(self.name)
-        return (self.module.name, name)
+        return (self.module.name, self.name)
 
     def process(self):
         for child in self.element.findall("value"):
@@ -413,7 +402,7 @@ class EnumerationValue(Node):
     
 class ErrorCondition(Node):
     def __init__(self, element, parent):
-        super(ErrorCondition, self).__init__(element, parent)
+        super().__init__(element, parent)
         self.error_ref = self.element.attrib["error"]
         self.error = None
 
@@ -438,7 +427,7 @@ class Model(Node):
         
     @property
     def abstract_path(self):
-        return ("index.html",)
+        return ()
 
     def process(self):
         for child in self.element.findall("module"):
