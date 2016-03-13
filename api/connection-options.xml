@@ -41,7 +41,7 @@
       Allow or deny clear-text authentication mechanisms.
     </property>
     
-    <property name="sasl-allowed-mechs" type="string" value="[discovered]" mutable="true">
+    <property name="sasl-allowed-mechs" type="string" mutable="true" nullable="true">
       The SASL mechanisms the local peer permits.  The value is a
       space-separated string of mechanism names.
     </property>

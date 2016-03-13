@@ -1,6 +1,6 @@
 # Module io
 
-import _qpid_proton_impl.io as _core
+import _qpid_proton_impl.io as _io
 
 # IO interfaces
 
@@ -41,14 +41,14 @@ class ConnectionEngine(object):
     concurrently in separate threads.
     """
 
-    # End of class ConnectionEngine
+    pass
 
 class IoAdapter(object):
     """
     
     """
 
-    # End of class IoAdapter
+    pass
 
 # IO implementations
 
@@ -57,13 +57,13 @@ class PosixIo(object):
     
     """
 
-    # End of class PosixIo
+    pass
 
 class WindowsIo(object):
     """
     
     """
 
-    # End of class WindowsIo
+    pass
 
 # End of module io

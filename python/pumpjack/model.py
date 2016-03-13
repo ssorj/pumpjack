@@ -195,6 +195,8 @@ class Module(Node):
         super().__init__(element, parent)
 
         self.groups = list()
+        self.classes = list()
+        self.enumerations = list()
 
     @property
     def abstract_path(self):
@@ -227,10 +229,12 @@ class ModuleMemberGroup(Group):
         for child in self.element.findall("class"):
             cls = Class(child, self)
             self.classes.append(cls)
+            self.module.classes.append(cls)
 
         for child in self.element.findall("enumeration"):
             enum = Enumeration(child, self)
             self.enumerations.append(enum)
+            self.module.enumerations.append(enum)
 
         super().process()
 
@@ -254,6 +258,9 @@ class Class(ModuleMember):
         self.groups = list()
         self.groups_by_name = dict()
 
+        self.properties = list()
+        self.methods = list()
+
     def process_properties(self):
         super().process_properties()
 
@@ -265,6 +272,10 @@ class Class(ModuleMember):
             self.groups.append(group)
             self.groups_by_name[group.name] = group
 
+        # Create a default constructor
+
+        # XXX
+            
         super().process()
 
     def process_references(self):
@@ -281,16 +292,17 @@ class ClassMemberGroup(Group):
 
         self.properties = list()
         self.methods = list()
-        self.constants = list() # XXX Not using this atm
 
     def process(self):
         for child in self.element.findall("property"):
-            attr = Property(child, self)
-            self.properties.append(attr)
+            prop = Property(child, self)
+            self.properties.append(prop)
+            self.class_.properties.append(prop)
 
         for child in self.element.findall("method"):
             meth = Method(child, self)
             self.methods.append(meth)
+            self.class_.methods.append(meth)
 
         super().process()
         
@@ -321,11 +333,8 @@ class Parameter(Node):
     def process_properties(self):
         super().process_properties()
 
-        if self.value is None:
-            if self.nullable:
-                self.value = "null"
-            else:
-                self.value = "[instance]"
+        if self.value is None and not self.nullable:
+            self.value = "[instance]"
         
     def process_references(self):
         super().process_references()

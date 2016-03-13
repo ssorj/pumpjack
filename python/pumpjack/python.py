@@ -63,6 +63,9 @@ class PythonRenderer(Renderer):
     def get_class_name(self, cls):
         return init_cap(_studly_name(cls.name))
 
+    def get_property_name(self, prop):
+        return prop.name.replace("-", "_")
+    
     def get_method_name(self, meth):
         if meth.name == "constructor":
             return "__init__"
@@ -76,6 +79,12 @@ class PythonRenderer(Renderer):
         self.render_model(None, model)
 
     def render_model(self, out, model):
+        model_name = self.get_model_name(model)
+        path = _os.path.join(self.output_dir, model_name, "__init__.py")
+
+        with OutputWriter(path) as out:
+            out.write("# Model {}", model.name)
+        
         for module in model.modules:
             self.render_module(out, module)
 
@@ -89,8 +98,7 @@ class PythonRenderer(Renderer):
             out.write("# Module {}", module.name)
             out.write()
 
-            out.write("import _{}_impl.{} as _core", model_name, module_name)
-            out.write()
+            self.render_module_imports(out, module)
 
             for group in module.groups:
                 out.write("# {}", group.title)
@@ -106,20 +114,50 @@ class PythonRenderer(Renderer):
 
             out.write("# End of module {}", module.name)
 
+    def render_module_imports(self, out, module):
+        model_name = self.get_model_name(module.model)
+        module_name = self.get_module_name(module)
+        
+        out.write("import _{}_impl.{} as _{}", model_name, module_name, module_name)
+        out.write()
+
     def render_class(self, out, cls):
         name = self.get_class_name(cls)
-        type = "object"
+        type_ = "object"
         
         if cls.type is not None:
-            type = self.get_class_name(cls.type)
+            type_ = self.get_class_name(cls.type)
 
+        out.write("class {}({}):", name, type_)
+        
+        self.render_class_docstring(out, cls)
+
+        if not cls.properties and not cls.methods:
+            out.write("    pass")
+            return
+
+        self.render_constructor(out, cls)
+
+        for prop in cls.properties:
+            self.render_property(out, prop)
+            out.write()
+        
+        for meth in cls.methods:
+            if meth.name == "constructor":
+                continue
+            
+            self.render_method(out, meth)
+            out.write()
+
+        out.write("    # End of class {}", name)
+
+    def render_class_docstring(self, out, cls):
         text = ""
 
         if cls.text is not None:
             text = dedent_text(cls.text)
             text = text.replace("\n", "\n    ")
             
-        out.write("class {}({}):", name, type)
         out.write("    \"\"\"")
         out.write("    {}", text)
 
@@ -130,43 +168,54 @@ class PythonRenderer(Renderer):
         out.write("    \"\"\"")
         out.write()
 
+    def render_constructor(self, out, cls):
         for group in cls.groups:
             for meth in group.methods:
-                self.render_method(out, meth)
-                out.write()
-
-        out.write("    # End of class {}", name)
-
-    def render_constructor(self, out, ctor):
-        print(111)
-        
-        inputs = list(("self",))
-        inputs.extend([x.name for x in ctor.inputs])
-        out.write("    def __init__({}):", ", ".join(inputs))
-
-        self.render_method_body(out, ctor)
-
-        for attr in ctor.parent.attributes:
-            self.render_attribute(out, attr)
-
-    # XXX
-    def render_attribute(self, out, attr):
-        name = self.get_parameter_name(attr)
-        value = attr.value
-
-        if value is None:
-            value = "None"
-        elif value.startswith("@"):
-            type = self.get_type_name(attr, value)
-            value = "{}()".format(type)
+                if meth.name == "constructor":
+                    self.render_method(out, meth)
+                    out.write()
+                    return
         else:
-            if attr.type == "string":
-                value = "\"{}\"".format(value)
+            # XXX Not so elegant here
+            out.write("    def __init__(self):")
+            out.write("        pass")
+            out.write()
 
-            if attr.type == "boolean":
-                value = initcap(value)
+    def render_property(self, out, prop):
+        name = self.get_parameter_name(prop)
 
-        out.write("        self.{} = {}", name, value)
+        out.write("    @property")
+        out.write("    def {}(self):", name)
+
+        self.render_property_docstring(out, prop)
+        self.render_property_getter_body(out, prop)
+
+        if prop.mutable:
+            out.write()
+            out.write("    @{}.setter", name)
+            out.write("    def {}(self, value):", name)
+
+            self.render_property_setter_body(out, prop)
+
+    def render_property_docstring(self, out, prop):
+        text = ""
+
+        if prop.text is not None:
+            text = dedent_text(prop.text)
+            text = text.replace("\n", "\n        ")
+        
+        out.write("        \"\"\"")
+        out.write("        {}", text)
+        out.write("        \"\"\"")
+        out.write()
+        
+    def render_property_getter_body(self, out, prop):
+        name = self.get_parameter_name(prop)
+        out.write("        return self._impl.{}", name)
+
+    def render_property_setter_body(self, out, prop):
+        name = self.get_parameter_name(prop)
+        out.write("        self._impl.{} = value", name)
 
     def render_method(self, out, meth):
         name = self.get_method_name(meth)
@@ -263,7 +312,90 @@ class PythonRenderer(Renderer):
     def render_type(self, out, type):
         out.write("# type {} -> {}", type.name, self.type_literals[type.name])
 
+class PythonImplRenderer(PythonRenderer):
+    def render_module_imports(self, out, module):
+        pass
+    
+    def render_class_docstring(self, out, cls):
+        pass
+
+    def render_property_docstring(self, out, prop):
+        pass
+
+    def render_property_getter_body(self, out, prop):
+        name = self.get_parameter_name(prop)
+        out.write("        return self._{}", name)
+
+    def render_property_setter_body(self, out, prop):
+        name = self.get_parameter_name(prop)
+        out.write("        self._{} = value", name)
+
+    def render_method_docstring(self, out, meth):
+        pass
+
+    def render_method_body(self, out, meth):
+        self.render_not_implemented(out, meth)
+
+    def get_constructor_attribute_value(self, ctor, prop):
+        # XXX Instead of direct plumbing, go through setters (maybe)
+        
+        for input in ctor.inputs:
+            if input.name == prop.name:
+                return input.name
+
+        if prop.value is None:
+            return "None"
+
+        # XXX Don't use magic strings for these
+
+        if prop.value == "[discovered]":
+            return "None"
+
+        if prop.value == "[instance]":
+            type_name = self.get_type_name(prop.type)
+            return "{}()".format(type_name)
+
+        if prop.value == "[generated]":
+            name = self.get_property_name(prop)
+            return "self._generate_{}()".format(name)
+
+        if type(prop.type) is Enumeration:
+            enum_name = self.get_class_name(prop.type)
+            name = prop.value.replace("-", "_")
+
+            return "{}.{}".format(enum_name, name)
+        
+        if prop.type.name == "boolean":
+            if prop.value == "true":
+                return "True"
+            else:
+                return "False"
+
+        if prop.type.name == "string":
+            return "\"{}\"".format(prop.value)
+
+        return prop.value
+        
+    def render_constructor_body(self, out, meth):
+        for group in meth.class_.groups:
+            if group.properties:
+                break
+        else:
+            out.write("        pass")
+            return
+        
+        for group in meth.class_.groups:
+            for prop in group.properties:
+                name = self.get_property_name(prop)
+                value = self.get_constructor_attribute_value(meth, prop)
+                
+                out.write("        self._{} = {}", name, value)
+
+    def render_not_implemented(self, out, node):
+        out.write("        raise NotImplementedError()")
+
 add_renderer("python", PythonRenderer)
+add_renderer("python-impl", PythonImplRenderer)
 
 def _studly_name(name):
     assert name

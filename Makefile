@@ -6,9 +6,17 @@ render: clean
 	transom input output
 
 .PHONY: render-python
-render-python: 
+render-python:
 	scripts/pumpjack -r python -i api -o input/python
 	transom input output
+
+.PHONY: gen-python-impl
+gen-python-impl: impl_dir := python/_qpid_proton_impl
+gen-python-impl: temp_dir := $(shell mktemp -d)
+gen-python-impl:
+	scripts/pumpjack -r python-impl -i api -o ${temp_dir}/new-impl
+	-mv ${impl_dir} ${temp_dir}/old-impl
+	mv ${temp_dir}/new-impl/qpid_proton ${impl_dir}
 
 .PHONY: help
 help:

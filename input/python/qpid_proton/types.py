@@ -1,6 +1,6 @@
 # Module types
 
-import _qpid_proton_impl.types as _core
+import _qpid_proton_impl.types as _types
 
 # Scalar data types
 
@@ -9,105 +9,105 @@ class Null(object):
     An empty value.
     """
 
-    # End of class Null
+    pass
 
 class Boolean(object):
     """
     A true or false value.
     """
 
-    # End of class Boolean
+    pass
 
 class Char(object):
     """
     A single Unicode character.
     """
 
-    # End of class Char
+    pass
 
 class String(object):
     """
     A sequence of Unicode characters.
     """
 
-    # End of class String
+    pass
 
 class Binary(object):
     """
     A sequence of bytes.
     """
 
-    # End of class Binary
+    pass
 
 class Float(object):
     """
     A 32-bit floating point number.
     """
 
-    # End of class Float
+    pass
 
 class Double(object):
     """
     A 64-bit floating point number.
     """
 
-    # End of class Double
+    pass
 
 class Byte(object):
     """
     A signed 8-bit integer.
     """
 
-    # End of class Byte
+    pass
 
 class Short(object):
     """
     A signed 16-bit integer.
     """
 
-    # End of class Short
+    pass
 
 class Int(object):
     """
     A signed 32-bit integer.
     """
 
-    # End of class Int
+    pass
 
 class Long(object):
     """
     A signed 64-bit integer.
     """
 
-    # End of class Long
+    pass
 
 class Ubyte(object):
     """
     An unsigned 8-bit integer.
     """
 
-    # End of class Ubyte
+    pass
 
 class Ushort(object):
     """
     An unsigned 16-bit integer.
     """
 
-    # End of class Ushort
+    pass
 
 class Uint(object):
     """
     An unsigned 32-bit integer.
     """
 
-    # End of class Uint
+    pass
 
 class Ulong(object):
     """
     An unsigned 64-bit integer.
     """
 
-    # End of class Ulong
+    pass
 
 # Composite data types
 
@@ -116,21 +116,21 @@ class Array(object):
     A sequence of values of a single type.
     """
 
-    # End of class Array
+    pass
 
 class List(object):
     """
     A sequence of values of variable type.
     """
 
-    # End of class List
+    pass
 
 class Map(object):
     """
     A mapping from distinct keys to values.
     """
 
-    # End of class Map
+    pass
 
 # Semantic data types
 
@@ -139,21 +139,21 @@ class Symbol(object):
     A 7-bit ASCII string from a constrained domain.
     """
 
-    # End of class Symbol
+    pass
 
 class Timestamp(object):
     """
     An absolute point in time.
     """
 
-    # End of class Timestamp
+    pass
 
 class Uuid(object):
     """
     A universally unique identifier.
     """
 
-    # End of class Uuid
+    pass
 
 class MessageId(object):
     """
@@ -161,7 +161,7 @@ class MessageId(object):
     string.
     """
 
-    # End of class MessageId
+    pass
 
 # Decimal floating-point data types
 
@@ -170,21 +170,21 @@ class Decimal32(object):
     A 32-bit decimal floating point number.
     """
 
-    # End of class Decimal32
+    pass
 
 class Decimal64(object):
     """
     A 64-bit decimal floating point number.
     """
 
-    # End of class Decimal64
+    pass
 
 class Decimal128(object):
     """
     A 128-bit decimal floating point number.
     """
 
-    # End of class Decimal128
+    pass
 
 # API data types
 
@@ -193,20 +193,20 @@ class Duration(object):
     A span of time.
     """
 
-    # End of class Duration
+    pass
 
 class Iterator(object):
     """
     A traversal of a collection.
     """
 
-    # End of class Iterator
+    pass
 
 class Object(object):
     """
     The most basic type.
     """
 
-    # End of class Object
+    pass
 
 # End of module types

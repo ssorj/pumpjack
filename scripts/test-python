@@ -4,7 +4,9 @@ from qpid_proton.core import *
 
 container = Container(id="testid")
 
+print("Container ID: {}".format(container.id))
+
+container.connect("localhost")
 container.run()
 
-# print(container.id) XXX Properties
 print("The end")

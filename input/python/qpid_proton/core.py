@@ -32,6 +32,15 @@ class Container(object):
 
         self._impl = _core.Container(handler, id)
 
+    @property
+    def id(self):
+        """
+        A globally unique container identifier.  It is used to
+        identify this container in any connections it establishes.
+        """
+
+        return self._impl.id
+
     def run(self):
         """
         Start processing events.  It returns when all connections
@@ -50,6 +59,38 @@ class Container(object):
         """
 
         return self._impl.stop()
+
+    @property
+    def client_connection_options(self):
+        """
+        Default options for new outbound connections.
+        """
+
+        return self._impl.client_connection_options
+
+    @property
+    def server_connection_options(self):
+        """
+        Default options for new inbound connections.
+        """
+
+        return self._impl.server_connection_options
+
+    @property
+    def session_options(self):
+        """
+        Default options for new sessions.
+        """
+
+        return self._impl.session_options
+
+    @property
+    def link_options(self):
+        """
+        Default options for new links.
+        """
+
+        return self._impl.link_options
 
     def send(self, message, url):
         """
@@ -211,6 +252,86 @@ class Endpoint(object):
     communicated over the wire.
     """
 
+    @property
+    def local_uninitialized(self):
+        """
+        The local endpoint is uninitialized.
+        """
+
+        return self._impl.local_uninitialized
+
+    @property
+    def remote_uninitialized(self):
+        """
+        The remote endpoint is uninitialized.
+        """
+
+        return self._impl.remote_uninitialized
+
+    @property
+    def local_active(self):
+        """
+        The local endpoint is active.
+        """
+
+        return self._impl.local_active
+
+    @property
+    def remote_active(self):
+        """
+        The remote endpoint is active.
+        """
+
+        return self._impl.remote_active
+
+    @property
+    def local_closed(self):
+        """
+        The local endpoint is closed.
+        """
+
+        return self._impl.local_closed
+
+    @property
+    def remote_closed(self):
+        """
+        The remote endpoint is closed.
+        """
+
+        return self._impl.remote_closed
+
+    @property
+    def remote_condition(self):
+        """
+        The error condition of the remote peer.
+        """
+
+        return self._impl.remote_condition
+
+    @property
+    def remote_properties(self):
+        """
+        Application properties defined by the remote peer.
+        """
+
+        return self._impl.remote_properties
+
+    @property
+    def remote_offered_capabilities(self):
+        """
+        Extensions the remote peer supports.
+        """
+
+        return self._impl.remote_offered_capabilities
+
+    @property
+    def remote_desired_capabilities(self):
+        """
+        Extensions the remote peer can use.
+        """
+
+        return self._impl.remote_desired_capabilities
+
     # End of class Endpoint
 
 class Connection(Endpoint):
@@ -224,6 +345,14 @@ class Connection(Endpoint):
     which in turn contain zero or more link objects.  Each link
     object contains an ordered sequence of delivery objects.
     """
+
+    @property
+    def transport(self):
+        """
+        The associated transport.
+        """
+
+        return self._impl.transport
 
     def open(self, options=None):
         """
@@ -306,6 +435,14 @@ class Connection(Endpoint):
 
         return self._impl.open_receiver(address, options)
 
+    @property
+    def default_session(self):
+        """
+        The session used by open-sender and open-receiver.
+        """
+
+        return self._impl.default_session
+
     def open_session(self, options=None):
         """
         Create and open a session.
@@ -315,6 +452,54 @@ class Connection(Endpoint):
         """
 
         return self._impl.open_session(options)
+
+    @property
+    def remote_container_id(self):
+        """
+        The unique identity of the remote container.
+        """
+
+        return self._impl.remote_container_id
+
+    @property
+    def remote_virtual_host(self):
+        """
+        The virtual host name of the remote peer.
+        """
+
+        return self._impl.remote_virtual_host
+
+    @property
+    def remote_user(self):
+        """
+        The user name for authentication.
+        """
+
+        return self._impl.remote_user
+
+    @property
+    def remote_idle_timeout(self):
+        """
+        The idle timeout of the remote peer.
+        """
+
+        return self._impl.remote_idle_timeout
+
+    @property
+    def remote_max_sessions(self):
+        """
+        The maximum active sessions allowed by the remote peer.
+        """
+
+        return self._impl.remote_max_sessions
+
+    @property
+    def remote_max_frame_size(self):
+        """
+        The maximum frame size allowed by the remote peer.
+        """
+
+        return self._impl.remote_max_frame_size
 
     def sessions(self):
         """
@@ -349,6 +534,14 @@ class Session(Endpoint):
     """
     A container of links.
     """
+
+    @property
+    def connection(self):
+        """
+        The containing connection.
+        """
+
+        return self._impl.connection
 
     def open(self, options=None):
         """
@@ -431,6 +624,38 @@ class Session(Endpoint):
 
         return self._impl.open_sender(address, options)
 
+    @property
+    def incoming_bytes(self):
+        """
+        The number of incoming bytes currently buffered.
+        """
+
+        return self._impl.incoming_bytes
+
+    @property
+    def outgoing_bytes(self):
+        """
+        The number of outgoing bytes currently buffered.
+        """
+
+        return self._impl.outgoing_bytes
+
+    @property
+    def remote_incoming_window(self):
+        """
+        The remote peer's max number of incoming transfer frames.
+        """
+
+        return self._impl.remote_incoming_window
+
+    @property
+    def remote_outgoing_window(self):
+        """
+        The remote peer's max number of outgoing transfer frames.
+        """
+
+        return self._impl.remote_outgoing_window
+
     def links(self):
         """
         Get the links contained in this session.
@@ -457,6 +682,30 @@ class Link(Endpoint):
     or a receiver, but never both.  A link contains an ordered sequence
     of delivery objects.
     """
+
+    @property
+    def type(self):
+        """
+        SENDER or RECEIVER.
+        """
+
+        return self._impl.type
+
+    @property
+    def session(self):
+        """
+        The containing session.
+        """
+
+        return self._impl.session
+
+    @property
+    def name(self):
+        """
+        The link name.
+        """
+
+        return self._impl.name
 
     def open(self, options=None):
         """
@@ -492,6 +741,46 @@ class Link(Endpoint):
         """
 
         return self._impl.detach(condition)
+
+    @property
+    def credit(self):
+        """
+        The number of messages the receiving end can accept.
+        """
+
+        return self._impl.credit
+
+    @property
+    def remote_source(self):
+        """
+        The properties of the link source at the remote peer.
+        """
+
+        return self._impl.remote_source
+
+    @property
+    def remote_target(self):
+        """
+        The properties of the link target at the remote peer.
+        """
+
+        return self._impl.remote_target
+
+    @property
+    def remote_delivery_mode(self):
+        """
+        The message delivery guarantee at the remote peer.
+        """
+
+        return self._impl.remote_delivery_mode
+
+    @property
+    def remote_max_message_size(self):
+        """
+        The maximum message size allowed by the remote peer.
+        """
+
+        return self._impl.remote_max_message_size
 
     def deliveries(self):
         """
@@ -580,6 +869,87 @@ class Terminus(object):
     A source or target for messages.
     """
 
+    @property
+    def type(self):
+        """
+        SOURCE or TARGET.
+        """
+
+        return self._impl.type
+
+    @property
+    def address(self):
+        """
+        The address of the message source or target.
+        """
+
+        return self._impl.address
+
+    @property
+    def durability_mode(self):
+        """
+        The persistence mode of the source or target.
+        """
+
+        return self._impl.durability_mode
+
+    @property
+    def distribution_mode(self):
+        """
+        The message distribution mode at the remote peer.  This is a
+        source-only option.
+        """
+
+        return self._impl.distribution_mode
+
+    @property
+    def filters(self):
+        """
+        Filters set by the remote peer.  This is a source-only option.
+        """
+
+        return self._impl.filters
+
+    @property
+    def dynamic(self):
+        """
+        On-demand creation of a source or target at the remote peer.
+        """
+
+        return self._impl.dynamic
+
+    @property
+    def properties(self):
+        """
+        The properties of a dynamic source or target.
+        """
+
+        return self._impl.properties
+
+    @property
+    def timeout(self):
+        """
+        The period after which the source or target is discarded.
+        """
+
+        return self._impl.timeout
+
+    @property
+    def expiry_policy(self):
+        """
+        When expiration of the source or target begins.
+        """
+
+        return self._impl.expiry_policy
+
+    @property
+    def capabilities(self):
+        """
+        Extensions supported or desired.
+        """
+
+        return self._impl.capabilities
+
     # End of class Terminus
 
 class Message(object):
@@ -597,6 +967,34 @@ class Message(object):
 
         self._impl = _core.Message(body)
 
+    @property
+    def id(self):
+        """
+        A globally unique message identifier.
+        
+        **XXX List legal types**
+        
+        **XXX Used to remove duplicates**
+        """
+
+        return self._impl.id
+
+    @id.setter
+    def id(self, value):
+        self._impl.id = value
+
+    @property
+    def user(self):
+        """
+        The identity of the user producing the message.
+        """
+
+        return self._impl.user
+
+    @user.setter
+    def user(self, value):
+        self._impl.user = value
+
     def clear(self):
         """
         Delete the content of the message.  All fields are reset to
@@ -605,6 +1003,277 @@ class Message(object):
         """
 
         return self._impl.clear()
+
+    @property
+    def to(self):
+        """
+        The destination address.
+        """
+
+        return self._impl.to
+
+    @to.setter
+    def to(self, value):
+        self._impl.to = value
+
+    @property
+    def reply_to(self):
+        """
+        The address for replies.
+        """
+
+        return self._impl.reply_to
+
+    @reply_to.setter
+    def reply_to(self, value):
+        self._impl.reply_to = value
+
+    @property
+    def correlation_id(self):
+        """
+        An identifier for matching related messages.
+        """
+
+        return self._impl.correlation_id
+
+    @correlation_id.setter
+    def correlation_id(self, value):
+        self._impl.correlation_id = value
+
+    @property
+    def subject(self):
+        """
+        Summary information.
+        """
+
+        return self._impl.subject
+
+    @subject.setter
+    def subject(self, value):
+        self._impl.subject = value
+
+    @property
+    def body(self):
+        """
+        The main message content.
+        """
+
+        return self._impl.body
+
+    @body.setter
+    def body(self, value):
+        self._impl.body = value
+
+    @property
+    def content_type(self):
+        """
+        The MIME type of the body.
+        """
+
+        return self._impl.content_type
+
+    @content_type.setter
+    def content_type(self, value):
+        self._impl.content_type = value
+
+    @property
+    def content_encoding(self):
+        """
+        The encoding of the body.
+        """
+
+        return self._impl.content_encoding
+
+    @content_encoding.setter
+    def content_encoding(self, value):
+        self._impl.content_encoding = value
+
+    @property
+    def expiry_time(self):
+        """
+        The absolute time past which the message should be discarded.
+        """
+
+        return self._impl.expiry_time
+
+    @expiry_time.setter
+    def expiry_time(self, value):
+        self._impl.expiry_time = value
+
+    @property
+    def creation_time(self):
+        """
+        The absolute time of message creation.
+        """
+
+        return self._impl.creation_time
+
+    @creation_time.setter
+    def creation_time(self, value):
+        self._impl.creation_time = value
+
+    @property
+    def inferred(self):
+        """
+        Determine the AMQP section type from the body type.
+        """
+
+        return self._impl.inferred
+
+    @inferred.setter
+    def inferred(self, value):
+        self._impl.inferred = value
+
+    @property
+    def durable(self):
+        """
+        Durability requirement.  The durable property indicates
+        that the message should be held durably by any
+        intermediaries taking responsibility for the message.  A
+        durable message is saved even if the intermediary is
+        unexpectedly terminated and restarted.
+        """
+
+        return self._impl.durable
+
+    @durable.setter
+    def durable(self, value):
+        self._impl.durable = value
+
+    @property
+    def priority(self):
+        """
+        Relative message priority.  Higher numbers indicate higher
+        priority.
+        """
+
+        return self._impl.priority
+
+    @priority.setter
+    def priority(self, value):
+        self._impl.priority = value
+
+    @property
+    def ttl(self):
+        """
+        The time to live.  The message must be discarded after
+        'ttl' milliseconds.
+        """
+
+        return self._impl.ttl
+
+    @ttl.setter
+    def ttl(self, value):
+        self._impl.ttl = value
+
+    @property
+    def first_acquirer(self):
+        """
+        The recipient is first to acquire the message.
+        """
+
+        return self._impl.first_acquirer
+
+    @first_acquirer.setter
+    def first_acquirer(self, value):
+        self._impl.first_acquirer = value
+
+    @property
+    def delivery_count(self):
+        """
+        The number of prior unsuccessful delivery attempts.
+        """
+
+        return self._impl.delivery_count
+
+    @delivery_count.setter
+    def delivery_count(self, value):
+        self._impl.delivery_count = value
+
+    @property
+    def group_id(self):
+        """
+        The identifier of the group the message belongs to.
+        """
+
+        return self._impl.group_id
+
+    @group_id.setter
+    def group_id(self, value):
+        self._impl.group_id = value
+
+    @property
+    def group_sequence(self):
+        """
+        The relative position of this message within its group.
+        """
+
+        return self._impl.group_sequence
+
+    @group_sequence.setter
+    def group_sequence(self, value):
+        self._impl.group_sequence = value
+
+    @property
+    def reply_to_group_id(self):
+        """
+        The group a reply message belongs to.
+        """
+
+        return self._impl.reply_to_group_id
+
+    @reply_to_group_id.setter
+    def reply_to_group_id(self, value):
+        self._impl.reply_to_group_id = value
+
+    @property
+    def properties(self):
+        """
+        Application-defined message attributes.
+        """
+
+        return self._impl.properties
+
+    @properties.setter
+    def properties(self, value):
+        self._impl.properties = value
+
+    @property
+    def delivery_annotations(self):
+        """
+        Delivery-specific transport attributes.
+        """
+
+        return self._impl.delivery_annotations
+
+    @delivery_annotations.setter
+    def delivery_annotations(self, value):
+        self._impl.delivery_annotations = value
+
+    @property
+    def message_annotations(self):
+        """
+        Message-specific transport attributes.
+        """
+
+        return self._impl.message_annotations
+
+    @message_annotations.setter
+    def message_annotations(self, value):
+        self._impl.message_annotations = value
+
+    @property
+    def footer(self):
+        """
+        Transport attributes that can only be evaluated after the
+        whole message has been seen.
+        """
+
+        return self._impl.footer
+
+    @footer.setter
+    def footer(self, value):
+        self._impl.footer = value
 
     def encode(self):
         """
@@ -635,6 +1304,38 @@ class Delivery(object):
     message may correspond to multiple deliveries.
     """
 
+    @property
+    def id(self):
+        """
+        The delivery identifier.
+        """
+
+        return self._impl.id
+
+    @property
+    def link(self):
+        """
+        The link on which the delivery was sent or received.
+        """
+
+        return self._impl.link
+
+    @property
+    def local_settled(self):
+        """
+        True if the delivery has been settled locally.
+        """
+
+        return self._impl.local_settled
+
+    @property
+    def remote_settled(self):
+        """
+        True if the delivery has been settled by the remote peer.
+        """
+
+        return self._impl.remote_settled
+
     def settle(self):
         """
         Mark the delivery settled.  A settled delivery can never
@@ -643,6 +1344,22 @@ class Delivery(object):
         """
 
         return self._impl.settle()
+
+    @property
+    def local_state(self):
+        """
+        The local delivery state.
+        """
+
+        return self._impl.local_state
+
+    @property
+    def remote_state(self):
+        """
+        The delivery state at the remote peer.
+        """
+
+        return self._impl.remote_state
 
     def accept(self):
         """
@@ -676,6 +1393,30 @@ class Delivery(object):
 
         return self._impl.modify()
 
+    @property
+    def updated(self):
+        """
+        
+        """
+
+        return self._impl.updated
+
+    @property
+    def readable(self):
+        """
+        
+        """
+
+        return self._impl.readable
+
+    @property
+    def writable(self):
+        """
+        
+        """
+
+        return self._impl.writable
+
     # End of class Delivery
 
 class Condition(object):
@@ -694,6 +1435,42 @@ class Condition(object):
         """
 
         self._impl = _core.Condition(name, description, properties)
+
+    @property
+    def name(self):
+        """
+        The AMQP condition name.
+        """
+
+        return self._impl.name
+
+    @name.setter
+    def name(self, value):
+        self._impl.name = value
+
+    @property
+    def description(self):
+        """
+        A message describing the condition.
+        """
+
+        return self._impl.description
+
+    @description.setter
+    def description(self, value):
+        self._impl.description = value
+
+    @property
+    def properties(self):
+        """
+        Extra properties of the condition.
+        """
+
+        return self._impl.properties
+
+    @properties.setter
+    def properties(self, value):
+        self._impl.properties = value
 
     # End of class Condition
 
@@ -727,6 +1504,54 @@ class EndpointOptions(object):
     link-options.
     """
 
+    @property
+    def properties(self):
+        """
+        Application properties defined by the local endpoint.
+        """
+
+        return self._impl.properties
+
+    @properties.setter
+    def properties(self, value):
+        self._impl.properties = value
+
+    @property
+    def offered_capabilities(self):
+        """
+        Extensions the local endpoint supports.
+        """
+
+        return self._impl.offered_capabilities
+
+    @offered_capabilities.setter
+    def offered_capabilities(self, value):
+        self._impl.offered_capabilities = value
+
+    @property
+    def desired_capabilities(self):
+        """
+        Extensions the local endpoint can use.
+        """
+
+        return self._impl.desired_capabilities
+
+    @desired_capabilities.setter
+    def desired_capabilities(self, value):
+        self._impl.desired_capabilities = value
+
+    @property
+    def handler(self):
+        """
+        The event handler for the endpoint.
+        """
+
+        return self._impl.handler
+
+    @handler.setter
+    def handler(self, value):
+        self._impl.handler = value
+
     # End of class EndpointOptions
 
 class ConnectionOptions(EndpointOptions):
@@ -742,6 +1567,127 @@ class ConnectionOptions(EndpointOptions):
         """
 
         self._impl = _core.ConnectionOptions()
+
+    @property
+    def container_id(self):
+        """
+        The connection container identifier.
+        """
+
+        return self._impl.container_id
+
+    @container_id.setter
+    def container_id(self, value):
+        self._impl.container_id = value
+
+    @property
+    def virtual_host(self):
+        """
+        The virtual host name.
+        """
+
+        return self._impl.virtual_host
+
+    @virtual_host.setter
+    def virtual_host(self, value):
+        self._impl.virtual_host = value
+
+    @property
+    def user(self):
+        """
+        The user name for authentication.
+        """
+
+        return self._impl.user
+
+    @user.setter
+    def user(self, value):
+        self._impl.user = value
+
+    @property
+    def password(self):
+        """
+        The user's authentication secret.
+        """
+
+        return self._impl.password
+
+    @password.setter
+    def password(self, value):
+        self._impl.password = value
+
+    @property
+    def sasl_enabled(self):
+        """
+        Enable or disable the SASL security layer.
+        """
+
+        return self._impl.sasl_enabled
+
+    @sasl_enabled.setter
+    def sasl_enabled(self, value):
+        self._impl.sasl_enabled = value
+
+    @property
+    def sasl_allow_insecure_mechs(self):
+        """
+        Allow or deny clear-text authentication mechanisms.
+        """
+
+        return self._impl.sasl_allow_insecure_mechs
+
+    @sasl_allow_insecure_mechs.setter
+    def sasl_allow_insecure_mechs(self, value):
+        self._impl.sasl_allow_insecure_mechs = value
+
+    @property
+    def sasl_allowed_mechs(self):
+        """
+        The SASL mechanisms the local peer permits.  The value is a
+        space-separated string of mechanism names.
+        """
+
+        return self._impl.sasl_allowed_mechs
+
+    @sasl_allowed_mechs.setter
+    def sasl_allowed_mechs(self, value):
+        self._impl.sasl_allowed_mechs = value
+
+    @property
+    def idle_timeout(self):
+        """
+        Expire the connection after a period of inactivity.
+        """
+
+        return self._impl.idle_timeout
+
+    @idle_timeout.setter
+    def idle_timeout(self, value):
+        self._impl.idle_timeout = value
+
+    @property
+    def max_sessions(self):
+        """
+        Limit the number of active sessions.
+        """
+
+        return self._impl.max_sessions
+
+    @max_sessions.setter
+    def max_sessions(self, value):
+        self._impl.max_sessions = value
+
+    @property
+    def max_frame_size(self):
+        """
+        Limit the size of AMQP frames.
+        """
+
+        return self._impl.max_frame_size
+
+    @max_frame_size.setter
+    def max_frame_size(self, value):
+        self._impl.max_frame_size = value
 
     # End of class ConnectionOptions
 
@@ -759,6 +1705,54 @@ class SessionOptions(EndpointOptions):
 
         self._impl = _core.SessionOptions()
 
+    @property
+    def incoming_capacity(self):
+        """
+        Control the number of incoming bytes the session will buffer.
+        """
+
+        return self._impl.incoming_capacity
+
+    @incoming_capacity.setter
+    def incoming_capacity(self, value):
+        self._impl.incoming_capacity = value
+
+    @property
+    def max_links(self):
+        """
+        Limit the number of links on this session.
+        """
+
+        return self._impl.max_links
+
+    @max_links.setter
+    def max_links(self, value):
+        self._impl.max_links = value
+
+    @property
+    def incoming_window(self):
+        """
+        Limit the number of incoming transfer frames.
+        """
+
+        return self._impl.incoming_window
+
+    @incoming_window.setter
+    def incoming_window(self, value):
+        self._impl.incoming_window = value
+
+    @property
+    def outgoing_window(self):
+        """
+        Limit the number of outgoing transfer frames.
+        """
+
+        return self._impl.outgoing_window
+
+    @outgoing_window.setter
+    def outgoing_window(self, value):
+        self._impl.outgoing_window = value
+
     # End of class SessionOptions
 
 class LinkOptions(EndpointOptions):
@@ -775,12 +1769,185 @@ class LinkOptions(EndpointOptions):
 
         self._impl = _core.LinkOptions()
 
+    @property
+    def source(self):
+        """
+        Options for the link source.
+        """
+
+        return self._impl.source
+
+    @property
+    def target(self):
+        """
+        Options for the link target.
+        """
+
+        return self._impl.target
+
+    @property
+    def delivery_mode(self):
+        """
+        Control the message delivery guarantee.
+        """
+
+        return self._impl.delivery_mode
+
+    @delivery_mode.setter
+    def delivery_mode(self, value):
+        self._impl.delivery_mode = value
+
+    @property
+    def name(self):
+        """
+        The name of the link.
+        """
+
+        return self._impl.name
+
+    @name.setter
+    def name(self, value):
+        self._impl.name = value
+
+    @property
+    def message_window(self):
+        """
+        Maintain credit for the given number of messages.
+        """
+
+        return self._impl.message_window
+
+    @message_window.setter
+    def message_window(self, value):
+        self._impl.message_window = value
+
+    @property
+    def max_message_size(self):
+        """
+        Limit the size of messages on the link.
+        """
+
+        return self._impl.max_message_size
+
+    @max_message_size.setter
+    def max_message_size(self, value):
+        self._impl.max_message_size = value
+
     # End of class LinkOptions
 
 class TerminusOptions(object):
     """
     Source and target options.
     """
+
+    @property
+    def address(self):
+        """
+        The address of the message source or target.
+        """
+
+        return self._impl.address
+
+    @address.setter
+    def address(self, value):
+        self._impl.address = value
+
+    @property
+    def durability_mode(self):
+        """
+        Control the persistence of source or target state.
+        """
+
+        return self._impl.durability_mode
+
+    @durability_mode.setter
+    def durability_mode(self, value):
+        self._impl.durability_mode = value
+
+    @property
+    def distribution_mode(self):
+        """
+        Control whether messsages are browsed or consumed.  This
+        is a receiver-only option.
+        """
+
+        return self._impl.distribution_mode
+
+    @distribution_mode.setter
+    def distribution_mode(self, value):
+        self._impl.distribution_mode = value
+
+    @property
+    def filters(self):
+        """
+        Select messages by criteria.
+        """
+
+        return self._impl.filters
+
+    @filters.setter
+    def filters(self, value):
+        self._impl.filters = value
+
+    @property
+    def dynamic(self):
+        """
+        Request on-demand creation of a node at the remote peer.
+        """
+
+        return self._impl.dynamic
+
+    @dynamic.setter
+    def dynamic(self, value):
+        self._impl.dynamic = value
+
+    @property
+    def properties(self):
+        """
+        Control the properties of nodes created on demand.
+        """
+
+        return self._impl.properties
+
+    @properties.setter
+    def properties(self, value):
+        self._impl.properties = value
+
+    @property
+    def timeout(self):
+        """
+        The period after which the source or target is discarded.
+        """
+
+        return self._impl.timeout
+
+    @timeout.setter
+    def timeout(self, value):
+        self._impl.timeout = value
+
+    @property
+    def expiry_policy(self):
+        """
+        Control when the clock for expiration begins.
+        """
+
+        return self._impl.expiry_policy
+
+    @expiry_policy.setter
+    def expiry_policy(self, value):
+        self._impl.expiry_policy = value
+
+    @property
+    def capabilities(self):
+        """
+        Extensions supported or desired.
+        """
+
+        return self._impl.capabilities
+
+    @capabilities.setter
+    def capabilities(self, value):
+        self._impl.capabilities = value
 
     # End of class TerminusOptions
 
@@ -819,6 +1986,70 @@ class Event(object):
     The Proton event object.  It is passed to the methods on
     handler.
     """
+
+    @property
+    def container(self):
+        """
+        Get the container.
+        """
+
+        return self._impl.container
+
+    @property
+    def connection(self):
+        """
+        Get the connection.
+        """
+
+        return self._impl.connection
+
+    @property
+    def session(self):
+        """
+        Get the session.
+        """
+
+        return self._impl.session
+
+    @property
+    def link(self):
+        """
+        Get the link.
+        """
+
+        return self._impl.link
+
+    @property
+    def sender(self):
+        """
+        Get the sender.
+        """
+
+        return self._impl.sender
+
+    @property
+    def receiver(self):
+        """
+        Get the receiver.
+        """
+
+        return self._impl.receiver
+
+    @property
+    def delivery(self):
+        """
+        Get the delivery.
+        """
+
+        return self._impl.delivery
+
+    @property
+    def transport(self):
+        """
+        Get the transport.
+        """
+
+        return self._impl.transport
 
     # End of class Event
 
@@ -1103,6 +2334,30 @@ class Transport(object):
     A network channel supporting an AMQP connection.
     """
 
+    @property
+    def ssl(self):
+        """
+        Get SSL connection information.
+        """
+
+        return self._impl.ssl
+
+    @property
+    def sasl(self):
+        """
+        Get SASL connection information.
+        """
+
+        return self._impl.sasl
+
+    @property
+    def condition(self):
+        """
+        Get the error condition.
+        """
+
+        return self._impl.condition
+
     # End of class Transport
 
 class Acceptor(object):
@@ -1118,6 +2373,18 @@ class Acceptor(object):
 
         return self._impl.close()
 
+    @property
+    def connection_options(self):
+        """
+        Default options for new inbound connections.
+        """
+
+        return self._impl.connection_options
+
+    @connection_options.setter
+    def connection_options(self, value):
+        self._impl.connection_options = value
+
     # End of class Acceptor
 
 class Sasl(object):
@@ -1125,14 +2392,14 @@ class Sasl(object):
     SASL properties for a connection.
     """
 
-    # End of class Sasl
+    pass
 
 class Ssl(object):
     """
     SSL properties for a connection.
     """
 
-    # End of class Ssl
+    pass
 
 # Error handling
 
@@ -1141,20 +2408,20 @@ class ProtonError(object):
     The base class for Proton errors.
     """
 
-    # End of class ProtonError
+    pass
 
 class TimeoutError(ProtonError):
     """
     An operation timed out.
     """
 
-    # End of class TimeoutError
+    pass
 
 class ConversionError(ProtonError):
     """
     A type conversion failed.
     """
 
-    # End of class ConversionError
+    pass
 
 # End of module core
