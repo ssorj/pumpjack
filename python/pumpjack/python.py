@@ -143,7 +143,7 @@ class PythonRenderer(Renderer):
             out.write()
         
         for meth in cls.methods:
-            if meth.name == "constructor":
+            if meth is cls.constructor:
                 continue
             
             self.render_method(out, meth)
@@ -169,17 +169,19 @@ class PythonRenderer(Renderer):
         out.write()
 
     def render_constructor(self, out, cls):
-        for group in cls.groups:
-            for meth in group.methods:
-                if meth.name == "constructor":
-                    self.render_method(out, meth)
-                    out.write()
-                    return
+        if cls.constructor is None:
+            self.render_default_constructor(out, cls)
         else:
-            # XXX Not so elegant here
-            out.write("    def __init__(self):")
-            out.write("        pass")
+            self.render_method(out, cls.constructor)
             out.write()
+
+    def render_default_constructor(self, out, cls):
+        module_name = self.get_module_name(cls.module)
+        class_name = self.get_class_name(cls)
+        
+        out.write("    def __init__(self):")
+        out.write("        self._impl = _{}.{}()", module_name, class_name)
+        out.write()
 
     def render_property(self, out, prop):
         name = self.get_parameter_name(prop)
@@ -309,47 +311,27 @@ class PythonRenderer(Renderer):
             name = self.get_parameter_name(value)
             out.write("{}.{} = {}()", enum_name, name, enum_name)
 
-    def render_type(self, out, type):
-        out.write("# type {} -> {}", type.name, self.type_literals[type.name])
-
 class PythonImplRenderer(PythonRenderer):
-    def render_module_imports(self, out, module):
-        pass
-    
-    def render_class_docstring(self, out, cls):
-        pass
-
-    def render_property_docstring(self, out, prop):
-        pass
-
-    def render_property_getter_body(self, out, prop):
-        name = self.get_parameter_name(prop)
-        out.write("        return self._{}", name)
-
-    def render_property_setter_body(self, out, prop):
-        name = self.get_parameter_name(prop)
-        out.write("        self._{} = value", name)
-
-    def render_method_docstring(self, out, meth):
-        pass
-
-    def render_method_body(self, out, meth):
-        self.render_not_implemented(out, meth)
-
-    def get_constructor_attribute_value(self, ctor, prop):
-        # XXX Instead of direct plumbing, go through setters (maybe)
-        
-        for input in ctor.inputs:
-            if input.name == prop.name:
-                return input.name
-
+    def get_property_value(self, prop):
         if prop.value is None:
+            if prop.type.name == "map":
+                return "map()"
+
+            if prop.type.name in ("array", "list"):
+                return "list()"
+            
             return "None"
 
         # XXX Don't use magic strings for these
 
         if prop.value == "[discovered]":
-            return "None"
+            if prop.type.name == "map":
+                return "map() # Discovered"
+
+            if prop.type.name in ("array", "list"):
+                return "list() # Discovered"
+            
+            return "None # Discovered"
 
         if prop.value == "[instance]":
             type_name = self.get_type_name(prop.type)
@@ -375,24 +357,90 @@ class PythonImplRenderer(PythonRenderer):
             return "\"{}\"".format(prop.value)
 
         return prop.value
-        
-    def render_constructor_body(self, out, meth):
-        for group in meth.class_.groups:
-            if group.properties:
-                break
+    
+    def render_module_imports(self, out, module):
+        pass
+    
+    def render_class_docstring(self, out, cls):
+        pass
+
+    def render_property_docstring(self, out, prop):
+        pass
+
+    def render_property_getter_body(self, out, prop):
+        name = self.get_parameter_name(prop)
+        out.write("        return self._{}", name)
+
+    def render_property_setter_body(self, out, prop):
+        name = self.get_parameter_name(prop)
+        out.write("        self._{} = value", name)
+
+    def render_method_docstring(self, out, meth):
+        pass
+
+    def render_method_body(self, out, meth):
+        self.render_not_implemented(out, meth)
+
+    def render_constructor_body(self, out, ctor):
+        #if not ctor.class_.properties and not ctor.inputs:
+        #    out.write("        pass")
+        #    return
+
+        if ctor.class_.type is None:
+            out.write("        super().__init__()")
+            out.write()
         else:
-            out.write("        pass")
-            return
+            super_ctor = ctor.class_.type.constructor
+
+            if super_ctor is not None:
+                args = ", ".join([self.get_parameter_name(x) for x in super_ctor.inputs])
+                out.write("        super().__init__()")
+                out.write()
         
-        for group in meth.class_.groups:
-            for prop in group.properties:
-                name = self.get_property_name(prop)
-                value = self.get_constructor_attribute_value(meth, prop)
+        for prop in ctor.class_.properties:
+            name = self.get_property_name(prop)
+            value = self.get_property_value(prop)
                 
-                out.write("        self._{} = {}", name, value)
+            out.write("        self._{} = {}", name, value)
+
+        if ctor.inputs:
+            property_names = {x.name for x in ctor.class_.properties}
+
+            for input in ctor.inputs:
+                name = self.get_parameter_name(input)
+
+                out.write()
+                
+                if input.optional:
+                    if input.name not in property_names:
+                        out.write("        self._{} = None", name)
+                        out.write()
+                        
+                    out.write("        if {} is not None:", name)
+                    out.write("            self._{} = {}", name, name)
+                else:
+                    out.write("        self._{} = {}", name, name)
 
     def render_not_implemented(self, out, node):
         out.write("        raise NotImplementedError()")
+
+    def render_default_constructor(self, out, cls):
+        module_name = self.get_module_name(cls.module)
+        class_name = self.get_class_name(cls)
+        
+        out.write("    def __init__(self):")
+        out.write("        super().__init__()")
+
+        if cls.properties:
+            out.write()
+            
+            for prop in cls.properties:
+                name = self.get_property_name(prop)
+                value = self.get_property_value(prop)
+            
+                out.write("        self._{} = {}", name, value)
+
+        out.write()
 
 add_renderer("python", PythonRenderer)
 add_renderer("python-impl", PythonImplRenderer)

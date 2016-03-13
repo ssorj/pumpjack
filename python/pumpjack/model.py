@@ -254,6 +254,7 @@ class Class(ModuleMember):
         self.module = self.group.parent
 
         self.type = None
+        self.constructor = None
 
         self.groups = list()
         self.groups_by_name = dict()
@@ -272,10 +273,6 @@ class Class(ModuleMember):
             self.groups.append(group)
             self.groups_by_name[group.name] = group
 
-        # Create a default constructor
-
-        # XXX
-            
         super().process()
 
     def process_references(self):
@@ -361,6 +358,10 @@ class Method(ClassMember):
         self.inputs = list()
         self.outputs = list()
         self.error_conditions = list()
+
+        if self.name == "constructor":
+            assert self.class_.constructor is None, self.class_.constructor
+            self.class_.constructor = self
 
     def process(self):
         for child in self.element.findall("input"):

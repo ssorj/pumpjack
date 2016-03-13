@@ -41,25 +41,6 @@ class Container(object):
 
         return self._impl.id
 
-    def run(self):
-        """
-        Start processing events.  It returns when all connections
-        and acceptors are closed or the container is stopped.
-
-        """
-
-        return self._impl.run()
-
-    def stop(self):
-        """
-        Shutdown open connections and stop processing events.
-        
-        The operation is complete when on-stop fires.
-
-        """
-
-        return self._impl.stop()
-
     @property
     def client_connection_options(self):
         """
@@ -91,6 +72,25 @@ class Container(object):
         """
 
         return self._impl.link_options
+
+    def run(self):
+        """
+        Start processing events.  It returns when all connections
+        and acceptors are closed or the container is stopped.
+
+        """
+
+        return self._impl.run()
+
+    def stop(self):
+        """
+        Shutdown open connections and stop processing events.
+        
+        The operation is complete when on-stop fires.
+
+        """
+
+        return self._impl.stop()
 
     def send(self, message, url):
         """
@@ -252,6 +252,9 @@ class Endpoint(object):
     communicated over the wire.
     """
 
+    def __init__(self):
+        self._impl = _core.Endpoint()
+
     @property
     def local_uninitialized(self):
         """
@@ -346,6 +349,9 @@ class Connection(Endpoint):
     object contains an ordered sequence of delivery objects.
     """
 
+    def __init__(self):
+        self._impl = _core.Connection()
+
     @property
     def transport(self):
         """
@@ -353,6 +359,62 @@ class Connection(Endpoint):
         """
 
         return self._impl.transport
+
+    @property
+    def default_session(self):
+        """
+        The session used by open-sender and open-receiver.
+        """
+
+        return self._impl.default_session
+
+    @property
+    def remote_container_id(self):
+        """
+        The unique identity of the remote container.
+        """
+
+        return self._impl.remote_container_id
+
+    @property
+    def remote_virtual_host(self):
+        """
+        The virtual host name of the remote peer.
+        """
+
+        return self._impl.remote_virtual_host
+
+    @property
+    def remote_user(self):
+        """
+        The user name for authentication.
+        """
+
+        return self._impl.remote_user
+
+    @property
+    def remote_idle_timeout(self):
+        """
+        The idle timeout of the remote peer.
+        """
+
+        return self._impl.remote_idle_timeout
+
+    @property
+    def remote_max_sessions(self):
+        """
+        The maximum active sessions allowed by the remote peer.
+        """
+
+        return self._impl.remote_max_sessions
+
+    @property
+    def remote_max_frame_size(self):
+        """
+        The maximum frame size allowed by the remote peer.
+        """
+
+        return self._impl.remote_max_frame_size
 
     def open(self, options=None):
         """
@@ -435,14 +497,6 @@ class Connection(Endpoint):
 
         return self._impl.open_receiver(address, options)
 
-    @property
-    def default_session(self):
-        """
-        The session used by open-sender and open-receiver.
-        """
-
-        return self._impl.default_session
-
     def open_session(self, options=None):
         """
         Create and open a session.
@@ -452,54 +506,6 @@ class Connection(Endpoint):
         """
 
         return self._impl.open_session(options)
-
-    @property
-    def remote_container_id(self):
-        """
-        The unique identity of the remote container.
-        """
-
-        return self._impl.remote_container_id
-
-    @property
-    def remote_virtual_host(self):
-        """
-        The virtual host name of the remote peer.
-        """
-
-        return self._impl.remote_virtual_host
-
-    @property
-    def remote_user(self):
-        """
-        The user name for authentication.
-        """
-
-        return self._impl.remote_user
-
-    @property
-    def remote_idle_timeout(self):
-        """
-        The idle timeout of the remote peer.
-        """
-
-        return self._impl.remote_idle_timeout
-
-    @property
-    def remote_max_sessions(self):
-        """
-        The maximum active sessions allowed by the remote peer.
-        """
-
-        return self._impl.remote_max_sessions
-
-    @property
-    def remote_max_frame_size(self):
-        """
-        The maximum frame size allowed by the remote peer.
-        """
-
-        return self._impl.remote_max_frame_size
 
     def sessions(self):
         """
@@ -535,6 +541,9 @@ class Session(Endpoint):
     A container of links.
     """
 
+    def __init__(self):
+        self._impl = _core.Session()
+
     @property
     def connection(self):
         """
@@ -542,6 +551,38 @@ class Session(Endpoint):
         """
 
         return self._impl.connection
+
+    @property
+    def incoming_bytes(self):
+        """
+        The number of incoming bytes currently buffered.
+        """
+
+        return self._impl.incoming_bytes
+
+    @property
+    def outgoing_bytes(self):
+        """
+        The number of outgoing bytes currently buffered.
+        """
+
+        return self._impl.outgoing_bytes
+
+    @property
+    def remote_incoming_window(self):
+        """
+        The remote peer's max number of incoming transfer frames.
+        """
+
+        return self._impl.remote_incoming_window
+
+    @property
+    def remote_outgoing_window(self):
+        """
+        The remote peer's max number of outgoing transfer frames.
+        """
+
+        return self._impl.remote_outgoing_window
 
     def open(self, options=None):
         """
@@ -624,38 +665,6 @@ class Session(Endpoint):
 
         return self._impl.open_sender(address, options)
 
-    @property
-    def incoming_bytes(self):
-        """
-        The number of incoming bytes currently buffered.
-        """
-
-        return self._impl.incoming_bytes
-
-    @property
-    def outgoing_bytes(self):
-        """
-        The number of outgoing bytes currently buffered.
-        """
-
-        return self._impl.outgoing_bytes
-
-    @property
-    def remote_incoming_window(self):
-        """
-        The remote peer's max number of incoming transfer frames.
-        """
-
-        return self._impl.remote_incoming_window
-
-    @property
-    def remote_outgoing_window(self):
-        """
-        The remote peer's max number of outgoing transfer frames.
-        """
-
-        return self._impl.remote_outgoing_window
-
     def links(self):
         """
         Get the links contained in this session.
@@ -683,6 +692,9 @@ class Link(Endpoint):
     of delivery objects.
     """
 
+    def __init__(self):
+        self._impl = _core.Link()
+
     @property
     def type(self):
         """
@@ -706,41 +718,6 @@ class Link(Endpoint):
         """
 
         return self._impl.name
-
-    def open(self, options=None):
-        """
-        Open the link.
-        
-        The operation is complete when on-link-open fires.
-
-        :type options: LinkOptions
-        """
-
-        return self._impl.open(options)
-
-    def close(self, condition=None):
-        """
-        Close the link.
-        
-        The operation is complete when on-link-close fires.
-
-        :type condition: Condition
-        """
-
-        return self._impl.close(condition)
-
-    def detach(self, condition=None):
-        """
-        Detach the link without closing it.  For durable
-        subscriptions this means the subscription is inactive but
-        not canceled.
-        
-        The operation is complete when on-link-detach fires.
-
-        :type condition: Condition
-        """
-
-        return self._impl.detach(condition)
 
     @property
     def credit(self):
@@ -782,6 +759,41 @@ class Link(Endpoint):
 
         return self._impl.remote_max_message_size
 
+    def open(self, options=None):
+        """
+        Open the link.
+        
+        The operation is complete when on-link-open fires.
+
+        :type options: LinkOptions
+        """
+
+        return self._impl.open(options)
+
+    def close(self, condition=None):
+        """
+        Close the link.
+        
+        The operation is complete when on-link-close fires.
+
+        :type condition: Condition
+        """
+
+        return self._impl.close(condition)
+
+    def detach(self, condition=None):
+        """
+        Detach the link without closing it.  For durable
+        subscriptions this means the subscription is inactive but
+        not canceled.
+        
+        The operation is complete when on-link-detach fires.
+
+        :type condition: Condition
+        """
+
+        return self._impl.detach(condition)
+
     def deliveries(self):
         """
         Get the deliveries contained in this link.
@@ -797,6 +809,9 @@ class Receiver(Link):
     """
     A link for receiving messages.
     """
+
+    def __init__(self):
+        self._impl = _core.Receiver()
 
     def add_credit(self, count):
         """
@@ -828,6 +843,9 @@ class Sender(Link):
     """
     A link for sending messages.
     """
+
+    def __init__(self):
+        self._impl = _core.Sender()
 
     def send(self, message):
         """
@@ -868,6 +886,9 @@ class Terminus(object):
     """
     A source or target for messages.
     """
+
+    def __init__(self):
+        self._impl = _core.Terminus()
 
     @property
     def type(self):
@@ -994,15 +1015,6 @@ class Message(object):
     @user.setter
     def user(self, value):
         self._impl.user = value
-
-    def clear(self):
-        """
-        Delete the content of the message.  All fields are reset to
-        their default values.
-
-        """
-
-        return self._impl.clear()
 
     @property
     def to(self):
@@ -1275,6 +1287,15 @@ class Message(object):
     def footer(self, value):
         self._impl.footer = value
 
+    def clear(self):
+        """
+        Delete the content of the message.  All fields are reset to
+        their default values.
+
+        """
+
+        return self._impl.clear()
+
     def encode(self):
         """
         Encode the message to bytes.
@@ -1303,6 +1324,9 @@ class Delivery(object):
     A delivery attempt can fail.  As a result, a particular
     message may correspond to multiple deliveries.
     """
+
+    def __init__(self):
+        self._impl = _core.Delivery()
 
     @property
     def id(self):
@@ -1336,15 +1360,6 @@ class Delivery(object):
 
         return self._impl.remote_settled
 
-    def settle(self):
-        """
-        Mark the delivery settled.  A settled delivery can never
-        be used again.
-
-        """
-
-        return self._impl.settle()
-
     @property
     def local_state(self):
         """
@@ -1360,6 +1375,39 @@ class Delivery(object):
         """
 
         return self._impl.remote_state
+
+    @property
+    def updated(self):
+        """
+        
+        """
+
+        return self._impl.updated
+
+    @property
+    def readable(self):
+        """
+        
+        """
+
+        return self._impl.readable
+
+    @property
+    def writable(self):
+        """
+        
+        """
+
+        return self._impl.writable
+
+    def settle(self):
+        """
+        Mark the delivery settled.  A settled delivery can never
+        be used again.
+
+        """
+
+        return self._impl.settle()
 
     def accept(self):
         """
@@ -1392,30 +1440,6 @@ class Delivery(object):
         """
 
         return self._impl.modify()
-
-    @property
-    def updated(self):
-        """
-        
-        """
-
-        return self._impl.updated
-
-    @property
-    def readable(self):
-        """
-        
-        """
-
-        return self._impl.readable
-
-    @property
-    def writable(self):
-        """
-        
-        """
-
-        return self._impl.writable
 
     # End of class Delivery
 
@@ -1503,6 +1527,9 @@ class EndpointOptions(object):
     The base class for connection-options, session-options, and
     link-options.
     """
+
+    def __init__(self):
+        self._impl = _core.EndpointOptions()
 
     @property
     def properties(self):
@@ -1840,6 +1867,9 @@ class TerminusOptions(object):
     Source and target options.
     """
 
+    def __init__(self):
+        self._impl = _core.TerminusOptions()
+
     @property
     def address(self):
         """
@@ -1987,6 +2017,9 @@ class Event(object):
     handler.
     """
 
+    def __init__(self):
+        self._impl = _core.Event()
+
     @property
     def container(self):
         """
@@ -2058,6 +2091,9 @@ class Handler(object):
     The Proton event handler.  It allows users to intercept and
     change Proton behaviors.
     """
+
+    def __init__(self):
+        self._impl = _core.Handler()
 
     def on_start(self, event, container):
         """
@@ -2334,6 +2370,9 @@ class Transport(object):
     A network channel supporting an AMQP connection.
     """
 
+    def __init__(self):
+        self._impl = _core.Transport()
+
     @property
     def ssl(self):
         """
@@ -2365,13 +2404,8 @@ class Acceptor(object):
     A context for accepting inbound connections.
     """
 
-    def close(self):
-        """
-        Close the acceptor.
-
-        """
-
-        return self._impl.close()
+    def __init__(self):
+        self._impl = _core.Acceptor()
 
     @property
     def connection_options(self):
@@ -2384,6 +2418,14 @@ class Acceptor(object):
     @connection_options.setter
     def connection_options(self, value):
         self._impl.connection_options = value
+
+    def close(self):
+        """
+        Close the acceptor.
+
+        """
+
+        return self._impl.close()
 
     # End of class Acceptor
 
