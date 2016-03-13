@@ -18,7 +18,7 @@
       The address of the message source or target.
     </property>
 
-    <property name="durability" type="durability" value="[discovered]">
+    <property name="durability-mode" type="durability-mode" value="[discovered]">
       The persistence mode of the source or target.
     </property>
   </group>

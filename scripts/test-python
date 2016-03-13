@@ -1,0 +1,10 @@
+#!/usr/bin/python
+
+from qpid_proton.core import *
+
+container = Container(id="testid")
+
+container.run()
+
+# print(container.id) XXX Properties
+print("The end")

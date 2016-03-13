@@ -1,5 +1,7 @@
 # Module io
 
+import _qpid_proton_impl.io as _core
+
 # IO interfaces
 
 class ConnectionEngine(object):

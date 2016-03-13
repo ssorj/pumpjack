@@ -202,7 +202,7 @@ class Module(Node):
 
     def process(self):
         for child in self.element.findall("group"):
-            group = ModuleGroup(child, self)
+            group = ModuleMemberGroup(child, self)
             self.groups.append(group)
 
         super().process()
@@ -214,7 +214,7 @@ class Module(Node):
             if ref in group.children_by_name:
                 return group.children_by_name[ref]
 
-class ModuleGroup(Group):
+class ModuleMemberGroup(Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -238,6 +238,10 @@ class ModuleMember(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
+    @property
+    def abstract_path(self):
+        return (self.module.name, self.name)
+
 class Class(ModuleMember):
     def __init__(self, element, parent):
         super().__init__(element, parent)
@@ -250,10 +254,6 @@ class Class(ModuleMember):
         self.groups = list()
         self.groups_by_name = dict()
 
-    @property
-    def abstract_path(self):
-        return (self.module.name, self.name)
-        
     def process_properties(self):
         super().process_properties()
 
@@ -261,7 +261,7 @@ class Class(ModuleMember):
         
     def process(self):
         for child in self.element.findall("group"):
-            group = ClassGroup(child, self)
+            group = ClassMemberGroup(child, self)
             self.groups.append(group)
             self.groups_by_name[group.name] = group
 
@@ -273,7 +273,7 @@ class Class(ModuleMember):
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
 
-class ClassGroup(Group):
+class ClassMemberGroup(Group):
     def __init__(self, element, parent):
         super().__init__(element, parent)
 
@@ -281,7 +281,7 @@ class ClassGroup(Group):
 
         self.properties = list()
         self.methods = list()
-        self.constants = list()
+        self.constants = list() # XXX Not using this atm
 
     def process(self):
         for child in self.element.findall("property"):
@@ -382,10 +382,6 @@ class Enumeration(ModuleMember):
         self.module = self.group.parent
 
         self.values = list()
-
-    @property
-    def abstract_path(self):
-        return (self.module.name, self.name)
 
     def process(self):
         for child in self.element.findall("value"):

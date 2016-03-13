@@ -21,45 +21,75 @@ from .render import *
 
 import os as _os
 
+_python_types = {
+    "null": "None",
+    "boolean": "bool",
+    "string": "str",
+    "binary": "bytes",
+    "double": "float",
+    "byte": "int",
+    "short": "int",
+    "ubyte": "int",
+    "ushort": "int",
+    "uint": "long",
+    "ulong": "long",
+    "array": "list",
+    "map": "dict",
+    "symbol": "str",
+    "timestamp": "datetime.datetime",
+    "uuid": "uuid.uuid4",
+    "duration": "datetime.timedelta",
+    "iterator": "object", # Which must implement the iterator protocol
+}
+
 class PythonRenderer(Renderer):
     def __init__(self, output_dir):
         super().__init__(output_dir)
 
-        self.type_literals["string"] = "str"
-        self.type_literals["boolean"] = "bool"
-        self.type_literals["integer"] = "int"
-        self.type_literals["object"] = "object"
-        self.type_literals["class"] = "type"
-        self.type_literals["list"] = "list"
-        self.type_literals["map"] = "dict"
-        self.type_literals["iterator"] = "iterator" # XXX
+    def get_type_name(self, type_):
+        try:
+            return _python_types[type_.name]
+        except KeyError:
+            pass
 
-    def render(self, model):
-        self.render_model(None, model)
+        return self.get_class_name(type_)
 
-    def render_class_name(self, cls):
+    def get_model_name(self, model):
+        return model.annotations.get("python-name", model.name)
+
+    def get_module_name(self, module):
+        return module.name.replace("-", "_")
+
+    def get_class_name(self, cls):
         return init_cap(_studly_name(cls.name))
 
-    def render_method_name(self, meth):
+    def get_method_name(self, meth):
         if meth.name == "constructor":
             return "__init__"
         
         return meth.name.replace("-", "_")
 
-    def render_parameter_name(self, param):
+    def get_parameter_name(self, param):
         return param.name.replace("-", "_")
+
+    def render(self, model):
+        self.render_model(None, model)
 
     def render_model(self, out, model):
         for module in model.modules:
             self.render_module(out, module)
 
     def render_module(self, out, module):
-        model_name = module.model.annotations.get("python-name", module.model.name)
-        module_name = "{}.py".format(module.name)
-        path = _os.path.join(self.output_dir, model_name, module_name)
+        model_name = self.get_model_name(module.model)
+        module_name = self.get_module_name(module)
+        module_file = "{}.py".format(module_name)
+        path = _os.path.join(self.output_dir, model_name, module_file)
 
         with OutputWriter(path) as out:
             out.write("# Module {}", module.name)
+            out.write()
+
+            out.write("import _{}_impl.{} as _core", model_name, module_name)
             out.write()
 
             for group in module.groups:
@@ -70,14 +100,18 @@ class PythonRenderer(Renderer):
                     self.render_class(out, cls)
                     out.write()
 
+                for enum in group.enumerations:
+                    self.render_enumeration(out, enum)
+                    out.write()
+
             out.write("# End of module {}", module.name)
 
     def render_class(self, out, cls):
-        name = self.render_class_name(cls)
+        name = self.get_class_name(cls)
         type = "object"
         
         if cls.type is not None:
-            type = self.render_class_name(cls.type)
+            type = self.get_class_name(cls.type)
 
         text = ""
 
@@ -90,7 +124,7 @@ class PythonRenderer(Renderer):
         out.write("    {}", text)
 
         #for group in cls.groups:
-        #    names = [self.render_method_name(x) for x in group.methods]
+        #    names = [self.get_method_name(x) for x in group.methods]
         #    out.write("    :group {}: {}", group.name, ", ".join(names))
 
         out.write("    \"\"\"")
@@ -103,12 +137,9 @@ class PythonRenderer(Renderer):
 
         out.write("    # End of class {}", name)
 
-    def render_constant(self, out, const):
-        name = const.name.upper()
-        value = const.value
-        out.write("    {} = {}", name, value)
-
     def render_constructor(self, out, ctor):
+        print(111)
+        
         inputs = list(("self",))
         inputs.extend([x.name for x in ctor.inputs])
         out.write("    def __init__({}):", ", ".join(inputs))
@@ -118,14 +149,15 @@ class PythonRenderer(Renderer):
         for attr in ctor.parent.attributes:
             self.render_attribute(out, attr)
 
+    # XXX
     def render_attribute(self, out, attr):
-        name = self.render_var_name(attr)
+        name = self.get_parameter_name(attr)
         value = attr.value
 
         if value is None:
             value = "None"
         elif value.startswith("@"):
-            type = self.get_type_literal(attr, value)
+            type = self.get_type_name(attr, value)
             value = "{}()".format(type)
         else:
             if attr.type == "string":
@@ -137,22 +169,45 @@ class PythonRenderer(Renderer):
         out.write("        self.{} = {}", name, value)
 
     def render_method(self, out, meth):
-        name = self.render_method_name(meth)
+        name = self.get_method_name(meth)
         inputs = list(("self",))
 
         for input in meth.inputs:
-            var = self.render_var_name(input)
+            input_name = self.get_parameter_name(input)
 
             if input.optional:
-                inputs.append("{}=None".format(var))
+                inputs.append("{}=None".format(input_name))
             else:
-                inputs.append(var)
+                inputs.append(input_name)
 
         out.write("    def {}({}):", name, ", ".join(inputs))
 
-        self.render_method_body(out, meth)
+        if meth.name == "constructor":
+            self.render_constructor_body(out, meth)
+        else:
+            self.render_method_body(out, meth)
+
+    def render_constructor_body(self, out, ctor):
+        self.render_method_docstring(out, ctor)
+
+        cls = ctor.class_
+        module_name = "_{}".format(self.get_module_name(cls.module))
+        class_name = self.get_class_name(cls)
+        args = ", ".join([self.get_parameter_name(x) for x in ctor.inputs])
+
+        out.write()
+        out.write("        self._impl = {}.{}({})", module_name, class_name, args)
 
     def render_method_body(self, out, meth):
+        self.render_method_docstring(out, meth)
+
+        method_name = self.get_method_name(meth)
+        args = ", ".join([self.get_parameter_name(x) for x in meth.inputs])
+
+        out.write()
+        out.write("        return self._impl.{}({})", method_name, args)
+
+    def render_method_docstring(self, out, meth):
         text = ""
 
         if meth.text is not None:
@@ -164,47 +219,46 @@ class PythonRenderer(Renderer):
         out.write()
 
         for input in meth.inputs:
-            name = self.render_var_name(input)
+            name = self.get_parameter_name(input)
 
             if input.text:
                 out.write("        :param {}: {}", name, input.text)
 
-            literal = self.get_type_literal(meth, input.type)
+            literal = self.get_type_name(input.type)
             out.write("        :type {}: {}", name, literal)
 
         if meth.outputs:
             output = meth.outputs[0]
-            name = self.render_var_name(output)
+            name = self.get_parameter_name(output)
 
             if output.text:
                 out.write("        :returns: {}", name, output.text)
 
-            literal = self.get_type_literal(meth, output.type)
+            literal = self.get_type_name(output.type)
             out.write("        :rtype: {}", literal)
 
         # for cond in meth.exception_conditions:
-        #     cls = self.render_class_name(cond.exception)
+        #     cls = self.get_class_name(cond.exception)
         #     out.write("        @raise {}: {}", cls, cond.doc)
 
         out.write("        \"\"\"")
 
     def render_exception(self, out, exc):
-        out.write("class {}(Exception):", self.render_class_name(exc))
+        out.write("class {}(Exception):", self.get_class_name(exc))
         out.write("    \"\"\"")
         out.write("    {}", exc.doc)
         out.write("    \"\"\"")
 
     def render_enumeration(self, out, enum):
-        name = self.render_class_name(enum)
+        enum_name = self.get_class_name(enum)
 
-        out.write("class {}:", name)
+        out.write("class {}(object):", enum_name)
         out.write("    pass")
         out.write()
 
-        for const in enum.constants:
-            #prefix = self.render_var_name(enum).upper()
-            #out.write("{}_{} = {}()", prefix, self.render_var_name(const).upper(), name)
-            out.write("{} = {}()", self.render_var_name(const).upper(), name)
+        for value in enum.values:
+            name = self.get_parameter_name(value)
+            out.write("{}.{} = {}()", enum_name, name, enum_name)
 
     def render_type(self, out, type):
         out.write("# type {} -> {}", type.name, self.type_literals[type.name])

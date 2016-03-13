@@ -1,5 +1,7 @@
 # Module types
 
+import _qpid_proton_impl.types as _core
+
 # Scalar data types
 
 class Null(object):

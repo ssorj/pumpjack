@@ -34,6 +34,10 @@ publish: render
 	rm -rf ${temp_dir}
 	rm ${temp_script}
 
+.PHONY: test-python
+test-python: render-python
+	PN_TRACE_FRM=1 PYTHONPATH=output/python:${PYTHONPATH} scripts/test-python
+
 .PHONY: update-markdown2
 update-markdown2:
 	curl "https://raw.githubusercontent.com/ssorj/transom/master/python/markdown2.py" -o python/markdown2.py

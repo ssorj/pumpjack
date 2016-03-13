@@ -14,7 +14,7 @@
       The address of the message source or target.
     </property>
 
-    <property name="durability" type="durability" value="NONE" mutable="true">
+    <property name="durability-mode" type="durability-mode" value="NONE" mutable="true" proposed="true">
       Control the persistence of source or target state.
     </property>
   </group>
@@ -62,3 +62,27 @@
     </property>
   </group>
 </class>
+
+<enumeration name="distribution-mode">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-std-dist-mode">AMQP definition</link>
+  
+  <value name="COPY"/>
+  <value name="MOVE"/>
+</enumeration>
+
+<enumeration name="durability-mode">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-durability">AMQP definition</link>
+  
+  <value name="NONE"/>
+  <value name="CONFIGURATION"/>
+  <value name="UNSETTLED-STATE"/>
+</enumeration>
+
+<enumeration name="expiry-policy">
+  <link href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-terminus-expiry-policy">AMQP definition</link>
+
+  <value name="LINK-CLOSE"/>
+  <value name="SESSION-CLOSE"/>
+  <value name="CONNECTION-CLOSE"/>
+  <value name="NEVER"/>
+</enumeration>

@@ -1,5 +1,7 @@
 # Module codec
 
+import _qpid_proton_impl.codec as _core
+
 # Encoding and decoding
 
 class Encoder(object):

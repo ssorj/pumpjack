@@ -1,5 +1,7 @@
 # Module core
 
+import _qpid_proton_impl.core as _core
+
 # Core model
 
 class Container(object):
@@ -24,9 +26,11 @@ class Container(object):
         :type handler: Handler
         :param id: Identifiers should be unique.  By default a UUID will be
         used.
-        :type id: String
+        :type id: str
         :rtype: Container
         """
+
+        self._impl = _core.Container(handler, id)
 
     def run(self):
         """
@@ -34,6 +38,8 @@ class Container(object):
         and acceptors are closed or the container is stopped.
 
         """
+
+        return self._impl.run()
 
     def stop(self):
         """
@@ -43,14 +49,18 @@ class Container(object):
 
         """
 
+        return self._impl.stop()
+
     def send(self, message, url):
         """
         Send a message.
 
         :type message: Message
-        :type url: String
+        :type url: str
         :rtype: Delivery
         """
+
+        return self._impl.send(message, url)
 
     def send_request(self, message, url):
         """
@@ -58,9 +68,11 @@ class Container(object):
         set automatically.
 
         :type message: Message
-        :type url: String
+        :type url: str
         :rtype: Delivery
         """
+
+        return self._impl.send_request(message, url)
 
     def send_response(self, message, request):
         """
@@ -72,16 +84,20 @@ class Container(object):
         :rtype: Delivery
         """
 
+        return self._impl.send_response(message, request)
+
     def connect(self, url, options=None):
         """
         Create and open an outbound connection.
         
         The operation is complete when on-connection-open fires.
 
-        :type url: String
+        :type url: str
         :type options: ConnectionOptions
         :rtype: Connection
         """
+
+        return self._impl.connect(url, options)
 
     def listen(self, url, options=None):
         """
@@ -89,10 +105,12 @@ class Container(object):
         
         The operation is complete when on-link-open fires.
 
-        :type url: String
+        :type url: str
         :type options: ConnectionOptions
         :rtype: Acceptor
         """
+
+        return self._impl.listen(url, options)
 
     def open_receiver(self, url, options=None):
         """
@@ -100,10 +118,12 @@ class Container(object):
         
         The operation is complete when on-link-open fires.
 
-        :type url: String
+        :type url: str
         :type options: LinkOptions
         :rtype: Receiver
         """
+
+        return self._impl.open_receiver(url, options)
 
     def open_sender(self, url, options=None):
         """
@@ -111,17 +131,21 @@ class Container(object):
         
         The operation is complete when on-link-open fires.
 
-        :type url: String
+        :type url: str
         :type options: LinkOptions
         :rtype: Sender
         """
+
+        return self._impl.open_sender(url, options)
 
     def connections(self):
         """
         Get the connections inside this container.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.connections()
 
     # End of class Container
 
@@ -135,14 +159,16 @@ class Client(Container):
         Create a new client.
 
         :param url: The host and port to connect to.
-        :type url: String
+        :type url: str
         :param handler: The main event handler for this container.
         :type handler: Handler
         :param id: Identifiers should be unique.  By default a UUID will be
         used.
-        :type id: String
+        :type id: str
         :rtype: Client
         """
+
+        self._impl = _core.Client(url, handler, id)
 
     # End of class Client
 
@@ -156,14 +182,16 @@ class Server(Container):
         Create a new server.
 
         :param url: The host and port to listen on.
-        :type url: String
+        :type url: str
         :param handler: The main event handler for this container.
         :type handler: Handler
         :param id: Identifiers should be unique.  By default a UUID will be
         used.
-        :type id: String
+        :type id: str
         :rtype: Server
         """
+
+        self._impl = _core.Server(url, handler, id)
 
     # End of class Server
 
@@ -206,6 +234,8 @@ class Connection(Endpoint):
         :type options: ConnectionOptions
         """
 
+        return self._impl.open(options)
+
     def close(self, condition=None):
         """
         Close the connection.
@@ -215,6 +245,8 @@ class Connection(Endpoint):
         :type condition: Condition
         """
 
+        return self._impl.close(condition)
+
     def send(self, message):
         """
         Send a message on the default session.
@@ -222,6 +254,8 @@ class Connection(Endpoint):
         :type message: Message
         :rtype: Delivery
         """
+
+        return self._impl.send(message)
 
     def send_request(self, message):
         """
@@ -231,6 +265,8 @@ class Connection(Endpoint):
         :type message: Message
         :rtype: Delivery
         """
+
+        return self._impl.send_request(message)
 
     def send_response(self, response_message, request_message):
         """
@@ -242,16 +278,20 @@ class Connection(Endpoint):
         :rtype: Delivery
         """
 
+        return self._impl.send_response(response_message, request_message)
+
     def open_sender(self, address, options=None):
         """
         Create and open a sender using the default session.
         
         The operation is complete when on-link-open fires.
 
-        :type address: String
+        :type address: str
         :type options: LinkOptions
         :rtype: Sender
         """
+
+        return self._impl.open_sender(address, options)
 
     def open_receiver(self, address, options=None):
         """
@@ -259,10 +299,12 @@ class Connection(Endpoint):
         
         The operation is complete when on-link-open fires.
 
-        :type address: String
+        :type address: str
         :type options: LinkOptions
         :rtype: Receiver
         """
+
+        return self._impl.open_receiver(address, options)
 
     def open_session(self, options=None):
         """
@@ -272,26 +314,34 @@ class Connection(Endpoint):
         :rtype: Session
         """
 
+        return self._impl.open_session(options)
+
     def sessions(self):
         """
         Get the sessions contained in this connection.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.sessions()
 
     def links(self):
         """
         Get the links contained in this connection.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.links()
 
     def deliveries(self):
         """
         Get the deliveries contained in this connection.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.deliveries()
 
     # End of class Connection
 
@@ -309,6 +359,8 @@ class Session(Endpoint):
         :type options: SessionOptions
         """
 
+        return self._impl.open(options)
+
     def close(self, condition=None):
         """
         Close the session.
@@ -318,6 +370,8 @@ class Session(Endpoint):
         :type condition: Condition
         """
 
+        return self._impl.close(condition)
+
     def send(self, message):
         """
         Send a message on a link with the given address.
@@ -325,6 +379,8 @@ class Session(Endpoint):
         :type message: Message
         :rtype: Delivery
         """
+
+        return self._impl.send(message)
 
     def send_request(self, message):
         """
@@ -334,6 +390,8 @@ class Session(Endpoint):
         :type message: Message
         :rtype: Delivery
         """
+
+        return self._impl.send_request(message)
 
     def send_response(self, response_message, request_message):
         """
@@ -345,16 +403,20 @@ class Session(Endpoint):
         :rtype: Delivery
         """
 
+        return self._impl.send_response(response_message, request_message)
+
     def open_receiver(self, address, options=None):
         """
         Create and open a receiving link.
         
         The operation is complete when on-link-open fires.
 
-        :type address: String
+        :type address: str
         :type options: LinkOptions
         :rtype: Receiver
         """
+
+        return self._impl.open_receiver(address, options)
 
     def open_sender(self, address, options=None):
         """
@@ -362,24 +424,30 @@ class Session(Endpoint):
         
         The operation is complete when on-link-open fires.
 
-        :type address: String
+        :type address: str
         :type options: LinkOptions
         :rtype: Sender
         """
+
+        return self._impl.open_sender(address, options)
 
     def links(self):
         """
         Get the links contained in this session.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.links()
 
     def deliveries(self):
         """
         Get the deliveries contained in this session.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.deliveries()
 
     # End of class Session
 
@@ -399,6 +467,8 @@ class Link(Endpoint):
         :type options: LinkOptions
         """
 
+        return self._impl.open(options)
+
     def close(self, condition=None):
         """
         Close the link.
@@ -407,6 +477,8 @@ class Link(Endpoint):
 
         :type condition: Condition
         """
+
+        return self._impl.close(condition)
 
     def detach(self, condition=None):
         """
@@ -419,12 +491,16 @@ class Link(Endpoint):
         :type condition: Condition
         """
 
+        return self._impl.detach(condition)
+
     def deliveries(self):
         """
         Get the deliveries contained in this link.
 
-        :rtype: Iterator
+        :rtype: object
         """
+
+        return self._impl.deliveries()
 
     # End of class Link
 
@@ -438,8 +514,10 @@ class Receiver(Link):
         Issue credit to the sending end.  This increases the credit
         issued to the remote sender by the specified number of messages.
 
-        :type count: Uint
+        :type count: long
         """
+
+        return self._impl.add_credit(count)
 
     def flush(self):
         """
@@ -452,6 +530,8 @@ class Receiver(Link):
         *on-receiver-flush* fires.
 
         """
+
+        return self._impl.flush()
 
     # End of class Receiver
 
@@ -468,6 +548,8 @@ class Sender(Link):
         :rtype: Delivery
         """
 
+        return self._impl.send(message)
+
     def send_request(self, message):
         """
         Send a request message.  The message reply-to property is
@@ -476,6 +558,8 @@ class Sender(Link):
         :type message: Message
         :rtype: Delivery
         """
+
+        return self._impl.send_request(message)
 
     def send_response(self, response, request):
         """
@@ -486,6 +570,8 @@ class Sender(Link):
         :type request: Message
         :rtype: Delivery
         """
+
+        return self._impl.send_response(response, request)
 
     # End of class Sender
 
@@ -509,6 +595,8 @@ class Message(object):
         :rtype: Message
         """
 
+        self._impl = _core.Message(body)
+
     def clear(self):
         """
         Delete the content of the message.  All fields are reset to
@@ -516,19 +604,25 @@ class Message(object):
 
         """
 
+        return self._impl.clear()
+
     def encode(self):
         """
         Encode the message to bytes.
 
-        :rtype: Binary
+        :rtype: bytes
         """
+
+        return self._impl.encode()
 
     def decode(self, bytes):
         """
         Decode the message from bytes.
 
-        :type bytes: Binary
+        :type bytes: bytes
         """
+
+        return self._impl.decode(bytes)
 
     # End of class Message
 
@@ -548,11 +642,15 @@ class Delivery(object):
 
         """
 
+        return self._impl.settle()
+
     def accept(self):
         """
         Change the delivery state to ACCEPTED and settle.
 
         """
+
+        return self._impl.accept()
 
     def reject(self):
         """
@@ -560,17 +658,23 @@ class Delivery(object):
 
         """
 
+        return self._impl.reject()
+
     def release(self):
         """
         Change the delivery state to RELEASED and settle.
 
         """
 
+        return self._impl.release()
+
     def modify(self):
         """
         Change the delivery state to MODIFIED and settle.
 
         """
+
+        return self._impl.modify()
 
     # End of class Delivery
 
@@ -583,13 +687,37 @@ class Condition(object):
         """
         Create a new condition.
 
-        :type name: Symbol
-        :type description: String
-        :type properties: Map
+        :type name: str
+        :type description: str
+        :type properties: dict
         :rtype: Condition
         """
 
+        self._impl = _core.Condition(name, description, properties)
+
     # End of class Condition
+
+class LinkType(object):
+    pass
+
+LinkType.SENDER = LinkType()
+LinkType.RECEIVER = LinkType()
+
+class TerminusType(object):
+    pass
+
+TerminusType.SOURCE = TerminusType()
+TerminusType.TARGET = TerminusType()
+
+class DeliveryState(object):
+    pass
+
+DeliveryState.NONE = DeliveryState()
+DeliveryState.RECEIVED = DeliveryState()
+DeliveryState.ACCEPTED = DeliveryState()
+DeliveryState.REJECTED = DeliveryState()
+DeliveryState.RELEASED = DeliveryState()
+DeliveryState.MODIFIED = DeliveryState()
 
 # Configuration
 
@@ -613,6 +741,8 @@ class ConnectionOptions(EndpointOptions):
         :rtype: ConnectionOptions
         """
 
+        self._impl = _core.ConnectionOptions()
+
     # End of class ConnectionOptions
 
 class SessionOptions(EndpointOptions):
@@ -626,6 +756,8 @@ class SessionOptions(EndpointOptions):
 
         :rtype: SessionOptions
         """
+
+        self._impl = _core.SessionOptions()
 
     # End of class SessionOptions
 
@@ -641,6 +773,8 @@ class LinkOptions(EndpointOptions):
         :rtype: LinkOptions
         """
 
+        self._impl = _core.LinkOptions()
+
     # End of class LinkOptions
 
 class TerminusOptions(object):
@@ -649,6 +783,34 @@ class TerminusOptions(object):
     """
 
     # End of class TerminusOptions
+
+class DeliveryMode(object):
+    pass
+
+DeliveryMode.AT_MOST_ONCE = DeliveryMode()
+DeliveryMode.AT_LEAST_ONCE = DeliveryMode()
+DeliveryMode.EXACTLY_ONCE = DeliveryMode()
+
+class DistributionMode(object):
+    pass
+
+DistributionMode.COPY = DistributionMode()
+DistributionMode.MOVE = DistributionMode()
+
+class DurabilityMode(object):
+    pass
+
+DurabilityMode.NONE = DurabilityMode()
+DurabilityMode.CONFIGURATION = DurabilityMode()
+DurabilityMode.UNSETTLED_STATE = DurabilityMode()
+
+class ExpiryPolicy(object):
+    pass
+
+ExpiryPolicy.LINK_CLOSE = ExpiryPolicy()
+ExpiryPolicy.SESSION_CLOSE = ExpiryPolicy()
+ExpiryPolicy.CONNECTION_CLOSE = ExpiryPolicy()
+ExpiryPolicy.NEVER = ExpiryPolicy()
 
 # Event processing
 
@@ -674,6 +836,8 @@ class Handler(object):
         :type container: Container
         """
 
+        return self._impl.on_start(event, container)
+
     def on_stop(self, event, container):
         """
         The event loop is stopped.
@@ -682,6 +846,8 @@ class Handler(object):
         :type container: Container
         """
 
+        return self._impl.on_stop(event, container)
+
     def on_message(self, event, message):
         """
         A message is received.
@@ -689,6 +855,8 @@ class Handler(object):
         :type event: Event
         :type message: Message
         """
+
+        return self._impl.on_message(event, message)
 
     def on_sendable(self, event, sender):
         """
@@ -701,6 +869,8 @@ class Handler(object):
         :type sender: Sender
         """
 
+        return self._impl.on_sendable(event, sender)
+
     def on_unhandled(self, event):
         """
         Fallback event handling.
@@ -710,6 +880,8 @@ class Handler(object):
 
         :type event: Event
         """
+
+        return self._impl.on_unhandled(event)
 
     def on_unhandled_error(self, event, condition):
         """
@@ -722,6 +894,8 @@ class Handler(object):
         :type condition: Condition
         """
 
+        return self._impl.on_unhandled_error(event, condition)
+
     def on_connection_open(self, event, connection):
         """
         The remote peer opened the connection.
@@ -730,6 +904,8 @@ class Handler(object):
         :type connection: Connection
         """
 
+        return self._impl.on_connection_open(event, connection)
+
     def on_connection_close(self, event, connection):
         """
         The remote peer closed the connection.
@@ -737,6 +913,8 @@ class Handler(object):
         :type event: Event
         :type connection: Connection
         """
+
+        return self._impl.on_connection_close(event, connection)
 
     def on_connection_error(self, event, connection):
         """
@@ -747,6 +925,8 @@ class Handler(object):
         :type connection: Connection
         """
 
+        return self._impl.on_connection_error(event, connection)
+
     def on_session_open(self, event, session):
         """
         The remote peer opened the session.
@@ -755,6 +935,8 @@ class Handler(object):
         :type session: Session
         """
 
+        return self._impl.on_session_open(event, session)
+
     def on_session_close(self, event, session):
         """
         The remote peer closed the session.
@@ -762,6 +944,8 @@ class Handler(object):
         :type event: Event
         :type session: Session
         """
+
+        return self._impl.on_session_close(event, session)
 
     def on_session_error(self, event, session):
         """
@@ -772,6 +956,8 @@ class Handler(object):
         :type session: Session
         """
 
+        return self._impl.on_session_error(event, session)
+
     def on_link_open(self, event, link):
         """
         The remote peer opened the link.
@@ -779,6 +965,8 @@ class Handler(object):
         :type event: Event
         :type link: Link
         """
+
+        return self._impl.on_link_open(event, link)
 
     def on_link_detach(self, event, link):
         """
@@ -788,6 +976,8 @@ class Handler(object):
         :type link: Link
         """
 
+        return self._impl.on_link_detach(event, link)
+
     def on_link_close(self, event, link):
         """
         The remote peer closed the link.
@@ -795,6 +985,8 @@ class Handler(object):
         :type event: Event
         :type link: Link
         """
+
+        return self._impl.on_link_close(event, link)
 
     def on_link_error(self, event, link):
         """
@@ -804,6 +996,8 @@ class Handler(object):
         :type link: Link
         """
 
+        return self._impl.on_link_error(event, link)
+
     def on_sender_flush(self, event, sender):
         """
         The remote end of the sender requested flushing.
@@ -811,6 +1005,8 @@ class Handler(object):
         :type event: Event
         :type sender: Sender
         """
+
+        return self._impl.on_sender_flush(event, sender)
 
     def on_receiver_flush(self, event, receiver):
         """
@@ -820,6 +1016,8 @@ class Handler(object):
         :type receiver: Receiver
         """
 
+        return self._impl.on_receiver_flush(event, receiver)
+
     def on_delivery_accept(self, event, delivery):
         """
         The remote peer accepted an outgoing message.
@@ -827,6 +1025,8 @@ class Handler(object):
         :type event: Event
         :type delivery: Delivery
         """
+
+        return self._impl.on_delivery_accept(event, delivery)
 
     def on_delivery_reject(self, event, delivery):
         """
@@ -838,6 +1038,8 @@ class Handler(object):
         :type delivery: Delivery
         """
 
+        return self._impl.on_delivery_reject(event, delivery)
+
     def on_delivery_release(self, event, delivery):
         """
         The remote peer released an outgoing message.  Note that
@@ -848,6 +1050,8 @@ class Handler(object):
         :type delivery: Delivery
         """
 
+        return self._impl.on_delivery_release(event, delivery)
+
     def on_delivery_settle(self, event, delivery):
         """
         The remote peer settled an outgoing message.  This is the
@@ -857,6 +1061,8 @@ class Handler(object):
         :type delivery: Delivery
         """
 
+        return self._impl.on_delivery_settle(event, delivery)
+
     def on_transport_open(self, event, transport):
         """
         The underlying network channel opened.
@@ -864,6 +1070,8 @@ class Handler(object):
         :type event: Event
         :type transport: Transport
         """
+
+        return self._impl.on_transport_open(event, transport)
 
     def on_transport_close(self, event, transport):
         """
@@ -873,6 +1081,8 @@ class Handler(object):
         :type transport: Transport
         """
 
+        return self._impl.on_transport_close(event, transport)
+
     def on_transport_error(self, event, transport):
         """
         The underlying network channel closed with an error
@@ -881,6 +1091,8 @@ class Handler(object):
         :type event: Event
         :type transport: Transport
         """
+
+        return self._impl.on_transport_error(event, transport)
 
     # End of class Handler
 
@@ -903,6 +1115,8 @@ class Acceptor(object):
         Close the acceptor.
 
         """
+
+        return self._impl.close()
 
     # End of class Acceptor
 
