@@ -3,15 +3,17 @@
 
   <!-- XXX a message is a value object -->
 
+  <link node="sender"/>
+  <link node="receiver"/>
+  <link node="delivery"/>
+
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">Message format</link>
   
   <group name="basic">
     <property name="id" type="message-id" mutable="true" nullable="true">
       A globally unique message identifier.
 
-      **XXX List legal types**
-      
-      **XXX Used to remove duplicates**
+      <!-- XXX Used to remove duplicates -->
     </property>
 
     <property name="user" type="string" mutable="true" nullable="true">
@@ -121,18 +123,19 @@
 
   <group name="extended-attributes">
     <property name="properties" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
-      Application-defined message attributes.
+      Application-defined message attributes.  Values must be scalar
+      types, not map or list or array.
     </property>
 
-    <property name="delivery-annotations" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
+    <property name="delivery-annotations" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">
       Delivery-specific transport attributes.
     </property>
 
-    <property name="message-annotations" type="map" key-type="string" item-type="object" mutable="true" nullable="true">
+    <property name="message-annotations" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">
       Message-specific transport attributes.
     </property>
 
-    <property name="footer" type="map" hidden="true" key-type="string" item-type="object" mutable="true" nullable="true">
+    <property name="footer" type="map" hidden="true" key-type="symbol" item-type="object" mutable="true" nullable="true">
       Transport attributes that can only be evaluated after the
       whole message has been seen.
     </property>

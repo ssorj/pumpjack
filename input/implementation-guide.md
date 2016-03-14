@@ -4,8 +4,8 @@
 
 | Namespace                  | Content                                       | Depends on                                 |
 |----------------------------|-----------------------------------------------|--------------------------------------------|
-| [proton/core][1]           | AMQP model, event processing, types           | proton/types, proton/codec, proton/io      |
-| [proton/types][2]          | AMQP model, event processing, types           | -                                          |
+| [proton/core][1]           | AMQP model, event processing                  | proton/types, proton/codec, proton/io      |
+| [proton/types][2]          | AMQP data types                               | -                                          |
 | [proton/codec][3]          | AMQP data encoding and decoding               | proton/types                               |
 | [proton/io][4]             | An SPI for IO integration                     | -                                          |
 | [proton/internal][5]       | API internals and language extensions         | -                                          |
@@ -27,12 +27,6 @@ language-conventional variants.
  - value remains `value` or becomes `Value`
  - event-type becomes `event_type` or `EventType`
  - url-error becomes `url_error` or `UrlError`
-
-## Root namespace
-
-In general, prefer simply 'proton' as the root namespace.  If your
-language uses fully qualified package names a la Java, it should
-include 'qpid', as in org.apache.qpid.proton.
 
 ## Data types
 
