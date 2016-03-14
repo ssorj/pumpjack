@@ -4,7 +4,7 @@
 
 class Container(object):
     def __init__(self, handler=None, id=None):
-        super().__init__()
+        super(Container, self).__init__()
 
         self._id = self._generate_id()
         self._client_connection_options = ConnectionOptions()
@@ -72,47 +72,9 @@ class Container(object):
 
     # End of class Container
 
-class Client(Container):
-    def __init__(self, url, handler=None, id=None):
-        super().__init__()
-
-
-        self._url = url
-
-        self._handler = None
-
-        if handler is not None:
-            self._handler = handler
-
-        self._id = None
-
-        if id is not None:
-            self._id = id
-
-    # End of class Client
-
-class Server(Container):
-    def __init__(self, url, handler=None, id=None):
-        super().__init__()
-
-
-        self._url = url
-
-        self._handler = None
-
-        if handler is not None:
-            self._handler = handler
-
-        self._id = None
-
-        if id is not None:
-            self._id = id
-
-    # End of class Server
-
 class Endpoint(object):
     def __init__(self):
-        super().__init__()
+        super(Endpoint, self).__init__()
 
         self._local_uninitialized = None # Discovered
         self._remote_uninitialized = None # Discovered
@@ -121,7 +83,7 @@ class Endpoint(object):
         self._local_closed = None # Discovered
         self._remote_closed = None # Discovered
         self._remote_condition = None # Discovered
-        self._remote_properties = map() # Discovered
+        self._remote_properties = dict() # Discovered
         self._remote_offered_capabilities = list() # Discovered
         self._remote_desired_capabilities = list() # Discovered
 
@@ -169,7 +131,7 @@ class Endpoint(object):
 
 class Connection(Endpoint):
     def __init__(self):
-        super().__init__()
+        super(Connection, self).__init__()
 
         self._transport = Transport()
         self._default_session = Session()
@@ -249,7 +211,7 @@ class Connection(Endpoint):
 
 class Session(Endpoint):
     def __init__(self):
-        super().__init__()
+        super(Session, self).__init__()
 
         self._connection = Connection()
         self._incoming_bytes = None # Discovered
@@ -308,7 +270,7 @@ class Session(Endpoint):
 
 class Link(Endpoint):
     def __init__(self):
-        super().__init__()
+        super(Link, self).__init__()
 
         self._type = None # Discovered
         self._session = Session()
@@ -367,7 +329,7 @@ class Link(Endpoint):
 
 class Receiver(Link):
     def __init__(self):
-        super().__init__()
+        super(Receiver, self).__init__()
 
     def add_credit(self, count):
         raise NotImplementedError()
@@ -379,7 +341,7 @@ class Receiver(Link):
 
 class Sender(Link):
     def __init__(self):
-        super().__init__()
+        super(Sender, self).__init__()
 
     def send(self, message):
         raise NotImplementedError()
@@ -394,15 +356,15 @@ class Sender(Link):
 
 class Terminus(object):
     def __init__(self):
-        super().__init__()
+        super(Terminus, self).__init__()
 
         self._type = None # Discovered
         self._address = None # Discovered
         self._durability_mode = None # Discovered
         self._distribution_mode = None # Discovered
-        self._filters = map() # Discovered
+        self._filters = dict() # Discovered
         self._dynamic = None # Discovered
-        self._properties = map() # Discovered
+        self._properties = dict() # Discovered
         self._timeout = None # Discovered
         self._expiry_policy = None # Discovered
         self._capabilities = list() # Discovered
@@ -451,7 +413,7 @@ class Terminus(object):
 
 class Message(object):
     def __init__(self, body=None):
-        super().__init__()
+        super(Message, self).__init__()
 
         self._id = None
         self._user = None
@@ -473,10 +435,10 @@ class Message(object):
         self._group_id = None
         self._group_sequence = None
         self._reply_to_group_id = None
-        self._properties = map()
-        self._delivery_annotations = map()
-        self._message_annotations = map()
-        self._footer = map()
+        self._properties = dict()
+        self._delivery_annotations = dict()
+        self._message_annotations = dict()
+        self._footer = dict()
 
         if body is not None:
             self._body = body
@@ -686,7 +648,7 @@ class Message(object):
 
 class Delivery(object):
     def __init__(self):
-        super().__init__()
+        super(Delivery, self).__init__()
 
         self._id = self._generate_id()
         self._link = Link()
@@ -753,11 +715,11 @@ class Delivery(object):
 
 class Condition(object):
     def __init__(self, name, description=None, properties=None):
-        super().__init__()
+        super(Condition, self).__init__()
 
         self._name = str()
         self._description = None
-        self._properties = map()
+        self._properties = dict()
 
         self._name = name
 
@@ -819,9 +781,9 @@ DeliveryState.MODIFIED = DeliveryState()
 
 class EndpointOptions(object):
     def __init__(self):
-        super().__init__()
+        super(EndpointOptions, self).__init__()
 
-        self._properties = map()
+        self._properties = dict()
         self._offered_capabilities = list()
         self._desired_capabilities = list()
         self._handler = None
@@ -1049,14 +1011,14 @@ class LinkOptions(EndpointOptions):
 
 class TerminusOptions(object):
     def __init__(self):
-        super().__init__()
+        super(TerminusOptions, self).__init__()
 
         self._address = None
         self._durability_mode = DurabilityMode.NONE
         self._distribution_mode = DistributionMode.MOVE
-        self._filters = map()
+        self._filters = dict()
         self._dynamic = False
-        self._properties = map()
+        self._properties = dict()
         self._timeout = None
         self._expiry_policy = ExpiryPolicy.SESSION_CLOSE
         self._capabilities = list()
@@ -1167,7 +1129,7 @@ ExpiryPolicy.NEVER = ExpiryPolicy()
 
 class Event(object):
     def __init__(self):
-        super().__init__()
+        super(Event, self).__init__()
 
         self._container = Container()
         self._connection = Connection()
@@ -1214,7 +1176,7 @@ class Event(object):
 
 class Handler(object):
     def __init__(self):
-        super().__init__()
+        super(Handler, self).__init__()
 
     def on_start(self, event, container):
         raise NotImplementedError()
@@ -1297,7 +1259,7 @@ class Handler(object):
 
 class Transport(object):
     def __init__(self):
-        super().__init__()
+        super(Transport, self).__init__()
 
         self._ssl = Ssl()
         self._sasl = Sasl()
@@ -1319,7 +1281,7 @@ class Transport(object):
 
 class Acceptor(object):
     def __init__(self):
-        super().__init__()
+        super(Acceptor, self).__init__()
 
         self._connection_options = ConnectionOptions()
 

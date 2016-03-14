@@ -315,7 +315,7 @@ class PythonImplRenderer(PythonRenderer):
     def get_property_value(self, prop):
         if prop.value is None:
             if prop.type.name == "map":
-                return "map()"
+                return "dict()"
 
             if prop.type.name in ("array", "list"):
                 return "list()"
@@ -326,7 +326,7 @@ class PythonImplRenderer(PythonRenderer):
 
         if prop.value == "[discovered]":
             if prop.type.name == "map":
-                return "map() # Discovered"
+                return "dict() # Discovered"
 
             if prop.type.name in ("array", "list"):
                 return "list() # Discovered"
@@ -386,15 +386,17 @@ class PythonImplRenderer(PythonRenderer):
         #    out.write("        pass")
         #    return
 
+        class_name = self.get_class_name(ctor.class_)
+
         if ctor.class_.type is None:
-            out.write("        super().__init__()")
+            out.write("        super({}, self).__init__()", class_name)
             out.write()
         else:
             super_ctor = ctor.class_.type.constructor
 
             if super_ctor is not None:
                 args = ", ".join([self.get_parameter_name(x) for x in super_ctor.inputs])
-                out.write("        super().__init__()")
+                out.write("        super({}, self).__init__()", class_name)
                 out.write()
         
         for prop in ctor.class_.properties:
@@ -429,7 +431,7 @@ class PythonImplRenderer(PythonRenderer):
         class_name = self.get_class_name(cls)
         
         out.write("    def __init__(self):")
-        out.write("        super().__init__()")
+        out.write("        super({}, self).__init__()", class_name)
 
         if cls.properties:
             out.write()

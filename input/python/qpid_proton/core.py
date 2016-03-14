@@ -190,52 +190,6 @@ class Container(object):
 
     # End of class Container
 
-class Client(Container):
-    """
-    A container that connects to a server.
-    """
-
-    def __init__(self, url, handler=None, id=None):
-        """
-        Create a new client.
-
-        :param url: The host and port to connect to.
-        :type url: str
-        :param handler: The main event handler for this container.
-        :type handler: Handler
-        :param id: Identifiers should be unique.  By default a UUID will be
-        used.
-        :type id: str
-        :rtype: Client
-        """
-
-        self._impl = _core.Client(url, handler, id)
-
-    # End of class Client
-
-class Server(Container):
-    """
-    A container that listens for client connections.
-    """
-
-    def __init__(self, url, handler=None, id=None):
-        """
-        Create a new server.
-
-        :param url: The host and port to listen on.
-        :type url: str
-        :param handler: The main event handler for this container.
-        :type handler: Handler
-        :param id: Identifiers should be unique.  By default a UUID will be
-        used.
-        :type id: str
-        :rtype: Server
-        """
-
-        self._impl = _core.Server(url, handler, id)
-
-    # End of class Server
-
 class Endpoint(object):
     """
     The base class for connection, session, and link.

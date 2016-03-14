@@ -166,6 +166,7 @@
   </group>
 </class>
 
+<!--
 <class name="client" type="container" hidden="true">
   A container that connects to a server.
   
@@ -215,3 +216,4 @@
     </method>
   </group>
 </class>
+-->
