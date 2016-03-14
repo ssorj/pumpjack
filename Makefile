@@ -20,7 +20,7 @@ gen-python-impl:
 
 .PHONY: help
 help:
-	@echo "render, render-python, clean, publish"
+	@echo "render, clean, publish"
 
 .PHONY: clean
 clean:
@@ -32,13 +32,13 @@ publish: temp_dir := $(shell mktemp -d)
 publish: temp_script := $(shell mktemp)
 publish: render
 	chmod 755 ${temp_dir}
-	transom input ${temp_dir} --site-url "/~jross/pumpjack"
-#	rsync -av ${temp_dir}/ jross@people.apache.org:public_html/pumpjack
-#	rsync -av ${temp_dir}/ jross@home.apache.org::public_html/pumpjack
+	transom input ${temp_dir} --site-url "/~${USER}/pumpjack"
+#	rsync -av ${temp_dir}/ ${USER}@people.apache.org:public_html/pumpjack
+#	rsync -av ${temp_dir}/ ${USER}@home.apache.org::public_html/pumpjack
 	echo 'lcd ${temp_dir}' >> ${temp_script}
 	cd ${temp_dir} && find * -type d -exec echo '-mkdir {}' \; >> ${temp_script}
 	cd ${temp_dir} && find * -type f -exec echo 'put {} {}' \; >> ${temp_script}
-	sftp -b ${temp_script} jross@home.apache.org:public_html/pumpjack
+	sftp -b ${temp_script} ${USER}@home.apache.org:public_html/pumpjack
 	rm -rf ${temp_dir}
 	rm ${temp_script}
 
