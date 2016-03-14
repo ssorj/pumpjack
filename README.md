@@ -1,11 +1,13 @@
 # Pumpjack
 
-Pumpjack is a general tool for documenting APIs that are implemented
-in multiple languages.
+Pumpjack is a tool for documenting APIs that are implemented in
+multiple languages.
 
 For now, I'm using it to document just one API, the
 [Qpid Proton](http://qpid.apache.org/proton/index.html) event-driven
-messaging API.  See the
+messaging API.
+
+See the
 [current published results](http://home.apache.org/~jross/pumpjack/).
 
 ## Project layout

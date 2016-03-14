@@ -2,19 +2,21 @@
 
 ## Overview
 
-| Namespace                  | Content                                       | Depends on                   |
-|----------------------------|-----------------------------------------------|------------------------------|
-| [proton/core][1]           | AMQP model, event processing, types           | proton/amqp, proton/io       |
-| [proton/amqp][2]           | AMQP data encoding and decoding               | proton/internal if needed    |
-| [proton/io][3]             | IO integration                                | proton/internal if needed    |
-| [proton/internal][4]       | API internals and language extensions         | -                            |
-| [proton/messenger][5]      | Home of the Messenger API                     | proton/core                  |
+| Namespace                  | Content                                       | Depends on                                 |
+|----------------------------|-----------------------------------------------|--------------------------------------------|
+| [proton/core][1]           | AMQP model, event processing, types           | proton/types, proton/codec, proton/io      |
+| [proton/types][2]          | AMQP model, event processing, types           | -                                          |
+| [proton/codec][3]          | AMQP data encoding and decoding               | proton/types                               |
+| [proton/io][4]             | An SPI for IO integration                     | -                                          |
+| [proton/internal][5]       | API internals and language extensions         | -                                          |
+| [proton/messenger][6]      | Home of the Messenger API                     | proton/core                                |
 
 [1]: #namespace-protoncore
-[2]: #namespace-protonamqp
-[3]: #namespace-protonio
-[4]: #namespace-protonmessenger
+[2]: #namespace-protontypes
+[3]: #namespace-protoncodec
+[4]: #namespace-protonio
 [5]: #namespace-protoninternal
+[6]: #namespace-protonmessenger
 
 ## Entity names
 
@@ -36,15 +38,15 @@ include 'qpid', as in org.apache.qpid.proton.
 
 The API should operate in terms of language-native data types whenever
 possible.  If a type is not available in the language or its standard
-library, the implementer should introduce it in the 'proton/core'
-namespace.
+library, the implementer should introduce it in the 'proton/types' (or
+optionally 'proton') namespace.
 
 ## Namespace 'proton/core'
 
 This is the primary user entry point for the event-driven API.  Most
 programs will import only this namespace.
 
-Because of their centrality, the APIs here can be placed directly in
+Because of their centrality, the APIs here may be placed directly in
 the 'proton' namespace instead.
 
 ### AMQP model entities
@@ -89,7 +91,10 @@ the 'proton' namespace instead.
  - timeout-error or -exception
  - conversion-error or -exception
 
-### Data types
+## Namespace 'proton/types'
+
+Because of their centrality, the APIs here may be placed directly in
+the 'proton' namespace instead.
 
 <div class="four-column" markdown="1">
 
@@ -121,7 +126,7 @@ the 'proton' namespace instead.
 
 </div>
 
-## Namespace 'proton/amqp'
+## Namespace 'proton/codec'
 
 AMQP data encoding and decoding.  These interfaces are available to
 the user but won't typically be necessary when building a Proton-based
@@ -133,12 +138,10 @@ application.
 ## Namespace 'proton/io'
 
 An SPI for IO integration and a place for standard IO implementations.
-Like 'proton/amqp', it is available but not primary.
+Like 'proton/codec', it is available but not primary.
 
  - connection-engine
  - io-adapter
- - windows-io
- - posix-io
 
 ## Namespace 'proton/internal'
 
