@@ -1,0 +1,82 @@
+<class name="sender" type="link">
+  A channel for sending messages.  A sender contains an ordered
+  sequence of deliveries.
+
+  <link node="sender-options"/>
+  <link node="session"/>
+  <link node="receiver"/>
+  <link node="delivery"/>
+  <link node="terminus"/>
+
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-detach">Detach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-flow">Flow performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
+  
+  <group name="basic">
+    <method name="open">
+      Open the sender.
+
+      <link node="/proton/core/handler/on-sender-open"/>
+
+      <input name="options" type="sender-options" optional="true"/>
+    </method>
+    
+    <method name="close">
+      Close the sender.
+
+      The operation is complete when on-sender-close fires.
+      
+      <link node="/proton/core/handler/on-sender-close"/>
+      
+      <input name="condition" type="condition" optional="true"/>
+    </method>
+
+    <method name="detach">
+      Detach the sender without closing it.
+      
+      The operation is complete when on-sender-detach fires.
+      
+      <link node="/proton/core/handler/on-sender-detach"/>
+      
+      <input name="condition" type="condition" optional="true"/>
+    </method>
+  </group>
+
+  <group name="endpoint-state-group">
+    <property name="remote" type="sender-state">
+      XXX Properties at the remote endpoint.
+    </property>
+  </group>
+
+  <group name="message-operations">
+    <method name="send">
+      Send a message on the link.
+
+      <input name="message" type="message"/>
+      <output name="delivery" type="delivery"/>
+    </method>
+
+    <method name="send-request" proposed="true">
+      Send a request message.  The message reply-to property is
+      set automatically.
+
+      <input name="message" type="message"/>
+      <output name="delivery" type="delivery"/>
+    </method>
+    
+    <method name="send-response" proposed="true">
+      Send a response message.  The message address and
+      correlation-id properties are set automatically.
+
+      <input name="response" type="message"/>
+      <input name="request" type="message"/>
+      <output name="delivery" type="delivery"/>
+    </method>
+  </group>
+</class>
+
+<class name="sender-state" type="link-state" hidden="true">
+</class>

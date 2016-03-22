@@ -1,4 +1,4 @@
-<class name="connection" type="endpoint">
+<class name="connection" type="connection-state">
   A top-level channel for communication.
   
   In current implementations, a connection corresponds to a TCP
@@ -23,6 +23,10 @@
       The associated transport.
     </property>
 
+    <property name="remote" type="connection-state">
+      Connection properties at the remote peer.
+    </property>
+    
     <method name="open">
       Open the connection.
 
@@ -79,9 +83,9 @@
     <method name="open-sender">
       Create and open a sender using the default session.
 
-      The operation is complete when on-link-open fires.
+      The operation is complete when on-sender-open fires.
 
-      <link node="/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-sender-open"/>
 
       <input name="address" type="string"/>
       <input name="options" type="link-options" optional="true"/>
@@ -91,9 +95,9 @@
     <method name="open-receiver">
       Create and open a receiver using the default session.
 
-      The operation is complete when on-link-open fires.
+      The operation is complete when on-receiver-open fires.
 
-      <link node="/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-receiver-open"/>
 
       <input name="address" type="string"/>
       <input name="options" type="link-options" optional="true"/>
@@ -114,32 +118,6 @@
     </method>
   </group>
   
-  <group name="endpoint-state-group">
-    <property name="remote-container-id" type="string" value="[discovered]">
-      The unique identity of the remote container.
-    </property>
-    
-    <property name="remote-virtual-host" type="string" value="[discovered]">
-      The virtual host name of the remote peer.
-    </property>
-
-    <property name="remote-user" type="string" value="[discovered]">
-      The user name for authentication.
-    </property>
-
-    <property name="remote-idle-timeout" type="duration" value="[discovered]">
-      The idle timeout of the remote peer.
-    </property>
-
-    <property name="remote-max-sessions" type="ushort" value="[discovered]">
-      The maximum active sessions allowed by the remote peer.
-    </property>
-    
-    <property name="remote-max-frame-size" type="uint" value="[discovered]">
-      The maximum frame size allowed by the remote peer.
-    </property>
-  </group>
-
   <group name="events">
     <method name="sessions">
       Get the sessions contained in this connection.
@@ -158,5 +136,35 @@
       
       <output name="deliveries" type="iterator" item-type="delivery"/>
     </method>
+  </group>
+</class>
+
+<class name="connection-state" type="endpoint-state" hidden="true">
+  <group name="endpoint-state-group">
+    <property name="container-id" type="string" value="[discovered]">
+      The unique identity of the container.
+    </property>
+    
+    <property name="virtual-host" type="string" value="[discovered]">
+      The virtual host name.
+    </property>
+
+    <property name="user" type="string" value="[discovered]">
+      The user name for authentication.
+    </property>
+
+    <property name="idle-timeout" type="duration" value="[discovered]">
+      The time after which an idle connection expires.
+    </property>
+  </group>
+
+  <group name="resource-limits">
+    <property name="max-sessions" type="ushort" value="[discovered]">
+      The maximum active sessions allowed.
+    </property>
+    
+    <property name="max-frame-size" type="uint" value="[discovered]">
+      The maximum frame size allowed.
+    </property>
   </group>
 </class>

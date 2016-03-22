@@ -16,7 +16,15 @@
 
     @link.xml@
 
+    @sender.xml@
+
+    @receiver.xml@
+
     @terminus.xml@
+
+    @source.xml@
+
+    @target.xml@
 
     @message.xml@
 
@@ -34,7 +42,15 @@
     
     @link-options.xml@
 
+    @sender-options.xml@
+
+    @receiver-options.xml@
+
     @terminus-options.xml@
+
+    @source-options.xml@
+
+    @target-options.xml@
   </group>
 
   <group name="events">

@@ -1,9 +1,9 @@
-<class name="link-options" type="endpoint-options">
+<class name="link-options" type="endpoint-options" hidden="true">
   Options for new links.
   
   <link node="link"/>
-  <link node="/proton/core/container/open-receiver"/>
-  <link node="/proton/core/container/open-sender"/>
+  <link node="sender-options"/>
+  <link node="receiver-options"/>
   <link node="terminus-options"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
@@ -17,28 +17,19 @@
     <property name="target" type="terminus-options">
       Options for the link target.
     </property>
-    
+
+    <property name="auto-settle" type="boolean" value="true" mutable="true" proposed="true">
+      Automatically settle deliveries.
+
+      <link node="/proton/core/delivery/settle"/>
+    </property>
+
     <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">
       Control the message delivery guarantee.
     </property>
 
     <property name="name" type="string" value="[generated]" mutable="true">
       The name of the link.
-    </property>
-
-    <method name="constructor" special="true">
-      Create a new link-options instance.
-      
-      <output type="link-options"/>
-    </method>
-  </group>
-
-  <group name="flow-control">
-    <property name="message-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">
-      Maintain credit for the given number of messages.
-
-      <link node="/proton/core/link/credit"/>
-      <link node="/proton/core/receiver/add-credit"/>
     </property>
   </group>
 

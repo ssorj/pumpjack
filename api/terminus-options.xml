@@ -1,5 +1,5 @@
-<class name="terminus-options">
-  Source and target options.
+<class name="terminus-options" hidden="true">
+  The base class for source-options and target-options.
 
   <link node="terminus"/>
   <link node="/proton/core/link-options/source"/>
@@ -16,21 +16,6 @@
 
     <property name="durability-mode" type="durability-mode" value="NONE" mutable="true" proposed="true">
       Control the persistence of source or target state.
-    </property>
-  </group>
-
-  <group name="source-properties" title="Source properties">
-    These options affect link sources only.
-
-    <property name="distribution-mode" type="distribution-mode" value="MOVE" mutable="true">
-      Control whether messsages are browsed or consumed.  This
-      is a receiver-only option.
-    </property>
-    
-    <property name="filters" type="map" key-type="symbol" item-type="string" mutable="true" nullable="true" proposed="true">
-      Select messages by criteria.
-      
-      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
     </property>
   </group>
 

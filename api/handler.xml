@@ -7,15 +7,19 @@
   <link node="/proton/core/endpoint-options/handler"/>
 
   <group name="common" title="Common-case application events">
-    <method name="on-start">
-      The event loop is started.
+    <method name="on-container-start">
+      The container event loop is started.
+
+      <link node="/proton/core/container/run"/>
       
       <input name="event" type="event"/>
       <input name="container" type="container"/>
     </method>
 
-    <method name="on-stop" proposed="true">
-      The event loop is stopped.
+    <method name="on-container-stop" proposed="true">
+      The container event loop is stopped.
+      
+      <link node="/proton/core/container/stop"/>
       
       <input name="event" type="event"/>
       <input name="container" type="container"/>
@@ -23,6 +27,8 @@
 
     <method name="on-message">
       A message is received.
+
+      <link node="/proton/core/sender/send"/>
       
       <input name="event" type="event"/>
       <input name="message" type="message"/>
@@ -33,6 +39,9 @@
       
       The sender has credit and messages can therefore be
       transferred.
+      
+      <link node="/proton/core/link-state/credit"/>
+      <link node="/proton/core/sender/send"/>
       
       <input name="event" type="event"/>
       <input name="sender" type="sender"/>
@@ -61,6 +70,9 @@
   <group name="endpoint-state-group">
     <method name="on-connection-open">
       The remote peer opened the connection.
+
+      <link node="/proton/core/container/connect"/>
+      <link node="/proton/core/connection/open"/>
       
       <input name="event" type="event"/>
       <input name="connection" type="connection"/>
@@ -69,6 +81,8 @@
     <method name="on-connection-close">
       The remote peer closed the connection.
       
+      <link node="/proton/core/connection/close"/>
+
       <input name="event" type="event"/>
       <input name="connection" type="connection"/>
     </method>
@@ -77,6 +91,8 @@
       The remote peer closed the connection with an error
       condition.
       
+      <link node="/proton/core/connection/close"/>
+      
       <input name="event" type="event"/>
       <input name="connection" type="connection"/>
     </method>
@@ -84,12 +100,16 @@
     <method name="on-session-open">
       The remote peer opened the session.
       
+      <link node="/proton/core/session/open"/>
+      
       <input name="event" type="event"/>
       <input name="session" type="session"/>
     </method>
     
     <method name="on-session-close">
       The remote peer closed the session.
+      
+      <link node="/proton/core/session/close"/>
       
       <input name="event" type="event"/>
       <input name="session" type="session"/>
@@ -99,36 +119,66 @@
       The remote peer closed the session with an error
       condition.
       
+      <link node="/proton/core/session/close"/>
+      
       <input name="event" type="event"/>
       <input name="session" type="session"/>
     </method>
 
-    <method name="on-link-open">
-      The remote peer opened the link.
+    <method name="on-sender-open">
+      The remote peer opened the sender.
       
       <input name="event" type="event"/>
-      <input name="link" type="link"/>
+      <input name="sender" type="sender"/>
     </method>
 
-    <method name="on-link-detach" proposed="true">
-      The remote peer detached the link.
+    <method name="on-sender-detach" proposed="true">
+      The remote peer detached the sender.
       
       <input name="event" type="event"/>
-      <input name="link" type="link"/>
+      <input name="sender" type="sender"/>
     </method>
      
-    <method name="on-link-close">
-      The remote peer closed the link.
+    <method name="on-sender-close">
+      The remote peer closed the sender.
       
       <input name="event" type="event"/>
-      <input name="link" type="link"/>
+      <input name="sender" type="sender"/>
     </method>
      
-    <method name="on-link-error">
-      The remote peer closed the link with an error condition.
+    <method name="on-sender-error">
+      The remote peer closed the sender with an error condition.
       
       <input name="event" type="event"/>
-      <input name="link" type="link"/>
+      <input name="sender" type="sender"/>
+    </method>
+
+    <method name="on-receiver-open">
+      The remote peer opened the receiver.
+      
+      <input name="event" type="event"/>
+      <input name="receiver" type="receiver"/>
+    </method>
+
+    <method name="on-receiver-detach" proposed="true">
+      The remote peer detached the receiver.
+      
+      <input name="event" type="event"/>
+      <input name="receiver" type="receiver"/>
+    </method>
+     
+    <method name="on-receiver-close">
+      The remote peer closed the receiver.
+      
+      <input name="event" type="event"/>
+      <input name="receiver" type="receiver"/>
+    </method>
+     
+    <method name="on-receiver-error">
+      The remote peer closed the receiver with an error condition.
+      
+      <input name="event" type="event"/>
+      <input name="receiver" type="receiver"/>
     </method>
   </group>
 

@@ -1,9 +1,10 @@
-<class name="session" type="endpoint">
+<class name="session" type="session-state">
   A container of links.
 
   <link node="session-options"/>
   <link node="connection"/>
-  <link node="link"/>
+  <link node="sender"/>
+  <link node="receiver"/>
   
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
@@ -14,6 +15,18 @@
       The containing connection.
     </property>
 
+    <property name="links" type="iterator" item-type="link">
+      Get the links contained in this session.
+    </property>
+
+    <property name="deliveries" type="iterator" item-type="delivery">
+      Get the deliveries contained in this session.
+    </property>
+    
+    <property name="remote" type="session-state">
+      Session properties at the remote peer.
+    </property>
+    
     <method name="open">
       Open the session.
 
@@ -62,28 +75,28 @@
   </group>
   
   <group name="link-operations">
-    <method name="open-receiver">
-      Create and open a receiving link.
-
-      The operation is complete when on-link-open fires.
-
-      <link node="/proton/core/handler/on-link-open"/>
-      
-      <input name="address" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="receiver" type="receiver"/>
-    </method>
-
     <method name="open-sender">
       Create and open a sending link.
 
-      The operation is complete when on-link-open fires.
+      The operation is complete when on-sender-open fires.
 
-      <link node="/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-sender-open"/>
 
       <input name="address" type="string"/>
       <input name="options" type="link-options" optional="true"/>
       <output name="sender" type="sender"/>
+    </method>
+    
+    <method name="open-receiver">
+      Create and open a receiving link.
+
+      The operation is complete when on-receiver-open fires.
+
+      <link node="/proton/core/handler/on-receiver-open"/>
+      
+      <input name="address" type="string"/>
+      <input name="options" type="link-options" optional="true"/>
+      <output name="receiver" type="receiver"/>
     </method>
   </group>
 
@@ -96,28 +109,16 @@
       The number of outgoing bytes currently buffered.
     </property>
   </group>
+</class>
 
-  <group name="endpoint-state-group">
-    <property name="remote-incoming-window" type="uint" value="[discovered]">
+<class name="session-state" type="endpoint-state" hidden="true">
+  <group name="resource-limits">
+    <property name="incoming-window" type="uint" value="[discovered]">
       The remote peer's max number of incoming transfer frames.
     </property>
     
-    <property name="remote-outgoing-window" type="uint" value="[discovered]">
+    <property name="outgoing-window" type="uint" value="[discovered]">
       The remote peer's max number of outgoing transfer frames.
     </property>
-  </group>
-
-  <group name="events">
-    <method name="links">
-      Get the links contained in this session.
-      
-      <output name="links" type="iterator" item-type="link"/>
-    </method>
-
-    <method name="deliveries">
-      Get the deliveries contained in this session.
-
-      <output name="deliveries" type="iterator" item-type="delivery"/>
-    </method>
   </group>
 </class>

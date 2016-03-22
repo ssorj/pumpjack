@@ -9,19 +9,24 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-open">Open performative</link>
 
   <group name="basic">
+    <method name="constructor" special="true">
+      Create a new connection-options instance.
+      
+      <output type="connection-options"/>
+    </method>
+  </group>
+  
+  <group name="endpoint-state-group">
     <property name="container-id" type="string" value="[generated]" mutable="true">
       The connection container identifier.
     </property>
     
     <property name="virtual-host" type="string" mutable="true" nullable="true">
       The virtual host name.
-    </property>
 
-    <method name="constructor" special="true">
-      Create a new connection-options instance.
-      
-      <output type="connection-options"/>
-    </method>
+      This value is also the host name used to match the server's SSL
+      certificate if you are using SSL with VERIFY_PEER_NAME.
+    </property>
   </group>
 
   <group name="security">

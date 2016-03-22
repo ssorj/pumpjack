@@ -41,6 +41,7 @@
       Start processing events.  It returns when all connections
       and acceptors are closed or the container is stopped.
 
+      <link node="/proton/core/handler/on-container-start"/>
       <link node="/proton/core/connection/close"/>
       <link node="acceptor"/>
     </method>
@@ -50,7 +51,7 @@
 
       The operation is complete when on-stop fires.
 
-      <link node="/proton/core/handler/on-stop"/>
+      <link node="/proton/core/handler/on-container-stop"/>
     </method>
   </group>
 
@@ -121,10 +122,6 @@
     <method name="listen">
       Listen for incoming connections.
       
-      The operation is complete when on-link-open fires.
-
-      <link node="/proton/core/handler/on-link-open"/>
-      
       <input name="url" type="string"/>
       <input name="options" type="connection-options" optional="true"/>
       <output name="acceptor" type="acceptor"/>
@@ -135,9 +132,9 @@
     <method name="open-receiver">
       Create and open a receiving link.
       
-      The operation is complete when on-link-open fires.
+      The operation is complete when on-receiver-open fires.
 
-      <link node="/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-receiver-open"/>
       
       <input name="url" type="string"/>
       <input name="options" type="link-options" optional="true"/>
@@ -147,9 +144,9 @@
     <method name="open-sender">
       Create and open a sending link.
 
-      The operation is complete when on-link-open fires.
+      The operation is complete when on-sender-open fires.
 
-      <link node="/proton/core/handler/on-link-open"/>
+      <link node="/proton/core/handler/on-sender-open"/>
       
       <input name="url" type="string"/>
       <input name="options" type="link-options" optional="true"/>

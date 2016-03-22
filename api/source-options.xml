@@ -1,0 +1,21 @@
+<class name="source-options" type="terminus-options">
+  Options for new sources.
+  
+  <link node="source"/>
+  <link node="/proton/core/link-options/source"/>
+    
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+
+  <group name="basic">
+    <property name="distribution-mode" type="distribution-mode" value="MOVE" mutable="true">
+      Control whether messsages are browsed or consumed.
+    </property>
+    
+    <property name="filters" type="map" key-type="symbol" item-type="string" mutable="true" nullable="true" proposed="true">
+      Select messages by criteria.
+      
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
+    </property>
+  </group>
+</class>

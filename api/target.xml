@@ -1,0 +1,19 @@
+<class name="target" type="target-state">
+  A destination for messages.
+  
+  <link node="terminus-options"/>
+  <link node="source"/>
+  <link node="/proton/core/link/target"/>
+
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+
+  <group name="endpoint-state-group">
+    <property name="remote" type="target-state">
+      Target properties at the remote peer.
+    </property>
+  </group>
+</class>
+
+<class name="target-state" type="terminus-state" hidden="true">
+</class>

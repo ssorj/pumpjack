@@ -1,14 +1,9 @@
-<class name="link" type="endpoint">
-  A channel for sending or receiving messages.  A link can be a sender
-  or a receiver, but never both.  A link contains an ordered sequence
-  of delivery objects.
+<class name="link" type="link-state" internal="true">
+  The base class for sender and receiver.
 
   <link node="link-options"/>
-  <link node="session"/>
   <link node="sender"/>
   <link node="receiver"/>
-  <link node="delivery"/>
-  <link node="terminus"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
@@ -18,172 +13,51 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
 
   <group name="basic">
-    <property name="type" type="link-type" value="[discovered]">
-      SENDER or RECEIVER.
-    </property>
-    
-    <property name="session" type="session" value="[instance]">
+    <property name="session" type="session">
       The containing session.
     </property>
+    
+    <property name="source" type="terminus">
+      Get the link source.
+    </property>
+    
+    <property name="target" type="terminus">
+      Get the link target.
+    </property>
+  
+    <property name="deliveries" type="iterator" item-type="delivery">
+      Get the deliveries contained in this link.
+    </property>
+  </group>
+</class>
 
-    <property name="name" type="string" value="[generated]">
+<class name="link-state" type="endpoint-state" hidden="true">
+  <group name="endpoint-state-group">
+    <property name="name" type="string" value="[discovered]">
       The link name.
     </property>
-
-    <method name="open">
-      Open the link.
-
-      The operation is complete when on-link-open fires.
-
-      <link node="/proton/core/handler/on-link-open"/>
-
-      <input name="options" type="link-options" optional="true"/>
-    </method>
-    
-    <method name="close">
-      Close the link.
-
-      The operation is complete when on-link-close fires.
-      
-      <link node="/proton/core/handler/on-link-close"/>
-      
-      <input name="condition" type="condition" optional="true"/>
-    </method>
-
-    <method name="detach">
-      Detach the link without closing it.  For durable
-      subscriptions this means the subscription is inactive but
-      not canceled.
-      
-      The operation is complete when on-link-detach fires.
-      
-      <link node="/proton/core/handler/on-link-detach"/>
-      
-      <input name="condition" type="condition" optional="true"/>
-    </method>
   </group>
-
+    
+  <group name="reliability">
+    <property name="delivery-mode" type="delivery-mode" value="[discovered]">
+      The message delivery guarantee.
+    </property>
+  </group>
+  
   <group name="flow-control">
-    <property name="credit" type="uint" value="[discovered]" proposed="true">
+    <link node="/proton/core/receiver/add-credit"/>
+    <link node="/proton/core/receiver-options/credit-window"/>
+      
+    <property name="credit" type="long" value="[discovered]">
       The number of messages the receiving end can accept.
 
-      <link node="/proton/core/receiver/add-credit"/>
-      <link node="/proton/core/link-options/message-window"/>
-    </property>
-
-    <!--
-    <property name="local-credit" type="long" value="[discovered]">
-      The local view of the total outstanding credit on the link.
-
       Each whole integer of credit permits one message transfer.
     </property>
-
-    <property name="remote-credit" type="long" value="[discovered]">
-      The remote view of the total outstanding credit on the link.
-
-      Each whole integer of credit permits one message transfer.
-    </property>
-    -->
-  </group>
-
-  <group name="endpoint-state-group">
-    <property name="remote-source" type="terminus" value="[discovered]">
-      The properties of the link source at the remote peer.
-    </property>
-    
-    <property name="remote-target" type="terminus" value="[discovered]">
-      The properties of the link target at the remote peer.
-    </property>
-    
-    <property name="remote-delivery-mode" type="delivery-mode" value="[discovered]">
-      The message delivery guarantee at the remote peer.
-    </property>
-    
-    <property name="remote-max-message-size" type="ulong" value="[discovered]" nullable="true">
-      The maximum message size allowed by the remote peer.
-    </property>
-  </group>
-
-  <group name="events">
-    <method name="deliveries">
-      Get the deliveries contained in this link.
-      
-      <output name="deliveries" type="iterator" item-type="delivery"/>
-    </method>
-  </group>
-</class>
-
-<class name="receiver" type="link">
-  A link for receiving messages.
-
-  <link node="sender"/>
-  <link node="link"/>
-  <link node="link-options"/>
-
-  <group name="basic">
   </group>
   
-  <group name="flow-control">
-    <method name="add-credit" proposed="true">
-      Issue credit to the sending end.  This increases the credit
-      issued to the remote sender by the specified number of messages.
-
-      <link node="/proton/core/link/credit"/>
-      <link node="/proton/core/link-options/message-window"/>
-      
-      <input name="count" type="uint"/>
-    </method>
-
-    <method name="flush" proposed="true">
-      Request any messages available at the sending end.  This tells
-      the sender to use all existing credit immediately to send
-      deliveries and then discard any excess credit.
-
-      The sending end is notified of the flush request by the
-      *on-sender-flush* event.  The operation is complete when
-      *on-receiver-flush* fires.
-
-      <link node="/proton/core/handler/on-sender-flush"/>
-      <link node="/proton/core/handler/on-receiver-flush"/>
-    </method>
+  <group name="resource-limits">
+    <property name="max-message-size" type="ulong" value="[discovered]" nullable="true">
+      The maximum message size.
+    </property>
   </group>
 </class>
-
-<class name="sender" type="link">
-  A link for sending messages.
-
-  <link node="receiver"/>
-  <link node="link"/>
-  <link node="link-options"/>
-  
-  <group name="message-operations">
-    <method name="send">
-      Send a message on the link.
-
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
-    </method>
-
-    <method name="send-request" proposed="true">
-      Send a request message.  The message reply-to property is
-      set automatically.
-
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
-    </method>
-    
-    <method name="send-response" proposed="true">
-      Send a response message.  The message address and
-      correlation-id properties are set automatically.
-
-      <input name="response" type="message"/>
-      <input name="request" type="message"/>
-      <output name="delivery" type="delivery"/>
-    </method>
-  </group>
-</class>
-
-<enumeration name="link-type">
-  <value name="SENDER"/>
-  <value name="RECEIVER"/>
-</enumeration>

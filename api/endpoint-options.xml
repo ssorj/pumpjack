@@ -1,8 +1,7 @@
-<class name="endpoint-options">
+<class name="endpoint-options" internal="true">
   The base class for connection-options, session-options, and
   link-options.
 
-  <link node="endpoint"/>
   <link node="connection-options"/>
   <link node="session-options"/>
   <link node="link-options"/>

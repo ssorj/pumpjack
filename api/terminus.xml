@@ -1,44 +1,27 @@
-<class name="terminus">
-  A source or target for messages.
+<class name="terminus" internal="true">
+  The base class for source and target.
 
   <link node="terminus-options"/>
-  <link node="/proton/core/link/remote-source"/>
-  <link node="/proton/core/link/remote-target"/>
+  <link node="source"/>
+  <link node="target"/>
+</class>
 
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
-    
-  <group name="basic">
-    <property name="type" type="terminus-type" value="[discovered]">
-      SOURCE or TARGET.
-    </property>
-
+<class name="terminus-state" hidden="true">
+  <group name="endpoint-state-group">
     <property name="address" type="string" value="[discovered]" nullable="true">
-      The address of the message source or target.
+      The address of the source or target.
     </property>
+  </group>
 
+  <group name="reliability">
     <property name="durability-mode" type="durability-mode" value="[discovered]">
       The persistence mode of the source or target.
     </property>
   </group>
     
-  <group name="source-properties" title="Source properties">
-    <property name="distribution-mode" type="distribution-mode" value="[discovered]">
-      The message distribution mode at the remote peer.  This is a
-      source-only option.
-    </property>
-    
-    <property name="filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true" proposed="true">
-      Filters set by the remote peer.  This is a source-only option.
-      
-      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
-    </property>
-  </group>
-
   <group name="dynamic-nodes" title="Dynamic nodes">
     <property name="dynamic" type="boolean" value="[discovered]">
-      On-demand creation of a source or target at the remote peer.
+      On-demand creation of a source or target.
     </property>
 
     <property name="properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true" proposed="true">
@@ -62,8 +45,3 @@
     </property>
   </group>
 </class>
-
-<enumeration name="terminus-type">
-  <value name="SOURCE"/>
-  <value name="TARGET"/>
-</enumeration>

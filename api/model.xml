@@ -75,6 +75,9 @@
   <group-definition name="events" title="Event processing">
   </group-definition>
 
+  <group-definition name="reliability" title="Reliability">
+  </group-definition>
+
   <group-definition name="errors" title="Error handling">
   </group-definition>
 

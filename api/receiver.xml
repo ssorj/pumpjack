@@ -1,0 +1,77 @@
+<class name="receiver" type="receiver-state">
+  A channel for receiving messages.  A receiver contains an ordered
+  sequence of deliveries.
+
+  <link node="receiver-options"/>
+  <link node="session"/>
+  <link node="sender"/>
+  <link node="delivery"/>
+  <link node="terminus"/>
+
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-detach">Detach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-flow">Flow performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
+  
+  <group name="basic">
+    <method name="open">
+      Open the receiver.
+
+      <link node="/proton/core/handler/on-receiver-open"/>
+
+      <input name="options" type="receiver-options" optional="true"/>
+    </method>
+    
+    <method name="close">
+      Close the receiver.
+
+      The operation is complete when on-receiver-close fires.
+      
+      <link node="/proton/core/handler/on-receiver-close"/>
+      
+      <input name="condition" type="condition" optional="true"/>
+    </method>
+
+    <method name="detach">
+      Detach the receiver without closing it.  For durable
+      subscriptions this means the subscription is inactive but not
+      canceled.
+      
+      The operation is complete when on-receiver-detach fires.
+      
+      <link node="/proton/core/handler/on-receiver-detach"/>
+      
+      <input name="condition" type="condition" optional="true"/>
+    </method>
+  </group>
+    
+  <group name="flow-control">
+    <link node="/proton/core/link-state/credit"/>
+    <link node="/proton/core/receiver-options/credit-window"/>
+      
+    <method name="add-credit" proposed="true">
+      Issue credit to the sending end.  This increases the credit
+      issued to the remote sender by the specified number of messages.
+
+      <input name="count" type="uint"/>
+    </method>
+
+    <method name="flush" proposed="true">
+      Request any messages available at the sending end.  This tells
+      the sender to use all existing credit immediately to send
+      deliveries and then discard any excess credit.
+
+      The sending end is notified of the flush request by the
+      *on-sender-flush* event.  The operation is complete when
+      *on-receiver-flush* fires.
+
+      <link node="/proton/core/handler/on-sender-flush"/>
+      <link node="/proton/core/handler/on-receiver-flush"/>
+    </method>
+  </group>
+</class>
+
+<class name="receiver-state" type="link-state" hidden="true">
+</class>

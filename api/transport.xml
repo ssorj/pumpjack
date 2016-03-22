@@ -13,5 +13,7 @@
     <property name="condition" type="condition">
       Get the error condition.
     </property>
+
+    <!-- local-port? -->
   </group>
 </class>

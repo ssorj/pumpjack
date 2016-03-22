@@ -1,4 +1,5 @@
-<class name="endpoint">
+<!--
+<class name="endpoint" internal="true">
   The base class for connection, session, and link.
 
   Every AMQP endpoint starts out in an uninitialized state and
@@ -18,52 +19,43 @@
   <link node="link"/>
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">Conceptual overview</link>
-  
+</class>
+-->
+
+<class name="endpoint-state" hidden="true">
   <group name="endpoint-state-group">
-    <property name="local-uninitialized" type="boolean" value="[discovered]">
+    <property name="uninitialized" type="boolean" value="[discovered]">
       The local endpoint is uninitialized.
     </property>
 
-    <property name="remote-uninitialized" type="boolean" value="[discovered]">
-      The remote endpoint is uninitialized.
-    </property>
-
-    <property name="local-active" type="boolean" value="[discovered]">
+    <property name="active" type="boolean" value="[discovered]">
       The local endpoint is active.
     </property>
 
-    <property name="remote-active" type="boolean" value="[discovered]">
-      The remote endpoint is active.
-    </property>
-
-    <property name="local-closed" type="boolean" value="[discovered]">
+    <property name="closed" type="boolean" value="[discovered]">
       The local endpoint is closed.
     </property>
-    
-    <property name="remote-closed" type="boolean" value="[discovered]">
-      The remote endpoint is closed.
-    </property>
 
-    <!--
-    <property name="local-condition" type="condition" nullable="true">
+    <property name="condition" type="condition" nullable="true">
       The error condition of the local peer.
     </property>
-    -->
-    
-    <property name="remote-condition" type="condition" value="[discovered]" nullable="true">
-      The error condition of the remote peer.
+
+    <property name="remote" type="endpoint-state">
+      Properties at the remote endpoint.
     </property>
-    
-    <property name="remote-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
-      Application properties defined by the remote peer.
+  </group>
+
+  <group name="extended-attributes">
+    <property name="properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
+      Application-defined properties.
     </property>
 
-    <property name="remote-offered-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
-      Extensions the remote peer supports.
+    <property name="offered-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
+      Supported extensions.
     </property>
     
-    <property name="remote-desired-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
-      Extensions the remote peer can use.
+    <property name="desired-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
+      Desired extensions.
     </property>
   </group>
 </class>

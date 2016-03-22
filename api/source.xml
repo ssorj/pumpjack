@@ -1,0 +1,31 @@
+<class name="source" type="source-state">
+  A source of messages.
+
+  <link node="target"/>
+  <link node="terminus-options"/>
+  <link node="/proton/core/link/source"/>
+
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+
+  <group name="endpoint-state-group">
+    <property name="remote" type="source-state">
+      Source properties at the remote peer.
+    </property>
+  </group>
+</class>
+
+<class name="source-state" type="terminus-state" hidden="true">
+  <group name="message-distribution" title="Message distribution">
+    <property name="distribution-mode" type="distribution-mode" value="[discovered]">
+      The message distribution mode at the remote peer.
+    </property>
+    
+    <property name="filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true" proposed="true">
+      Filters set by the remote peer.
+      
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
+    </property>
+  </group>
+</class>
