@@ -18,6 +18,7 @@
 #
 
 from collections import defaultdict as _defaultdict
+from collections import OrderedDict as _OrderedDict
 from pencil import *
 
 import os as _os
@@ -80,17 +81,17 @@ class Node:
     def abstract_path(self):
         raise NotImplementedError()
 
-    def process(self):
+    def process_node(self):
         print("Processing {}".format(self))
         
-        self.process_properties()
-        self.process_text()
-        self.process_annotations()
+        self.process_node_attributes()
+        self.process_node_text()
+        self.process_node_annotations()
 
         for child in self.children:
-            child.process()
+            child.process_node()
         
-    def process_properties(self):
+    def process_node_attributes(self):
         self.title = self.element.attrib.get("title")
 
         self.special = self.element.attrib.get("special", "false") == "true"
@@ -102,7 +103,7 @@ class Node:
         self.experimental = self.element.attrib.get \
                             ("experimental", "false") == "true"
         
-    def process_text(self):
+    def process_node_text(self):
         text = self.element.text
 
         if text:
@@ -111,7 +112,7 @@ class Node:
         if text != "":
             self.text = text
 
-    def process_annotations(self):
+    def process_node_annotations(self):
         for child in self.element.findall("annotation"):
             self.annotations[child.attrib["name"]] = child.text
             
@@ -174,6 +175,10 @@ class Node:
             if isinstance(ancestor, cls):
                 return ancestor
 
+    def process_model(self):
+        for child in self.children:
+            child.process_model()
+
 class Group(Node):
     def process_references(self):
         super().process_references()
@@ -202,12 +207,12 @@ class Module(Node):
     def abstract_path(self):
         return (self.name,)
 
-    def process(self):
+    def process_node(self):
         for child in self.element.findall("group"):
             group = ModuleMemberGroup(child, self)
             self.groups.append(group)
 
-        super().process()
+        super().process_node()
 
     def find_member(self, ref):
         assert not ref.startswith("/")
@@ -225,7 +230,7 @@ class ModuleMemberGroup(Group):
         self.classes = list()
         self.enumerations = list()
 
-    def process(self):
+    def process_node(self):
         for child in self.element.findall("class"):
             cls = Class(child, self)
             self.classes.append(cls)
@@ -236,7 +241,7 @@ class ModuleMemberGroup(Group):
             self.enumerations.append(enum)
             self.module.enumerations.append(enum)
 
-        super().process()
+        super().process_node()
 
 class ModuleMember(Node):
     def __init__(self, element, parent):
@@ -262,24 +267,66 @@ class Class(ModuleMember):
         self.properties = list()
         self.methods = list()
 
-    def process_properties(self):
-        super().process_properties()
+        self.classes = None # Computed
+        self.virtual_properties = None # Computed
+        self.virtual_methods = None # Computed
+        
+    def process_node_attributes(self):
+        super().process_node_attributes()
 
         self.type = self.element.attrib.get("type")
         
-    def process(self):
+    def process_node(self):
         for child in self.element.findall("group"):
             group = ClassMemberGroup(child, self)
+
             self.groups.append(group)
             self.groups_by_name[group.name] = group
 
-        super().process()
+        super().process_node()
 
     def process_references(self):
         super().process_references()
 
         if self.type is not None:
             self.type = self.resolve_reference(self.type)
+
+    def process_model(self):
+        super().process_model()
+
+        self.classes = self._classes()
+        self.virtual_properties = self._virtual_properties()
+        self.virtual_methods = self._virtual_methods()
+        
+    def _classes(self):
+        cls = self
+        classes = [cls]
+
+        while cls.type is not None:
+            classes.append(cls.type)
+            cls = cls.type
+
+        classes.reverse()
+            
+        return classes
+        
+    def _virtual_properties(self):
+        props = _OrderedDict()
+        
+        for cls in self.classes:
+            for prop in cls.properties:
+                props[prop.name] = prop
+
+        return props.values()
+
+    def _virtual_methods(self):
+        meths = _OrderedDict()
+        
+        for cls in self.classes:
+            for meth in cls.methods:
+                meths[meth.name] = meth
+
+        return meths.values()
 
 class ClassMemberGroup(Group):
     def __init__(self, element, parent):
@@ -290,19 +337,31 @@ class ClassMemberGroup(Group):
         self.properties = list()
         self.methods = list()
 
-    def process(self):
+    def process_node(self):
         for child in self.element.findall("property"):
             prop = Property(child, self)
+
             self.properties.append(prop)
             self.class_.properties.append(prop)
 
         for child in self.element.findall("method"):
             meth = Method(child, self)
+
             self.methods.append(meth)
             self.class_.methods.append(meth)
 
-        super().process()
-        
+        super().process_node()
+
+    @property
+    def virtual_properties(self):
+        return [x for x in self.class_.virtual_properties
+                if x.parent.name == self.name]
+
+    @property
+    def virtual_methods(self):
+        return [x for x in self.class_.virtual_methods
+                if x.parent.name == self.name]
+    
 class ClassMember(Node):
     def __init__(self, element, parent):
         super().__init__(element, parent)
@@ -327,8 +386,8 @@ class Parameter(Node):
         self.value = self.element.attrib.get("value")
         self.nullable = self.element.attrib.get("nullable", "false") == "true"
 
-    def process_properties(self):
-        super().process_properties()
+    def process_node_attributes(self):
+        super().process_node_attributes()
 
         if self.value is None and not self.nullable:
             self.value = "[instance]"
@@ -363,7 +422,7 @@ class Method(ClassMember):
             assert self.class_.constructor is None, self.class_.constructor
             self.class_.constructor = self
 
-    def process(self):
+    def process_node(self):
         for child in self.element.findall("input"):
             input = MethodInput(child, self)
             self.inputs.append(input)
@@ -376,7 +435,7 @@ class Method(ClassMember):
             cond = ErrorCondition(child, self)
             self.error_conditions.append(cond)
 
-        super().process()
+        super().process_node()
 
 class MethodInput(Parameter):
     def __init__(self, element, parent):
@@ -393,12 +452,12 @@ class Enumeration(ModuleMember):
 
         self.values = list()
 
-    def process(self):
+    def process_node(self):
         for child in self.element.findall("value"):
             value = EnumerationValue(child, self)
             self.values.append(value)
         
-        super().process()
+        super().process_node()
 
 class EnumerationValue(Node):
     def __init__(self, element, parent):
@@ -436,6 +495,11 @@ class Model(Node):
         return ()
 
     def process(self):
+        self.process_node()
+        self.process_references()
+        self.process_model()
+    
+    def process_node(self):
         for child in self.element.findall("module"):
             module = Module(child, self)
             self.modules.append(module)
@@ -450,6 +514,6 @@ class Model(Node):
 
             self.link_generators.append(func)
 
-        super().process()
+        super().process_node()
 
 from .linkgenerators import *

@@ -253,11 +253,10 @@ class HtmlRenderer(Renderer):
         
         print("Rendering {} to {}".format(cls, path))
 
-        classes = _get_classes(cls)
         groups = _collections.OrderedDict()
         basic_group = None
-                
-        for c in classes:
+
+        for c in cls.classes:
             for group in c.groups:
                 if group.name == "basic":
                     basic_group = group
@@ -295,25 +294,12 @@ class HtmlRenderer(Renderer):
         self.render_node_title(out, group)
         self.render_node_doc(out, group)
 
-        classes = _get_classes(cls)
-        properties = list()
-        methods = list()
-
-        for c in reversed(classes):
-            try:
-                group = c.groups_by_name[group.name]
-            except KeyError:
-                continue
-            
-            properties.extend(group.properties)
-            methods.extend(group.methods)
-
-        if properties:
+        if group.virtual_properties:
             items = list()
             items.append(("Property", "Summary", "Type", "Default value",
                           "Mutable", "Nullable"))
 
-            for prop in properties:
+            for prop in group.virtual_properties:
                 if prop.hidden or prop.internal:
                     continue
                 
@@ -328,11 +314,11 @@ class HtmlRenderer(Renderer):
 
             out.write(html_table(items, class_="pumpjack properties"))
 
-        if methods:
+        if group.virtual_methods:
             items = list()
             items.append(("Method", "Summary", "Inputs", "Outputs"))
                             
-            for meth in methods:
+            for meth in group.virtual_methods:
                 if meth.hidden or meth.internal:
                     continue
                 
@@ -469,13 +455,3 @@ def _boolean_text(value):
         value = value == "true"
     
     return "Yes" if value else "No"
-
-def _get_classes(cls):
-    classes = list()
-    current = cls
-
-    while current is not None:
-        classes.append(current)
-        current = current.type
-
-    return classes

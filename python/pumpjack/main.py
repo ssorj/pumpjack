@@ -40,9 +40,7 @@ class Pumpjack(object):
         elem = _et.fromstring(content)
 
         self.model = Model(elem)
-        
         self.model.process()
-        self.model.process_references()
 
     def merge_content(self, content, input_dir):
         input_files = _os.listdir(input_dir)
