@@ -1,4 +1,4 @@
-<class name="session" type="session-state">
+<class name="session" type="endpoint">
   A container of links.
 
   <link node="session-options"/>
@@ -11,7 +11,7 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
   
   <group name="basic">
-    <property name="connection" type="connection" value="[instance]">
+    <property name="connection" type="connection">
       The containing connection.
     </property>
 
@@ -21,10 +21,6 @@
 
     <property name="deliveries" type="iterator" item-type="delivery">
       The deliveries contained in this session.
-    </property>
-    
-    <property name="remote" type="session-state">
-      Session state at the remote peer.
     </property>
     
     <method name="open">
@@ -109,9 +105,7 @@
       The number of outgoing bytes currently buffered.
     </property>
   </group>
-</class>
-
-<class name="session-state" type="endpoint-state" hidden="true">
+  
   <group name="resource-limits">
     <property name="incoming-window" type="uint" value="[discovered]">
       The maximum incoming transfer frames.

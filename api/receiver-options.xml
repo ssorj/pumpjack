@@ -20,12 +20,13 @@
     <method name="constructor" special="true">
       Create a new receiver-options instance.
       
+      <input type="receiver" optional="true"/>
       <output type="receiver-options"/>
     </method>
   </group>
 
   <group name="flow-control">
-    <link node="/proton/core/link-state/credit"/>
+    <link node="/proton/core/link/credit"/>
     <link node="/proton/core/receiver/add-credit"/>
 
     <property name="credit-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">

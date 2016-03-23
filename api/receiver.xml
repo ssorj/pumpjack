@@ -1,4 +1,4 @@
-<class name="receiver" type="receiver-state">
+<class name="receiver" type="link">
   A channel for receiving messages.  A receiver contains an ordered
   sequence of deliveries.
 
@@ -30,10 +30,6 @@
   
     <property name="deliveries" type="iterator" item-type="delivery">
       The deliveries contained in this link.
-    </property>
-    
-    <property name="remote" type="receiver-state">
-      Receiver state at the remote peer.
     </property>
     
     <method name="open">
@@ -68,7 +64,7 @@
   </group>
     
   <group name="flow-control">
-    <link node="/proton/core/link-state/credit"/>
+    <link node="/proton/core/link/credit"/>
     <link node="/proton/core/receiver-options/credit-window"/>
       
     <method name="add-credit" proposed="true">
@@ -91,7 +87,4 @@
       <link node="/proton/core/handler/on-receiver-flush"/>
     </method>
   </group>
-</class>
-
-<class name="receiver-state" type="link-state" hidden="true">
 </class>

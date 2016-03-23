@@ -1,5 +1,4 @@
-<!--
-<class name="endpoint" internal="true">
+<class name="endpoint" hidden="true">
   The base class for connection, session, and link.
 
   Every AMQP endpoint starts out in an uninitialized state and
@@ -19,10 +18,7 @@
   <link node="link"/>
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">Conceptual overview</link>
-</class>
--->
 
-<class name="endpoint-state" hidden="true">
   <group name="endpoint-lifecycle">
     <property name="uninitialized" type="boolean" value="[discovered]">
       The endpoint is uninitialized.

@@ -1,4 +1,4 @@
-<class name="connection" type="connection-state">
+<class name="connection" type="endpoint">
   A top-level channel for communication.
   
   In current implementations, a connection corresponds to a TCP
@@ -33,10 +33,6 @@
 
     <property name="deliveries" type="iterator" item-type="delivery">
       The deliveries contained in this connection.
-    </property>
-    
-    <property name="remote" type="connection-state">
-      Connection state at the remote peer.
     </property>
     
     <method name="open">
@@ -129,9 +125,7 @@
       <output name="session" type="session"/>
     </method>
   </group>
-</class>
 
-<class name="connection-state" type="endpoint-state" hidden="true">
   <group name="identity">
     <property name="container-id" type="string" value="[discovered]">
       The unique identity of the container.

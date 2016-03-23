@@ -40,7 +40,7 @@
       The sender has credit and messages can therefore be
       transferred.
       
-      <link node="/proton/core/link-state/credit"/>
+      <link node="/proton/core/link/credit"/>
       <link node="/proton/core/sender/send"/>
       
       <input name="event" type="event"/>
@@ -67,7 +67,7 @@
     </method>
   </group>
 
-  <group name="endpoint-state-group">
+  <group name="endpoint-lifecycle">
     <method name="on-connection-open">
       The remote peer opened the connection.
 

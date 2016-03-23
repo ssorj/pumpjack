@@ -1,4 +1,4 @@
-<class name="link" type="link-state" hidden="true">
+<class name="link" hidden="true">
   The base class for sender and receiver.
 
   <link node="link-options"/>
@@ -28,11 +28,7 @@
     <property name="deliveries" type="iterator" item-type="delivery">
       The deliveries contained in this link.
     </property>
-  </group>
-</class>
-
-<class name="link-state" type="endpoint-state" hidden="true">
-  <group name="basic">
+    
     <property name="name" type="string" value="[discovered]">
       The link name.
     </property>

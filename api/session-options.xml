@@ -11,6 +11,7 @@
     <method name="constructor" special="true">
       Create a new session-options instance.
       
+      <input type="session" optional="true"/>
       <output type="session-options"/>
     </method>
   </group>

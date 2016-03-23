@@ -1,12 +1,9 @@
-<class name="terminus" internal="true">
+<class name="terminus" hidden="true">
   The base class for source and target.
 
-  <link node="terminus-options"/>
   <link node="source"/>
   <link node="target"/>
-</class>
 
-<class name="terminus-state" hidden="true">
   <group name="basic">
     <property name="address" type="string" value="[discovered]" nullable="true">
       The address of the source or target.

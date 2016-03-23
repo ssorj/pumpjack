@@ -63,9 +63,6 @@
   <group-definition name="link-operations" title="Link operations">
   </group-definition>
 
-  <group-definition name="endpoint-state-group" title="Endpoint state">
-  </group-definition>
-
   <group-definition name="endpoint-lifecycle" title="Endpoint lifecycle">
   </group-definition>
 
@@ -87,6 +84,9 @@
   <group-definition name="reliability" title="Reliability">
   </group-definition>
 
+  <group-definition name="message-distribution" title="Message distribution">
+  </group-definition>
+  
   <group-definition name="errors" title="Error handling">
   </group-definition>
 

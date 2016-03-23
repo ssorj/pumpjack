@@ -13,6 +13,7 @@
     <method name="constructor" special="true">
       Create a new sender-options instance.
       
+      <input type="sender" optional="true"/>
       <output type="sender-options"/>
     </method>
   </group>

@@ -16,10 +16,6 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
   
   <group name="basic">
-    <property name="remote" type="sender-state">
-      Sender state at the remote peer.
-    </property>
-
     <method name="open">
       Open the sender.
 
@@ -74,7 +70,4 @@
       <output name="delivery" type="delivery"/>
     </method>
   </group>
-</class>
-
-<class name="sender-state" type="link-state" hidden="true">
 </class>

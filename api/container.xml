@@ -68,8 +68,12 @@
       Default options for new sessions.
     </property>
 
-    <property name="link-options" value="[instance]" type="link-options">
-      Default options for new links.
+    <property name="sender-options" value="[instance]" type="sender-options">
+      Default options for new senders.
+    </property>
+
+    <property name="receiver-options" value="[instance]" type="receiver-options">
+      Default options for new receivers.
     </property>
   </group>
 

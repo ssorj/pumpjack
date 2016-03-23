@@ -11,7 +11,8 @@
   <group name="basic">
     <method name="constructor" special="true">
       Create a new connection-options instance.
-      
+
+      <input type="connection" optional="true"/>
       <output type="connection-options"/>
     </method>
   </group>

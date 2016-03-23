@@ -4,7 +4,8 @@
   <link node="link"/>
   <link node="sender-options"/>
   <link node="receiver-options"/>
-  <link node="terminus-options"/>
+  <link node="source-options"/>
+  <link node="target-options"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
@@ -24,7 +25,7 @@
   </group>
 
   <group name="reliability">
-    <property name="auto-settle" type="boolean" value="true" mutable="true" proposed="true">
+    <property name="auto-settle" type="boolean" value="true" mutable="true">
       Automatically settle deliveries.
 
       <link node="/proton/core/delivery/settle"/>

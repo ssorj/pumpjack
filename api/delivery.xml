@@ -16,28 +16,9 @@
       The delivery identifier.
     </property>
 
-    <property name="link" type="link" value="[instance]">
+    <property name="link" type="link">
       The link on which the delivery was sent or received.
     </property>
-  </group>
-
-  <group name="settlement" title="Settlement">
-    Settlement state governs how long a message transfer is
-    tracked at the local and remote peers, and when each can
-    safely consider the transfer resolved, that is "settled".
-    
-    <property name="local-settled" type="boolean" value="false">
-      True if the delivery has been settled locally.
-    </property>
-    
-    <property name="remote-settled" type="boolean" value="false">
-      True if the delivery has been settled by the remote peer.
-    </property>
-
-    <method name="settle">
-      Mark the delivery settled.  A settled delivery can never
-      be used again.
-    </method>
   </group>
 
   <group name="delivery-state" title="Delivery state">
@@ -48,12 +29,8 @@
     
     <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">Conceptual overview</link>
     
-    <property name="local-state" type="delivery-state" value="NONE">
-      The local delivery state.
-    </property>
-    
-    <property name="remote-state" type="delivery-state" value="NONE">
-      The delivery state at the remote peer.
+    <property name="state" type="delivery-state" value="[discovered]">
+      The current delivery state.
     </property>
     
     <method name="accept">
@@ -73,15 +50,19 @@
     </method>
   </group>
 
-  <group name="events" internal="true">
-    <property name="updated" type="boolean" internal="true">
+  <group name="settlement" title="Settlement">
+    Settlement state governs how long a message transfer is
+    tracked at the local and remote peers, and when each can
+    safely consider the transfer resolved, that is "settled".
+    
+    <property name="settled" type="boolean" value="[discovered]">
+      True if the delivery has been settled.
     </property>
-
-    <property name="readable" type="boolean" internal="true">
-    </property>
-
-    <property name="writable" type="boolean" internal="true">
-    </property>
+    
+    <method name="settle">
+      Mark the delivery settled.  A settled delivery can never
+      be used again.
+    </method>
   </group>
 </class>
 
