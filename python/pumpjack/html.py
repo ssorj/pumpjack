@@ -37,7 +37,7 @@ class HtmlRenderer(Renderer):
     def get_node_path(self, node, prefix):
         elems = [prefix]
         elems.extend(node.abstract_path)
-    
+
         if type(node) in (Model, Module, Class):
             elems.append("index")
 
@@ -172,8 +172,18 @@ class HtmlRenderer(Renderer):
                 name = self.get_node_name(link)
                 text = "{} {}".format(init_cap(link.type_name), name)
                 href = self.get_node_href(link)
-                link = text, href
 
+                if type(link) in (Property, Method):
+                    elems = ["{{{{site_url}}}}"]
+                    elems.extend(link.abstract_path)
+                    
+                    path = "/".join(elems[:-1])
+                    fragment = elems[-1]
+                    
+                    href = "{}/index.html#{}".format(path, fragment)
+        
+                link = text, href
+                
             links.append(html_a(link[0], link[1]))
 
         if not links:
