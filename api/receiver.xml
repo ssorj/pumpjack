@@ -16,6 +16,26 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
   
   <group name="basic">
+    <property name="session" type="session">
+      The containing session.
+    </property>
+    
+    <property name="source" type="source">
+      The source end of the link.
+    </property>
+    
+    <property name="target" type="target">
+      The target end of the link.
+    </property>
+  
+    <property name="deliveries" type="iterator" item-type="delivery">
+      The deliveries contained in this link.
+    </property>
+    
+    <property name="remote" type="receiver-state">
+      Receiver state at the remote peer.
+    </property>
+    
     <method name="open">
       Open the receiver.
 

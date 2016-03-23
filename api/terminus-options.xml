@@ -13,12 +13,14 @@
     <property name="address" type="string" mutable="true" nullable="true">
       The address of the message source or target.
     </property>
+  </group>
 
-    <property name="durability-mode" type="durability-mode" value="NONE" mutable="true" proposed="true">
+  <group name="reliability">
+    <property name="durability-mode" type="durability-mode" value="NONE" mutable="true">
       Control the persistence of source or target state.
     </property>
   </group>
-
+    
   <group name="dynamic-nodes" title="Dynamic nodes">
     <property name="dynamic" type="boolean" value="false" mutable="true">
       Request on-demand creation of a node at the remote peer.
@@ -31,7 +33,7 @@
     </property>
   </group>
     
-  <group name="expiration" title="Expiration">
+  <group name="resource-limits">
     <property name="timeout" type="duration" mutable="true" nullable="true">
       The period after which the source or target is discarded.
     </property>

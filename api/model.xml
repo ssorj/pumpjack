@@ -66,6 +66,9 @@
   <group-definition name="endpoint-state-group" title="Endpoint state">
   </group-definition>
 
+  <group-definition name="endpoint-lifecycle" title="Endpoint lifecycle">
+  </group-definition>
+
   <group-definition name="delivery-state" title="Delivery state">
   </group-definition>
 
@@ -73,6 +76,12 @@
   </group-definition>
 
   <group-definition name="events" title="Event processing">
+  </group-definition>
+
+  <group-definition name="identity" title="Identity">
+  </group-definition>
+
+  <group-definition name="expiration" title="Expiration">
   </group-definition>
 
   <group-definition name="reliability" title="Reliability">

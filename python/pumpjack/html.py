@@ -94,7 +94,7 @@ class HtmlRenderer(Renderer):
 
         href = self.get_node_href(node)
         flags = self.get_node_flags(node)
-        link = html_a(node.name, href, class_=class_)
+        link = html_a(node.name, href, class_=class_, id=node.name)
 
         return "{} {}".format(link, flags)
 

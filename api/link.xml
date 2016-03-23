@@ -1,4 +1,4 @@
-<class name="link" type="link-state" internal="true">
+<class name="link" type="link-state" hidden="true">
   The base class for sender and receiver.
 
   <link node="link-options"/>
@@ -17,22 +17,22 @@
       The containing session.
     </property>
     
-    <property name="source" type="terminus">
-      Get the link source.
+    <property name="source" type="source">
+      The source end of the link.
     </property>
     
-    <property name="target" type="terminus">
-      Get the link target.
+    <property name="target" type="target">
+      The target end of the link.
     </property>
   
     <property name="deliveries" type="iterator" item-type="delivery">
-      Get the deliveries contained in this link.
+      The deliveries contained in this link.
     </property>
   </group>
 </class>
 
 <class name="link-state" type="endpoint-state" hidden="true">
-  <group name="endpoint-state-group">
+  <group name="basic">
     <property name="name" type="string" value="[discovered]">
       The link name.
     </property>

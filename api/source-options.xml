@@ -7,7 +7,7 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
 
-  <group name="basic">
+  <group name="message-distribution" title="Message distribution">
     <property name="distribution-mode" type="distribution-mode" value="MOVE" mutable="true">
       Control whether messsages are browsed or consumed.
     </property>

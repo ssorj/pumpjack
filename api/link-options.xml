@@ -10,14 +10,20 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
   
   <group name="basic">
-    <property name="source" type="terminus-options">
+    <property name="source" type="source-options">
       Options for the link source.
     </property>
     
-    <property name="target" type="terminus-options">
+    <property name="target" type="target-options">
       Options for the link target.
     </property>
+    
+    <property name="name" type="string" value="[generated]" mutable="true">
+      The name of the link.
+    </property>
+  </group>
 
+  <group name="reliability">
     <property name="auto-settle" type="boolean" value="true" mutable="true" proposed="true">
       Automatically settle deliveries.
 
@@ -26,10 +32,6 @@
 
     <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">
       Control the message delivery guarantee.
-    </property>
-
-    <property name="name" type="string" value="[generated]" mutable="true">
-      The name of the link.
     </property>
   </group>
 

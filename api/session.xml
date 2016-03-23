@@ -16,15 +16,15 @@
     </property>
 
     <property name="links" type="iterator" item-type="link">
-      Get the links contained in this session.
+      The links contained in this session.
     </property>
 
     <property name="deliveries" type="iterator" item-type="delivery">
-      Get the deliveries contained in this session.
+      The deliveries contained in this session.
     </property>
     
     <property name="remote" type="session-state">
-      Session properties at the remote peer.
+      Session state at the remote peer.
     </property>
     
     <method name="open">
@@ -114,11 +114,11 @@
 <class name="session-state" type="endpoint-state" hidden="true">
   <group name="resource-limits">
     <property name="incoming-window" type="uint" value="[discovered]">
-      The remote peer's max number of incoming transfer frames.
+      The maximum incoming transfer frames.
     </property>
     
     <property name="outgoing-window" type="uint" value="[discovered]">
-      The remote peer's max number of outgoing transfer frames.
+      The maximum outgoing transfer frames.
     </property>
   </group>
 </class>

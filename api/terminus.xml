@@ -7,7 +7,7 @@
 </class>
 
 <class name="terminus-state" hidden="true">
-  <group name="endpoint-state-group">
+  <group name="basic">
     <property name="address" type="string" value="[discovered]" nullable="true">
       The address of the source or target.
     </property>
@@ -29,7 +29,7 @@
     </property>
   </group>
 
-  <group name="expiration" title="Expiration">
+  <group name="resource-limits">
     <property name="timeout" type="duration" value="[discovered]" nullable="true">
       The period after which the source or target is discarded.
     </property>

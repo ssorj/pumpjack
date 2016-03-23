@@ -23,8 +23,20 @@
       The associated transport.
     </property>
 
+    <property name="sessions" type="iterator" item-type="session">
+      The sessions contained in this connection.
+    </property>
+
+    <property name="links" type="iterator" item-type="link">
+      The links contained in this connection.
+    </property>
+
+    <property name="deliveries" type="iterator" item-type="delivery">
+      The deliveries contained in this connection.
+    </property>
+    
     <property name="remote" type="connection-state">
-      Connection properties at the remote peer.
+      Connection state at the remote peer.
     </property>
     
     <method name="open">
@@ -117,30 +129,10 @@
       <output name="session" type="session"/>
     </method>
   </group>
-  
-  <group name="events">
-    <method name="sessions">
-      Get the sessions contained in this connection.
-      
-      <output name="sessions" type="iterator" item-type="session"/>
-    </method>
-
-    <method name="links">
-      Get the links contained in this connection.
-      
-      <output name="links" type="iterator" item-type="link"/>
-    </method>
-
-    <method name="deliveries">
-      Get the deliveries contained in this connection.
-      
-      <output name="deliveries" type="iterator" item-type="delivery"/>
-    </method>
-  </group>
 </class>
 
 <class name="connection-state" type="endpoint-state" hidden="true">
-  <group name="endpoint-state-group">
+  <group name="identity">
     <property name="container-id" type="string" value="[discovered]">
       The unique identity of the container.
     </property>
@@ -150,15 +142,15 @@
     </property>
 
     <property name="user" type="string" value="[discovered]">
-      The user name for authentication.
-    </property>
-
-    <property name="idle-timeout" type="duration" value="[discovered]">
-      The time after which an idle connection expires.
+      The user name or ID for authentication.
     </property>
   </group>
 
   <group name="resource-limits">
+    <property name="idle-timeout" type="duration" value="[discovered]">
+      The time after which an idle connection expires.
+    </property>
+
     <property name="max-sessions" type="ushort" value="[discovered]">
       The maximum active sessions allowed.
     </property>

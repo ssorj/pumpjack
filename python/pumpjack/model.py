@@ -264,6 +264,9 @@ class Class(ModuleMember):
         self.groups = list()
         self.groups_by_name = dict()
 
+        self.members = list()
+        self.members_by_name = dict()
+
         self.properties = list()
         self.methods = list()
 
@@ -343,12 +346,16 @@ class ClassMemberGroup(Group):
 
             self.properties.append(prop)
             self.class_.properties.append(prop)
+            self.class_.members.append(prop)
+            self.class_.members_by_name[prop.name] = prop
 
         for child in self.element.findall("method"):
             meth = Method(child, self)
 
             self.methods.append(meth)
             self.class_.methods.append(meth)
+            self.class_.members.append(meth)
+            self.class_.members_by_name[meth.name] = meth
 
         super().process_node()
 
@@ -373,6 +380,14 @@ class ClassMember(Node):
     def abstract_path(self):
         return (self.class_.module.name, self.class_.name, self.name)
 
+    def process_model(self):
+        super().process_model()
+
+        if self.text is None:
+            if self.class_.type is not None:
+                ancestor = self.class_.type.members_by_name[self.name]
+                self.text = ancestor.text
+        
 class Parameter(Node):
     def __init__(self, element, parent):
         type_name = element.attrib.get("type")
@@ -389,8 +404,11 @@ class Parameter(Node):
     def process_node_attributes(self):
         super().process_node_attributes()
 
-        if self.value is None and not self.nullable:
-            self.value = "[instance]"
+        if self.value is None:
+            if self.nullable:
+                self.value = "null"
+            else:
+                self.value = "[instance]"
         
     def process_references(self):
         super().process_references()
