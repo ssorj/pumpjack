@@ -1,5 +1,6 @@
 <class name="container">
-  A top-level container of connections, sessions, and links.
+  A top-level container of connections, sessions, senders, and
+  receivers.
 
   A container gives a unique identity to each communicating
   peer.  It is often a process-level object.
@@ -12,7 +13,8 @@
 
   <link node="connection"/>
   <link node="session"/>
-  <link node="link"/>
+  <link node="sender"/>
+  <link node="receiver"/>
   
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">Conceptual overview</link>
   
@@ -22,6 +24,12 @@
       identify this container in any connections it establishes.
     </property>
 
+    <method name="connections">
+      The connections inside this container.
+      
+      <output name="connections" type="iterator" item-type="connection"/>
+    </method>
+    
     <method name="constructor" special="true">
       Create a new container.
 
@@ -155,14 +163,6 @@
       <input name="url" type="string"/>
       <input name="options" type="link-options" optional="true"/>
       <output name="sender" type="sender"/>
-    </method>
-  </group>
-
-  <group name="events">
-    <method name="connections">
-      Get the connections inside this container.
-      
-      <output name="connections" type="iterator" item-type="connection"/>
     </method>
   </group>
 </class>

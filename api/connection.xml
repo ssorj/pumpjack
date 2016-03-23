@@ -136,10 +136,10 @@
     </property>
 
     <property name="user" type="string" value="[discovered]">
-      The user name or ID for authentication.
+      The identity of the user associated with the connection.
     </property>
   </group>
-
+    
   <group name="resource-limits">
     <property name="idle-timeout" type="duration" value="[discovered]">
       The time after which an idle connection expires.
