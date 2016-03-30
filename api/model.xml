@@ -60,7 +60,7 @@
   <group-definition name="connection-operations" title="Connection operations">
   </group-definition>
 
-  <group-definition name="link-operations" title="Link operations">
+  <group-definition name="link-operations" title="Sender and receiver operations">
   </group-definition>
 
   <group-definition name="endpoint-lifecycle" title="Endpoint lifecycle">

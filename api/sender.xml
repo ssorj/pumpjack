@@ -21,7 +21,7 @@
 
       <link node="/proton/core/handler/on-sender-open"/>
 
-      <input name="options" type="sender-options" optional="true"/>
+      <input type="sender-options" optional="true"/>
     </method>
     
     <method name="close">
@@ -31,7 +31,7 @@
       
       <link node="/proton/core/handler/on-sender-close"/>
       
-      <input name="condition" type="condition" optional="true"/>
+      <input type="condition" optional="true"/>
     </method>
 
     <method name="detach">
@@ -41,7 +41,7 @@
       
       <link node="/proton/core/handler/on-sender-detach"/>
       
-      <input name="condition" type="condition" optional="true"/>
+      <input type="condition" optional="true"/>
     </method>
   </group>
 
@@ -49,16 +49,16 @@
     <method name="send">
       Send a message on the link.
 
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <input type="message"/>
+      <output type="delivery-ticket"/>
     </method>
 
     <method name="send-request" proposed="true">
       Send a request message.  The message reply-to property is
       set automatically.
 
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <input type="message"/>
+      <output type="delivery-ticket"/>
     </method>
     
     <method name="send-response" proposed="true">
@@ -67,7 +67,7 @@
 
       <input name="response" type="message"/>
       <input name="request" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <output type="delivery-ticket"/>
     </method>
   </group>
 </class>

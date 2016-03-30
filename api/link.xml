@@ -25,10 +25,6 @@
       The target end of the link.
     </property>
   
-    <property name="deliveries" type="iterator" item-type="delivery">
-      The deliveries contained in this link.
-    </property>
-    
     <property name="name" type="string" value="[discovered]">
       The link name.
     </property>

@@ -25,7 +25,7 @@
     </property>
 
     <method name="connections">
-      The connections inside this container.
+      The connections managed by this container.
       
       <output name="connections" type="iterator" item-type="connection"/>
     </method>
@@ -33,7 +33,7 @@
     <method name="constructor" special="true">
       Create a new container.
 
-      <input name="handler" type="handler" optional="true">
+      <input type="handler" optional="true">
         The main event handler for this container.
       </input>
       
@@ -72,15 +72,15 @@
       Default options for new inbound connections.
     </property>
 
-    <property name="session-options" value="[instance]" type="session-options">
+    <property value="[instance]" type="session-options">
       Default options for new sessions.
     </property>
 
-    <property name="sender-options" value="[instance]" type="sender-options">
+    <property value="[instance]" type="sender-options">
       Default options for new senders.
     </property>
 
-    <property name="receiver-options" value="[instance]" type="receiver-options">
+    <property value="[instance]" type="receiver-options">
       Default options for new receivers.
     </property>
   </group>
@@ -89,9 +89,9 @@
     <method name="send" proposed="true">
       Send a message.
 
-      <input name="message" type="message"/>
+      <input type="message"/>
       <input name="url" type="string"/>
-      <output name="delivery" type="delivery"/>
+      <output type="delivery-ticket"/>
     </method>
 
     <method name="send-request" proposed="true">
@@ -100,9 +100,9 @@
 
       <link node="/proton/core/message/reply-to"/>
 
-      <input name="message" type="message"/>
+      <input type="message"/>
       <input name="url" type="string"/>
-      <output name="delivery" type="delivery"/>
+      <output type="delivery-ticket"/>
     </method>
 
     <method name="send-response" proposed="true">
@@ -114,7 +114,7 @@
 
       <input name="message" type="message"/>
       <input name="request" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <output type="delivery-ticket"/>
     </method>
   </group>
 
@@ -149,8 +149,8 @@
       <link node="/proton/core/handler/on-receiver-open"/>
       
       <input name="url" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="receiver" type="receiver"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="receiver"/>
     </method>
 
     <method name="open-sender">
@@ -161,8 +161,8 @@
       <link node="/proton/core/handler/on-sender-open"/>
       
       <input name="url" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="sender" type="sender"/>
+      <input type="sender-options" optional="true"/>
+      <output type="sender"/>
     </method>
   </group>
 </class>

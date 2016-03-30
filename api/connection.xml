@@ -4,11 +4,8 @@
   In current implementations, a connection corresponds to a TCP
   connection, represented by a transport.
 
-  A connection object contains zero or more session objects,
-  which in turn contain zero or more link objects.  Each link
-  object contains an ordered sequence of delivery objects.
-
-  <!-- What behaviors do you get by default? -->
+  A connection object contains zero or more session objects, which in
+  turn contain zero or more senders and zero or more receivers.
 
   <link node="connection-options"/>
   <link node="transport"/>
@@ -19,7 +16,7 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-close">Close performative</link>
 
   <group name="basic">
-    <property name="transport" type="transport">
+    <property type="transport">
       The associated transport.
     </property>
 
@@ -27,14 +24,14 @@
       The sessions contained in this connection.
     </property>
 
-    <property name="links" type="iterator" item-type="link">
-      The links contained in this connection.
+    <property name="senders" type="iterator" item-type="sender">
+      The senders contained in this connection.
     </property>
 
-    <property name="deliveries" type="iterator" item-type="delivery">
-      The deliveries contained in this connection.
+    <property name="receivers" type="iterator" item-type="receiver">
+      The receivers contained in this connection.
     </property>
-    
+
     <method name="open">
       Open the connection.
 
@@ -60,8 +57,8 @@
     <method name="send" experimental="true">
       Send a message on the default session.
 
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <input type="message"/>
+      <output type="delivery-ticket"/>
     </method>
 
     <method name="send-request" proposed="true">
@@ -70,8 +67,8 @@
 
       <link node="/proton/core/message/reply-to"/>
 
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <input type="message"/>
+      <output type="delivery-ticket"/>
     </method>
 
     <method name="send-response" proposed="true">
@@ -83,7 +80,7 @@
 
       <input name="response-message" type="message"/>
       <input name="request-message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <output type="delivery-ticket"/>
     </method>
   </group>
 
@@ -96,8 +93,8 @@
       <link node="/proton/core/handler/on-sender-open"/>
 
       <input name="address" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="sender" type="sender"/>
+      <input type="sender-options" optional="true"/>
+      <output type="sender"/>
     </method>
 
     <method name="open-receiver">
@@ -108,8 +105,8 @@
       <link node="/proton/core/handler/on-receiver-open"/>
 
       <input name="address" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="receiver" type="receiver"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="receiver"/>
     </method>
   </group>
 
@@ -121,8 +118,8 @@
     <method name="open-session">
       Create and open a session.
 
-      <input name="options" type="session-options" optional="true"/>
-      <output name="session" type="session"/>
+      <input type="session-options" optional="true"/>
+      <output type="session"/>
     </method>
   </group>
 

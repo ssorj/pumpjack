@@ -1,4 +1,4 @@
-<class name="endpoint-options" internal="true">
+<class name="endpoint-options" hidden="true">
   The base class for connection-options, session-options, and
   link-options.
 

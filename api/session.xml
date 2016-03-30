@@ -11,18 +11,18 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
   
   <group name="basic">
-    <property name="connection" type="connection">
+    <property type="connection">
       The containing connection.
     </property>
 
-    <property name="links" type="iterator" item-type="link">
-      The links contained in this session.
+    <property name="senders" type="iterator" item-type="sender">
+      The senders contained in this session.
     </property>
 
-    <property name="deliveries" type="iterator" item-type="delivery">
-      The deliveries contained in this session.
+    <property name="receivers" type="iterator" item-type="receiver">
+      The receivers contained in this session.
     </property>
-    
+
     <method name="open">
       Open the session.
 
@@ -30,7 +30,7 @@
 
       <link node="/proton/core/handler/on-session-open"/>
 
-      <input name="options" type="session-options" optional="true"/>
+      <input type="session-options" optional="true"/>
     </method>
 
     <method name="close">
@@ -40,7 +40,7 @@
       
       <link node="/proton/core/handler/on-session-close"/>
 
-      <input name="condition" type="condition" optional="true"/>
+      <input type="condition" optional="true"/>
     </method>
   </group>
 
@@ -48,16 +48,16 @@
     <method name="send" proposed="true">
       Send a message on a link with the given address.
 
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <input type="message"/>
+      <output type="delivery-ticket"/>
     </method>
 
     <method name="send-request" proposed="true">
       Send a request message.  The message.reply-to property is
       set automatically.
 
-      <input name="message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <input type="message"/>
+      <output type="delivery-ticket"/>
     </method>
     
     <method name="send-response" proposed="true">
@@ -66,7 +66,7 @@
 
       <input name="response-message" type="message"/>
       <input name="request-message" type="message"/>
-      <output name="delivery" type="delivery"/>
+      <output type="delivery-ticket"/>
     </method>
   </group>
   
@@ -79,8 +79,8 @@
       <link node="/proton/core/handler/on-sender-open"/>
 
       <input name="address" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="sender" type="sender"/>
+      <input type="sender-options" optional="true"/>
+      <output type="sender"/>
     </method>
     
     <method name="open-receiver">
@@ -91,8 +91,8 @@
       <link node="/proton/core/handler/on-receiver-open"/>
       
       <input name="address" type="string"/>
-      <input name="options" type="link-options" optional="true"/>
-      <output name="receiver" type="receiver"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="receiver"/>
     </method>
   </group>
 

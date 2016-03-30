@@ -28,7 +28,11 @@
 
     @message.xml@
 
+    @transfer.xml@
+    
     @delivery.xml@
+
+    @delivery-ticket.xml@
 
     @condition.xml@
   </group>

@@ -1,38 +1,24 @@
-<class name="delivery">
-  A message transfer.  Every delivery exists within the context
-  of a link.
+<class name="delivery" type="transfer">
+  A received message.
 
   A delivery attempt can fail.  As a result, a particular
   message may correspond to multiple deliveries.
 
-  <link node="link"/>
+  <link node="delivery-ticket"/>
+  <link node="receiver"/>
+  <link node="/proton/core/handler/on-message"/>
 
   <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp438000">Conceptual overview</link>
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
   
   <group name="basic">
-    <property name="id" type="binary" value="[generated]">
-      The delivery identifier.
-    </property>
-
-    <property name="link" type="link">
-      The link on which the delivery was sent or received.
+    <property type="receiver">
+      The receiver on which the delivery was received.
     </property>
   </group>
 
-  <group name="delivery-state" title="Delivery state">
-    Delivery states represent the current status or final
-    outcome of a message transfer. Every delivery contains both
-    a local and a remote delivery state.  The remote state
-    indicates the last known remote state of the delivery.
-    
-    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">Conceptual overview</link>
-    
-    <property name="state" type="delivery-state" value="[discovered]">
-      The current delivery state.
-    </property>
-    
+  <group name="delivery-state">
     <method name="accept">
       Change the delivery state to ACCEPTED and settle.
     </method>
@@ -49,48 +35,4 @@
       Change the delivery state to MODIFIED and settle.
     </method>
   </group>
-
-  <group name="settlement" title="Settlement">
-    Settlement state governs how long a message transfer is
-    tracked at the local and remote peers, and when each can
-    safely consider the transfer resolved, that is "settled".
-    
-    <property name="settled" type="boolean" value="[discovered]">
-      True if the delivery has been settled.
-    </property>
-    
-    <method name="settle">
-      Mark the delivery settled.  A settled delivery can never
-      be used again.
-    </method>
-  </group>
 </class>
-
-<enumeration name="delivery-state">
-  Delivery state values
-  
-  <value name="NONE">
-    The initial state before any delivery data is transferred.
-  </value>
-  
-  <value name="RECEIVED">
-    A non-terminal state indicating data has been received.
-  </value>
-
-  <value name="ACCEPTED">
-    The delivery was successfully processed; terminal.
-  </value>
-
-  <value name="REJECTED">
-    The delivery was invalid; terminal.
-  </value>
-
-  <value name="RELEASED">
-    The delivery is returned to the sender; terminal.
-  </value>
-
-  <value name="MODIFIED">
-    The delivery is returned to the sender for annotation
-    before further delivery attempts; terminal.
-  </value>
-</enumeration>

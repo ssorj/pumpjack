@@ -28,7 +28,7 @@
     <property name="auto-settle" type="boolean" value="true" mutable="true">
       Automatically settle deliveries.
 
-      <link node="/proton/core/delivery/settle"/>
+      <link node="/proton/core/transfer/settle"/>
     </property>
 
     <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">

@@ -5,35 +5,35 @@
   <link node="handler"/>
 
   <group name="basic">
-    <property name="container" type="container" value="[instance]" nullable="true">
+    <property type="container" value="[instance]" nullable="true">
       Get the container.
     </property>
 
-    <property name="connection" type="connection" value="[instance]" nullable="true">
+    <property type="connection" value="[instance]" nullable="true">
       Get the connection.
     </property>
 
-    <property name="session" type="session" value="[instance]" nullable="true">
+    <property type="session" value="[instance]" nullable="true">
       Get the session.
     </property>
 
-    <property name="link" type="link" value="[instance]" nullable="true">
-      Get the link.
-    </property>
-
-    <property name="sender" type="sender" value="[instance]" nullable="true">
+    <property type="sender" value="[instance]" nullable="true">
       Get the sender.
     </property>
 
-    <property name="receiver" type="receiver" value="[instance]" nullable="true">
+    <property type="receiver" value="[instance]" nullable="true">
       Get the receiver.
     </property>
 
-    <property name="delivery" type="delivery" value="[instance]" nullable="true">
+    <property type="delivery" value="[instance]" nullable="true">
       Get the delivery.
     </property>
 
-    <property name="transport" type="transport" value="[instance]" nullable="true">
+    <property type="delivery-ticket" value="[instance]" nullable="true">
+      Get the delivery-ticket.
+    </property>
+
+    <property type="transport" value="[instance]" nullable="true">
       Get the transport.
     </property>
   </group>
