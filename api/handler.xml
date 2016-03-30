@@ -182,42 +182,42 @@
 
   <group name="deliveries" title="Deliveries">
     <method name="on-delivery">
-      A delivery is received.
+      The sending end delivered a message.
 
       <link node="/proton/core/sender/send"/>
       
       <input type="event"/>
       <input type="delivery"/>
     </method>
+    
+    <method name="on-delivery-settle">
+      The sending end settled a delivery.
+      
+      <input type="event"/>
+      <input type="delivery"/>
+    </method>
 
     <method name="on-delivery-accept">
-      The remote peer accepted a delivery.
+      The receiving end accepted a delivery.
       
       <input type="event"/>
       <input type="delivery-ticket"/>
     </method>
     
     <method name="on-delivery-reject">
-      The remote peer rejected a delivery.
+      The receiving end rejected a delivery.
 
-      XXX error condition
+      <!-- XXX error condition -->
       
       <input type="event"/>
       <input type="delivery-ticket"/>
     </method>
     
     <method name="on-delivery-release">
-      The remote peer released a delivery.  Note that this may be in
-      response to either the RELEASE or MODIFIED state as defined by
-      the AMQP specification.
-      
-      <input type="event"/>
-      <input type="delivery-ticket"/>
-    </method>
-    
-    <method name="on-delivery-settle">
-      The remote peer settled a delivery.  This is the
-      point at which it should never be retransmitted.
+      The receiving end released a delivery.
+
+      Note that this may be in response to either the RELEASE or
+      MODIFIED state as defined by the AMQP specification.
       
       <input type="event"/>
       <input type="delivery-ticket"/>

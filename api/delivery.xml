@@ -20,19 +20,31 @@
 
   <group name="delivery-state">
     <method name="accept">
-      Change the delivery state to ACCEPTED and settle.
+      Change the delivery state to ACCEPTED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
     </method>
 
     <method name="reject">
-      Change the delivery state to REJECTED and settle.
+      Change the delivery state to REJECTED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
     </method>
 
     <method name="release">
-      Change the delivery state to RELEASED and settle.
+      Change the delivery state to RELEASED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
     </method>
     
     <method name="modify">
-      Change the delivery state to MODIFIED and settle.
+      Change the delivery state to MODIFIED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
     </method>
   </group>
 </class>

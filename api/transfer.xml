@@ -28,7 +28,7 @@
     tracked at the local and remote peers, and when each can
     safely consider the transfer resolved, that is "settled".
     
-    <property name="local-settled" type="boolean" value="[discovered]">
+    <property name="settled" type="boolean" value="[discovered]">
       True if the delivery has been settled.
     </property>
 
