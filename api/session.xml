@@ -49,7 +49,7 @@
       Send a message on a link with the given address.
 
       <input type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
 
     <method name="send-request" proposed="true">
@@ -57,7 +57,7 @@
       set automatically.
 
       <input type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
     
     <method name="send-response" proposed="true">
@@ -66,7 +66,7 @@
 
       <input name="response-message" type="message"/>
       <input name="request-message" type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
   </group>
   

@@ -29,8 +29,8 @@
       Get the delivery.
     </property>
 
-    <property type="delivery-ticket" value="[instance]" nullable="true">
-      Get the delivery-ticket.
+    <property type="tracker" value="[instance]" nullable="true">
+      Get the tracker.
     </property>
 
     <property type="transport" value="[instance]" nullable="true">

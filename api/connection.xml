@@ -58,7 +58,7 @@
       Send a message on the default session.
 
       <input type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
 
     <method name="send-request" proposed="true">
@@ -68,7 +68,7 @@
       <link node="/proton/core/message/reply-to"/>
 
       <input type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
 
     <method name="send-response" proposed="true">
@@ -80,7 +80,7 @@
 
       <input name="response-message" type="message"/>
       <input name="request-message" type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
   </group>
 

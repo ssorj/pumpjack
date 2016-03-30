@@ -30,6 +30,7 @@
       <link node="/proton/core/sender/send"/>
       
       <input type="event"/>
+      <input type="delivery"/>
       <input type="message"/>
     </method>
 
@@ -181,7 +182,7 @@
   </group>
 
   <group name="deliveries" title="Deliveries">
-    <method name="on-delivery">
+    <method name="on-delivery" hidden="true">
       The sending end delivered a message.
 
       <link node="/proton/core/sender/send"/>
@@ -190,18 +191,11 @@
       <input type="delivery"/>
     </method>
     
-    <method name="on-delivery-settle">
-      The sending end settled a delivery.
-      
-      <input type="event"/>
-      <input type="delivery"/>
-    </method>
-
     <method name="on-delivery-accept">
       The receiving end accepted a delivery.
       
       <input type="event"/>
-      <input type="delivery-ticket"/>
+      <input type="tracker"/>
     </method>
     
     <method name="on-delivery-reject">
@@ -210,7 +204,7 @@
       <!-- XXX error condition -->
       
       <input type="event"/>
-      <input type="delivery-ticket"/>
+      <input type="tracker"/>
     </method>
     
     <method name="on-delivery-release">
@@ -220,7 +214,14 @@
       MODIFIED state as defined by the AMQP specification.
       
       <input type="event"/>
-      <input type="delivery-ticket"/>
+      <input type="tracker"/>
+    </method>
+
+    <method name="on-delivery-settle">
+      The sending end settled a delivery.
+      
+      <input type="event"/>
+      <input type="delivery"/>
     </method>
   </group>
 
@@ -248,21 +249,11 @@
     </method>
   </group>
 
-  <group name="fallbacks" title="Fallback event handling">
-    <method name="on-unhandled">
-      The fallback event handler.
-      
-      Called if an event handler function is not overriden to
-      handle an event.
-
-      <input type="event"/>
-    </method>
-
-    <method name="on-unhandled-error">
+  <group name="errors">
+    <method name="on-error">
       The fallback error handler.
       
-      Called if an error handler function is not overriden to
-      handle an error.
+      Called if a more specific error handler is not overriden.
       
       <input type="event"/>
       <input type="condition"/>

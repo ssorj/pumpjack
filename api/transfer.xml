@@ -1,8 +1,8 @@
 <class name="transfer" hidden="true">
-  The base class for delivery and delivery-ticket.
+  The base class for delivery and tracker.
 
   <link node="delivery"/>
-  <link node="delivery-ticket"/>
+  <link node="tracker"/>
   
   <group name="basic">
     <property name="id" type="binary" value="[generated]">

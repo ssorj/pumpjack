@@ -32,7 +32,7 @@
     
     @delivery.xml@
 
-    @delivery-ticket.xml@
+    @tracker.xml@
 
     @condition.xml@
   </group>

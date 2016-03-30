@@ -4,7 +4,7 @@
   A delivery attempt can fail.  As a result, a particular
   message may correspond to multiple deliveries.
 
-  <link node="delivery-ticket"/>
+  <link node="tracker"/>
   <link node="receiver"/>
   <link node="/proton/core/handler/on-message"/>
 

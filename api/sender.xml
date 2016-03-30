@@ -50,7 +50,7 @@
       Send a message on the link.
 
       <input type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
 
     <method name="send-request" proposed="true">
@@ -58,7 +58,7 @@
       set automatically.
 
       <input type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
     
     <method name="send-response" proposed="true">
@@ -67,7 +67,7 @@
 
       <input name="response" type="message"/>
       <input name="request" type="message"/>
-      <output type="delivery-ticket"/>
+      <output type="tracker"/>
     </method>
   </group>
 </class>
