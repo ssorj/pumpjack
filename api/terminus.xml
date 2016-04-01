@@ -18,11 +18,11 @@
     
   <group name="dynamic-nodes" title="Dynamic nodes">
     <property name="dynamic" type="boolean" value="[discovered]">
-      On-demand creation of a source or target.
+      On-demand creation of a source or target node.
     </property>
 
-    <property name="properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true" proposed="true">
-      The properties of a dynamic source or target.
+    <property name="node-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
+      The properties of a dynamic source or target node.
     </property>
   </group>
 

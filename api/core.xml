@@ -37,6 +37,10 @@
     @condition.xml@
   </group>
 
+  <group name="events">
+    @handler.xml@
+  </group>
+
   <group name="configuration">
     @endpoint-options.xml@
 
@@ -55,12 +59,6 @@
     @source-options.xml@
 
     @target-options.xml@
-  </group>
-
-  <group name="events">
-    @event.xml@
-
-    @handler.xml@
   </group>
 
   <group name="network">

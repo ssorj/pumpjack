@@ -8,6 +8,10 @@
     <property name="id" type="binary" value="[generated]">
       The delivery identifier.
     </property>
+    
+    <property type="container">
+      The container holding this delivery or tracker.
+    </property>
   </group>
 
   <group name="delivery-state" title="Delivery state">

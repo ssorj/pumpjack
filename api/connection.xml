@@ -16,6 +16,10 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-close">Close performative</link>
 
   <group name="basic">
+    <property type="container">
+      The container holding this connection.
+    </property>
+
     <property type="transport">
       The associated transport.
     </property>
@@ -24,6 +28,7 @@
       The sessions contained in this connection.
     </property>
 
+    <!--
     <property name="senders" type="iterator" item-type="sender">
       The senders contained in this connection.
     </property>
@@ -31,6 +36,7 @@
     <property name="receivers" type="iterator" item-type="receiver">
       The receivers contained in this connection.
     </property>
+    -->
 
     <method name="open">
       Open the connection.
@@ -39,7 +45,7 @@
 
       <link node="/proton/core/handler/on-connection-open"/>
 
-      <input name="options" type="connection-options" optional="true"/>
+      <input type="connection-options" optional="true"/>
     </method>
 
     <method name="close">

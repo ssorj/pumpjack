@@ -2,7 +2,6 @@
   The Proton event handler.  It allows users to intercept and
   change Proton behaviors.
 
-  <link node="event"/>
   <link node="/proton/core/container/constructor"/>
 
   <group name="common" title="Common-case application events">
@@ -11,7 +10,6 @@
 
       <link node="/proton/core/container/run"/>
       
-      <input type="event"/>
       <input type="container"/>
     </method>
 
@@ -20,7 +18,6 @@
       
       <link node="/proton/core/container/stop"/>
       
-      <input type="event"/>
       <input type="container"/>
     </method>
 
@@ -29,7 +26,6 @@
 
       <link node="/proton/core/sender/send"/>
       
-      <input type="event"/>
       <input type="delivery"/>
       <input type="message"/>
     </method>
@@ -43,7 +39,6 @@
       <link node="/proton/core/link/credit"/>
       <link node="/proton/core/sender/send"/>
       
-      <input type="event"/>
       <input type="sender"/>
     </method>
   </group>
@@ -55,7 +50,6 @@
       <link node="/proton/core/container/connect"/>
       <link node="/proton/core/connection/open"/>
       
-      <input type="event"/>
       <input type="connection"/>
     </method>
 
@@ -64,7 +58,6 @@
       
       <link node="/proton/core/connection/close"/>
 
-      <input type="event"/>
       <input type="connection"/>
     </method>
       
@@ -74,7 +67,6 @@
       
       <link node="/proton/core/connection/close"/>
       
-      <input type="event"/>
       <input type="connection"/>
     </method>
 
@@ -83,7 +75,6 @@
       
       <link node="/proton/core/session/open"/>
       
-      <input type="event"/>
       <input type="session"/>
     </method>
     
@@ -92,7 +83,6 @@
       
       <link node="/proton/core/session/close"/>
       
-      <input type="event"/>
       <input type="session"/>
     </method>
 
@@ -102,81 +92,54 @@
       
       <link node="/proton/core/session/close"/>
       
-      <input type="event"/>
       <input type="session"/>
     </method>
 
     <method name="on-sender-open">
       The remote peer opened the sender.
       
-      <input type="event"/>
       <input type="sender"/>
     </method>
 
     <method name="on-sender-detach" proposed="true">
       The remote peer detached the sender.
       
-      <input type="event"/>
       <input type="sender"/>
     </method>
      
     <method name="on-sender-close">
       The remote peer closed the sender.
       
-      <input type="event"/>
       <input type="sender"/>
     </method>
      
     <method name="on-sender-error">
       The remote peer closed the sender with an error condition.
       
-      <input type="event"/>
       <input type="sender"/>
     </method>
 
     <method name="on-receiver-open">
       The remote peer opened the receiver.
       
-      <input type="event"/>
       <input type="receiver"/>
     </method>
 
     <method name="on-receiver-detach" proposed="true">
       The remote peer detached the receiver.
       
-      <input type="event"/>
       <input type="receiver"/>
     </method>
      
     <method name="on-receiver-close">
       The remote peer closed the receiver.
       
-      <input type="event"/>
       <input type="receiver"/>
     </method>
      
     <method name="on-receiver-error">
       The remote peer closed the receiver with an error condition.
       
-      <input type="event"/>
-      <input type="receiver"/>
-    </method>
-  </group>
-
-  <group name="flow-control">
-    <link node="/proton/core/receiver/flush"/>
-    
-    <method name="on-sender-flush" proposed="true">
-      The remote end of the sender requested flushing.
-
-      <input type="event"/>
-      <input type="sender"/>
-    </method>
-    
-    <method name="on-receiver-flush" proposed="true">
-      The remote end of the receiver finished flushing.
-      
-      <input type="event"/>
       <input type="receiver"/>
     </method>
   </group>
@@ -187,14 +150,12 @@
 
       <link node="/proton/core/sender/send"/>
       
-      <input type="event"/>
       <input type="delivery"/>
     </method>
     
     <method name="on-delivery-accept">
       The receiving end accepted a delivery.
       
-      <input type="event"/>
       <input type="tracker"/>
     </method>
     
@@ -203,7 +164,6 @@
 
       <!-- XXX error condition -->
       
-      <input type="event"/>
       <input type="tracker"/>
     </method>
     
@@ -213,39 +173,29 @@
       Note that this may be in response to either the RELEASE or
       MODIFIED state as defined by the AMQP specification.
       
-      <input type="event"/>
       <input type="tracker"/>
     </method>
 
     <method name="on-delivery-settle">
       The sending end settled a delivery.
       
-      <input type="event"/>
       <input type="delivery"/>
     </method>
   </group>
 
-  <group name="transport-lifecycle" title="Transport lifecycle">
-    <method name="on-transport-open">
-      The underlying network channel opened.
-      
-      <input type="event"/>
-      <input type="transport"/>
+  <group name="flow-control">
+    <link node="/proton/core/receiver/flush"/>
+    
+    <method name="on-sender-flush" proposed="true">
+      The remote end of the sender requested flushing.
+
+      <input type="sender"/>
     </method>
     
-    <method name="on-transport-close">
-      The underlying network channel closed.
+    <method name="on-receiver-flush" proposed="true">
+      The remote end of the receiver finished flushing.
       
-      <input type="event"/>
-      <input type="transport"/>
-    </method>
-      
-    <method name="on-transport-error">
-      The underlying network channel closed with an error
-      condition.
-      
-      <input type="event"/>
-      <input type="transport"/>
+      <input type="receiver"/>
     </method>
   </group>
 
@@ -255,8 +205,28 @@
       
       Called if a more specific error handler is not overriden.
       
-      <input type="event"/>
       <input type="condition"/>
+    </method>
+  </group>
+
+  <group name="transport-lifecycle" title="Transport lifecycle">
+    <method name="on-transport-open">
+      The underlying network channel opened.
+      
+      <input type="transport"/>
+    </method>
+    
+    <method name="on-transport-close">
+      The underlying network channel closed.
+      
+      <input type="transport"/>
+    </method>
+      
+    <method name="on-transport-error">
+      The underlying network channel closed with an error
+      condition.
+      
+      <input type="transport"/>
     </method>
   </group>
 
@@ -264,20 +234,14 @@
   <group name="transactions">
     <method name="on-transaction-declare" experimental="true">
       The remote peer declared a transaction.
-      
-      <input type="event"/>
     </method>
 
     <method name="on-transaction-commit" experimental="true">
       The remote peer committed a transaction.
-      
-      <input type="event"/>
     </method>
 
     <method name="on-transaction-abort" experimental="true">
       The remote peer aborted a transaction.
-      
-      <input type="event"/>
     </method>
   </group>
   -->  
