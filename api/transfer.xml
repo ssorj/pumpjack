@@ -1,4 +1,4 @@
-<class name="transfer" hidden="true">
+<class name="transfer" internal="true">
   The base class for delivery and tracker.
 
   <link node="delivery"/>

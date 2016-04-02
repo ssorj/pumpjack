@@ -1,4 +1,4 @@
-<class name="terminus" hidden="true">
+<class name="terminus" internal="true">
   The base class for source and target.
 
   <link node="source"/>

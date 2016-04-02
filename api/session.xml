@@ -11,10 +11,6 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
   
   <group name="basic">
-    <property type="container">
-      The container holding this session.
-    </property>
-
     <property type="connection">
       The containing connection.
     </property>

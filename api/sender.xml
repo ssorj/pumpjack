@@ -16,6 +16,10 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
   
   <group name="basic">
+    <property name="trackers" type="iterator" item-type="tracker">
+      The trackers contained in this sender.
+    </property>
+    
     <method name="open">
       Open the sender.
 

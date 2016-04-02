@@ -26,7 +26,7 @@
       Request on-demand creation of a node at the remote peer.
     </property>
     
-    <property name="properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true" proposed="true">
+    <property name="node-properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">
       Control the properties of nodes created on demand.
 
       <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-node-properties">Type</link>

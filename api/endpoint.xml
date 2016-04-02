@@ -19,6 +19,12 @@
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp48736">Conceptual overview</link>
 
+  <group name="basic">
+    <property type="container">
+      The container holding this endpoint object.
+    </property>
+  </group>
+
   <group name="endpoint-lifecycle">
     <property name="uninitialized" type="boolean" value="[discovered]">
       The endpoint is uninitialized.

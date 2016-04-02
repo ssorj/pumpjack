@@ -16,10 +16,6 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-close">Close performative</link>
 
   <group name="basic">
-    <property type="container">
-      The container holding this connection.
-    </property>
-
     <property type="transport">
       The associated transport.
     </property>
