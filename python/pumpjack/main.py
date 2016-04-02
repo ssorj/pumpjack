@@ -22,6 +22,7 @@ from .python import *
 
 import os as _os
 import re as _re
+import tempfile as _tempfile
 import xml.etree.ElementTree as _et
 
 class Pumpjack(object):
@@ -37,7 +38,18 @@ class Pumpjack(object):
             content = f.read()
 
         content = self.merge_content(content, self.input_dir)
-        elem = _et.fromstring(content)
+
+        try:
+            elem = _et.fromstring(content)
+        except _et.ParseError as e:
+            path = _tempfile.mktemp()
+
+            with open(path, "w") as f:
+                f.write(content)
+
+            print("Merged output saved at '{}'".format(path))
+
+            raise(e)
 
         self.model = Model(elem)
         self.model.process()
