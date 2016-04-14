@@ -38,7 +38,7 @@
       The endpoint is closed.
     </property>
 
-    <property name="condition" type="condition" value="[discovered]" nullable="true">
+    <property name="error" type="error-condition" value="[discovered]" nullable="true">
       The endpoint error condition.
     </property>
   </group>

@@ -40,7 +40,7 @@
       
       <link node="/proton/core/handler/on-session-close"/>
 
-      <input type="condition" optional="true"/>
+      <input type="error-condition" optional="true"/>
     </method>
   </group>
 

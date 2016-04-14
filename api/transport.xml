@@ -10,7 +10,7 @@
       Get SASL connection information.
     </property>
     
-    <property name="condition" type="condition" value="[discovered]" nullable="true">
+    <property name="error" type="error-condition" value="[discovered]" nullable="true">
       Get the error condition.
     </property>
 

@@ -385,8 +385,10 @@ class ClassMember(Node):
 
         if self.text is None:
             if self.class_.type is not None:
-                ancestor = self.class_.type.members_by_name[self.name]
-                self.text = ancestor.text
+                ancestor = self.class_.type.members_by_name.get(self.name)
+
+                if ancestor is not None:
+                    self.text = ancestor.text
         
 class Parameter(Node):
     def __init__(self, element, parent):

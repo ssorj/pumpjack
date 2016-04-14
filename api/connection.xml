@@ -51,7 +51,7 @@
       
       <link node="/proton/core/handler/on-connection-close"/>
     
-      <input name="condition" type="condition" optional="true"/>
+      <input type="error-condition" optional="true"/>
     </method>
   </group>
   

@@ -34,7 +34,7 @@
 
     @tracker.xml@
 
-    @condition.xml@
+    @error-condition.xml@
   </group>
 
   <group name="events">

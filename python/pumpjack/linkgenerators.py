@@ -44,13 +44,18 @@ _cpp_namespaces_by_module = {
     "types": "proton",
     "codec": "proton_1_1codec",
     "io": "proton_1_1io",
+    "concurrrent": "proton_1_1concurrent",
 }
 
 def gen_cpp_module_link(node):
     if type(node) is not Module:
         return
 
-    namespace = _cpp_namespaces_by_module[node.name]
+    namespace = _cpp_namespaces_by_module.get(node.name)
+
+    if namespace is None:
+        return
+    
     href = _cpp_module_href.format(namespace)
     link = "C++", href
         
@@ -63,7 +68,11 @@ def gen_cpp_class_link(node):
     if node.name == "endpoint-options":
         return
 
-    namespace = _cpp_namespaces_by_module[node.module.name]
+    namespace = _cpp_namespaces_by_module.get(node.module.name)
+
+    if namespace is None:
+        return
+    
     name = node.name.replace("-", "__")
     href = _cpp_class_href.format(namespace, name)
 
@@ -82,14 +91,13 @@ _c_groups_by_module = {
     "core": "engine",
     "types": "types",
     "codec": "data",
-    "io": None,
 }
 
 def gen_c_module_link(node):
     if type(node) is not Module:
         return
 
-    name = _c_groups_by_module[node.name]
+    name = _c_groups_by_module.get(node.name)
 
     if name is None:
         return
@@ -128,14 +136,13 @@ _java_packages_by_module = {
     "core": "org/apache/qpid/proton/engine",
     "types": "org/apache/qpid/proton/amqp",
     "codec": "org/apache/qpid/proton/codec",
-    "io": None,
 }
 
 def gen_java_module_link(node):
     if type(node) is not Module:
         return
 
-    package = _java_packages_by_module[node.name]
+    package = _java_packages_by_module.get(node.name)
 
     if package is None:
         return
@@ -155,7 +162,7 @@ def gen_java_class_link(node):
     if node.name in ("container", "acceptor", "conversion-error"):
         return
 
-    package = _java_packages_by_module[node.module.name]
+    package = _java_packages_by_module.get(node.module.name)
 
     if package is None:
         return
@@ -185,14 +192,13 @@ _python_packages_by_module = {
     "core": "proton",
     "types": "proton",
     "codec": "proton",
-    "io": None,
 }
 
 def gen_python_module_link(node):
     if type(node) is not Module:
         return
 
-    package = _python_packages_by_module[node.name]
+    package = _python_packages_by_module.get(node.name)
 
     if package is None:
         return
@@ -212,7 +218,7 @@ def gen_python_class_link(node):
     if node.name in ("conversion-error"):
         return
 
-    package = _python_packages_by_module[node.module.name]
+    package = _python_packages_by_module.get(node.module.name)
 
     if package is None:
         return

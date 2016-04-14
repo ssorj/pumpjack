@@ -35,7 +35,7 @@
       
       <link node="/proton/core/handler/on-sender-close"/>
       
-      <input type="condition" optional="true"/>
+      <input type="error-condition" optional="true"/>
     </method>
 
     <method name="detach">
@@ -45,7 +45,7 @@
       
       <link node="/proton/core/handler/on-sender-detach"/>
       
-      <input type="condition" optional="true"/>
+      <input type="error-condition" optional="true"/>
     </method>
   </group>
 

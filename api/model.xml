@@ -45,6 +45,8 @@
   
   @io.xml@
 
+  @concurrent.xml@
+
   <group-definition name="basic" title="Basic properties and methods">
   </group-definition>
 

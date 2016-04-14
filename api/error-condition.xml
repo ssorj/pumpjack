@@ -1,4 +1,4 @@
-<class name="condition">
+<class name="error-condition">
   An endpoint error state.
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-error">Type definition</link>
@@ -10,7 +10,7 @@
       <input name="name" type="symbol"/>
       <input name="description" type="string" optional="true"/>
       <input name="properties" type="map" key-type="symbol" item-type="object" optional="true"/>
-      <output type="condition"/>
+      <output type="error-condition"/>
     </method>
     
     <property name="name" type="symbol" mutable="true">
