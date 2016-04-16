@@ -170,12 +170,15 @@
     <method name="on-tracker-release">
       The receiving end released a delivery.
 
-      Note that this may be in response to either the RELEASE or
-      MODIFIED state as defined by the AMQP specification.
-      
       <input type="tracker"/>
     </method>
 
+    <method name="on-tracker-modify">
+      The receiving end modified a delivery.
+      
+      <input type="tracker"/>
+    </method>
+    
     <method name="on-tracker-settle">
       The receiving end settled a delivery.
       

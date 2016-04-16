@@ -90,7 +90,7 @@
       Send a message.
 
       <input type="message"/>
-      <input name="url" type="string"/>
+      <input name="address-url" type="string"/>
       <output type="tracker"/>
     </method>
 
@@ -101,7 +101,7 @@
       <link node="/proton/core/message/reply-to"/>
 
       <input type="message"/>
-      <input name="url" type="string"/>
+      <input name="address-url" type="string"/>
       <output type="tracker"/>
     </method>
 
@@ -126,7 +126,7 @@
 
       <link node="/proton/core/handler/on-connection-open"/>
       
-      <input name="url" type="string"/>
+      <input name="connection-url" type="string"/>
       <input name="options" type="connection-options" optional="true"/>
       <output name="connection" type="connection"/>
     </method>
@@ -134,7 +134,7 @@
     <method name="listen">
       Listen for incoming connections.
       
-      <input name="url" type="string"/>
+      <input name="listen-info" type="string"/>
       <input name="options" type="connection-options" optional="true"/>
       <output name="acceptor" type="acceptor"/>
     </method>
@@ -148,7 +148,7 @@
 
       <link node="/proton/core/handler/on-receiver-open"/>
       
-      <input name="url" type="string"/>
+      <input name="address-url" type="string"/>
       <input type="receiver-options" optional="true"/>
       <output type="receiver"/>
     </method>
@@ -160,9 +160,18 @@
 
       <link node="/proton/core/handler/on-sender-open"/>
       
-      <input name="url" type="string"/>
+      <input name="address-url" type="string"/>
       <input type="sender-options" optional="true"/>
       <output type="sender"/>
+    </method>
+  </group>
+
+  <group name="events">
+    <method name="schedule">
+      Schedule a function call.
+
+      <input type="function"/>
+      <input name="delay" type="duration" optional="true"/>
     </method>
   </group>
 </class>

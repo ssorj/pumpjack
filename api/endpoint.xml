@@ -43,6 +43,19 @@
     </property>
   </group>
 
+  <group name="events">
+    <method name="inject" experimental="true">
+      Register a function to be called.
+
+      It is safe to call inject from another thread.
+      
+      The injected function will be invoked in the thread-safe
+      execution context of the endpoint.
+
+      <input type="function"/>
+    </method>
+  </group>
+
   <group name="extended-attributes">
     <property name="properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
       Application-defined properties.

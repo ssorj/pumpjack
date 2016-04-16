@@ -1,5 +1,5 @@
 <class name="session" type="endpoint">
-  A container of links.
+  A container of senders and receivers.
 
   <link node="session-options"/>
   <link node="connection"/>

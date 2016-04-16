@@ -1,7 +1,24 @@
 <module name="io" experimental="true">
-  An SPI for IO integration
+  Tools for IO integration
 
   <group name="io-interfaces" title="IO interfaces">
+    <class name="controller" experimental="true">
+      <group name="basic">
+        <method name="listen">
+          <input name="listen-info" type="string"/>
+          <input name="handler-factory" type="function"/>
+        </method>
+
+        <method name="run">
+        </method>
+
+        <method name="closed">
+          <output type="boolean"/>
+        </method>
+      </group>
+    </class>
+    
+    
     <class name="connection-engine" experimental="true">
       An event loop for integrating with an existing IO framework.
       
@@ -38,11 +55,19 @@
       concurrently in separate threads.
     </class>
 
-    <class name="io-adapter" experimental="true"></class>
+    <class name="execution-context" experimental="true">
+      <group name="basic">
+        <method name="inject">
+          <input type="function"/>
+          <output name="XXX why?" type="boolean"/>
+        </method>
+      </group>
+    </class>
   </group>
 
   <group name="io-implementations" title="IO implementations">
-    <class name="posix-io" experimental="true"></class>
-    <class name="windows-io" experimental="true"></class>
+    <class name="poll-controller" experimental="true"></class>
+    <class name="epoll-controller" experimental="true"></class>
+    <class name="iocp-controller" experimental="true"></class>
   </group>
 </module>
