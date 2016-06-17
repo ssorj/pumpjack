@@ -11,7 +11,7 @@
   
   <group name="basic">
     <property name="id" type="message-id" mutable="true" nullable="true">
-      A globally unique message identifier.
+      A unique message identifier.
 
       <!-- XXX Used to remove duplicates -->
     </property>
@@ -34,7 +34,7 @@
   </group>
 
   <group name="routing" title="Routing">
-    <property name="to" type="string" mutable="true" nullable="true" proposed="true">
+    <property name="to" type="string" mutable="true" nullable="true">
       The destination address.
     </property>
   

@@ -13,7 +13,7 @@
       <input type="container"/>
     </method>
 
-    <method name="on-container-stop" proposed="true">
+    <method name="on-container-stop">
       The container event loop is stopped.
       
       <link node="/proton/core/container/stop"/>
@@ -101,7 +101,7 @@
       <input type="sender"/>
     </method>
 
-    <method name="on-sender-detach" proposed="true">
+    <method name="on-sender-detach">
       The remote peer detached the sender.
       
       <input type="sender"/>
@@ -125,7 +125,7 @@
       <input type="receiver"/>
     </method>
 
-    <method name="on-receiver-detach" proposed="true">
+    <method name="on-receiver-detach">
       The remote peer detached the receiver.
       
       <input type="receiver"/>
@@ -145,6 +145,12 @@
   </group>
 
   <group name="deliveries" title="Deliveries">
+    Delivery states represent the current status or final outcome of a
+    message transfer.  Settlement state determines when a peer can
+    safely consider the transfer resolved.
+
+    <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-delivery-state">Conceptual overview</link>
+
     <method name="on-delivery" hidden="true">
       The sending end delivered a message.
 
@@ -155,14 +161,18 @@
     
     <method name="on-tracker-accept">
       The receiving end accepted a delivery.
-      
+
+      "Accepted" means the delivery was successfully processed by the
+      receiving application.
+
       <input type="tracker"/>
     </method>
     
     <method name="on-tracker-reject">
       The receiving end rejected a delivery.
 
-      <!-- XXX error condition -->
+      "Rejected" means the receiving application considered the
+      delivery invalid.
       
       <input type="tracker"/>
     </method>
@@ -170,11 +180,16 @@
     <method name="on-tracker-release">
       The receiving end released a delivery.
 
+      "Released" means the delivery was returned to the sender.
+
       <input type="tracker"/>
     </method>
 
     <method name="on-tracker-modify">
       The receiving end modified a delivery.
+
+      "Modified" means the delivery was returned to the sender for
+      annotation before further delivery attempts.
       
       <input type="tracker"/>
     </method>
@@ -194,15 +209,16 @@
 
   <group name="flow-control">
     <link node="/proton/core/receiver/flush"/>
+    <!-- <link node="/proton/core/sender/flushing"/> -->
     
-    <method name="on-sender-flush" proposed="true">
+    <method name="on-sender-flush-start">
       The remote end of the sender requested flushing.
 
       <input type="sender"/>
     </method>
     
-    <method name="on-receiver-flush" proposed="true">
-      The remote end of the receiver finished flushing.
+    <method name="on-receiver-flush-finish">
+      The remote end of the receiver completed flushing.
       
       <input type="receiver"/>
     </method>

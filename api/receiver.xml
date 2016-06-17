@@ -55,24 +55,24 @@
     <link node="/proton/core/link/credit"/>
     <link node="/proton/core/receiver-options/credit-window"/>
       
-    <method name="add-credit" proposed="true">
+    <method name="add-credit">
       Issue credit to the sending end.  This increases the credit
       issued to the remote sender by the specified number of messages.
 
       <input name="count" type="uint"/>
     </method>
 
-    <method name="flush" proposed="true">
+    <method name="flush">
       Request any messages available at the sending end.  This tells
       the sender to use all existing credit immediately to send
       deliveries and then discard any excess credit.
 
       The sending end is notified of the flush request by the
-      *on-sender-flush* event.  The operation is complete when
-      *on-receiver-flush* fires.
+      *on-sender-flush-start* event.  The operation is complete when
+      *on-receiver-flush-finish* fires.
 
-      <link node="/proton/core/handler/on-sender-flush"/>
-      <link node="/proton/core/handler/on-receiver-flush"/>
+      <link node="/proton/core/handler/on-sender-flush-start"/>
+      <link node="/proton/core/handler/on-receiver-flush-finish"/>
     </method>
   </group>
 </class>

@@ -26,7 +26,7 @@
       The virtual host name.
 
       This value is also the host name used to match the server's SSL
-      certificate if you are using SSL with VERIFY_PEER_NAME.
+      certificate if you are using SSL with `VERIFY_PEER_NAME`.
     </property>
     
     <property name="user" type="string" mutable="true" nullable="true">
