@@ -21,7 +21,7 @@
   </group>
 
   <group name="events">
-    <property name="handler" type="handler" mutable="true" nullable="true">
+    <property name="handler" type="messaging-handler" mutable="true" nullable="true">
       The event handler for the endpoint.
     </property>
   </group>

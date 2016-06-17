@@ -38,7 +38,9 @@
   </group>
 
   <group name="events">
-    @handler.xml@
+    @messaging-handler.xml@
+
+    @listen-handler.xml@
   </group>
 
   <group name="configuration">
@@ -64,7 +66,7 @@
   <group name="network">
     @transport.xml@
     
-    @acceptor.xml@
+    @listener.xml@
     
     @sasl.xml@
     

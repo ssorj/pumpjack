@@ -1,0 +1,14 @@
+<class name="listen-handler">
+  Events for incoming connections.
+  
+  <group name="basic">
+    <method name="on-accept">
+    </method>
+
+    <method name="on-error">
+    </method>
+
+    <method name="on-close">
+    </method>
+  </group>
+</class>

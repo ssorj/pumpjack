@@ -1,6 +1,6 @@
-<class name="handler">
-  The Proton event handler.  It allows users to intercept and
-  change Proton behaviors.
+<class name="messaging-handler">
+  The primary messaging event handler.  It allows users to intercept
+  and change Proton behaviors.
 
   <link node="/proton/core/container/constructor"/>
 
@@ -208,17 +208,17 @@
   </group>
 
   <group name="flow-control">
-    <link node="/proton/core/receiver/flush"/>
-    <!-- <link node="/proton/core/sender/flushing"/> -->
+    <link node="/proton/core/receiver/drain"/>
+    <!-- <link node="/proton/core/sender/draining"/> -->
     
-    <method name="on-sender-flush-start">
-      The remote end of the sender requested flushing.
+    <method name="on-sender-drain-start">
+      The remote end of the sender requested draining.
 
       <input type="sender"/>
     </method>
     
-    <method name="on-receiver-flush-finish">
-      The remote end of the receiver completed flushing.
+    <method name="on-receiver-drain-finish">
+      The remote end of the receiver completed draining.
       
       <input type="receiver"/>
     </method>

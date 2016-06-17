@@ -1,0 +1,11 @@
+<class name="listener">
+  A context for accepting inbound connections.
+
+  <link node="/proton/core/container/listen"/>
+
+  <group name="basic">
+    <method name="stop">
+      Stop listening.
+    </method>
+  </group>
+</class>

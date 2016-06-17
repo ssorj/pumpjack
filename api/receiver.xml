@@ -23,7 +23,7 @@
     <method name="open">
       Open the receiver.
 
-      <link node="/proton/core/handler/on-receiver-open"/>
+      <link node="/proton/core/messaging-handler/on-receiver-open"/>
 
       <input name="options" type="receiver-options" optional="true"/>
     </method>
@@ -33,7 +33,7 @@
 
       The operation is complete when on-receiver-close fires.
       
-      <link node="/proton/core/handler/on-receiver-close"/>
+      <link node="/proton/core/messaging-handler/on-receiver-close"/>
       
       <input type="error-condition" optional="true"/>
     </method>
@@ -45,7 +45,7 @@
       
       The operation is complete when on-receiver-detach fires.
       
-      <link node="/proton/core/handler/on-receiver-detach"/>
+      <link node="/proton/core/messaging-handler/on-receiver-detach"/>
       
       <input type="error-condition" optional="true"/>
     </method>
@@ -62,17 +62,17 @@
       <input name="count" type="uint"/>
     </method>
 
-    <method name="flush">
+    <method name="drain">
       Request any messages available at the sending end.  This tells
       the sender to use all existing credit immediately to send
       deliveries and then discard any excess credit.
 
-      The sending end is notified of the flush request by the
-      *on-sender-flush-start* event.  The operation is complete when
-      *on-receiver-flush-finish* fires.
+      The sending end is notified of the drain request by the
+      *on-sender-drain-start* event.  The operation is complete when
+      *on-receiver-drain-finish* fires.
 
-      <link node="/proton/core/handler/on-sender-flush-start"/>
-      <link node="/proton/core/handler/on-receiver-flush-finish"/>
+      <link node="/proton/core/messaging-handler/on-sender-drain-start"/>
+      <link node="/proton/core/messaging-handler/on-receiver-drain-finish"/>
     </method>
   </group>
 </class>

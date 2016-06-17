@@ -39,7 +39,7 @@
 
       The operation is complete when on-connection-open fires.
 
-      <link node="/proton/core/handler/on-connection-open"/>
+      <link node="/proton/core/messaging-handler/on-connection-open"/>
 
       <input type="connection-options" optional="true"/>
     </method>
@@ -49,7 +49,7 @@
 
       The operation is complete when on-connection-close fires.
       
-      <link node="/proton/core/handler/on-connection-close"/>
+      <link node="/proton/core/messaging-handler/on-connection-close"/>
     
       <input type="error-condition" optional="true"/>
     </method>
@@ -63,6 +63,7 @@
       <output type="tracker"/>
     </method>
 
+<!--
     <method name="send-request" proposed="true">
       Send a request message.  The message reply-to property is
       set automatically.
@@ -84,6 +85,7 @@
       <input name="request-message" type="message"/>
       <output type="tracker"/>
     </method>
+-->      
   </group>
 
   <group name="link-operations">
@@ -92,7 +94,7 @@
 
       The operation is complete when on-sender-open fires.
 
-      <link node="/proton/core/handler/on-sender-open"/>
+      <link node="/proton/core/messaging-handler/on-sender-open"/>
 
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
@@ -104,7 +106,7 @@
 
       The operation is complete when on-receiver-open fires.
 
-      <link node="/proton/core/handler/on-receiver-open"/>
+      <link node="/proton/core/messaging-handler/on-receiver-open"/>
 
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>

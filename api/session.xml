@@ -28,7 +28,7 @@
 
       The operation is complete when on-session-open fires.
 
-      <link node="/proton/core/handler/on-session-open"/>
+      <link node="/proton/core/messaging-handler/on-session-open"/>
 
       <input type="session-options" optional="true"/>
     </method>
@@ -38,7 +38,7 @@
 
       The operation is complete when on-session-close fires.
       
-      <link node="/proton/core/handler/on-session-close"/>
+      <link node="/proton/core/messaging-handler/on-session-close"/>
 
       <input type="error-condition" optional="true"/>
     </method>
@@ -76,7 +76,7 @@
 
       The operation is complete when on-sender-open fires.
 
-      <link node="/proton/core/handler/on-sender-open"/>
+      <link node="/proton/core/messaging-handler/on-sender-open"/>
 
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
@@ -88,7 +88,7 @@
 
       The operation is complete when on-receiver-open fires.
 
-      <link node="/proton/core/handler/on-receiver-open"/>
+      <link node="/proton/core/messaging-handler/on-receiver-open"/>
       
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
