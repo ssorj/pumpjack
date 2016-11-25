@@ -1,5 +1,5 @@
 <class name="source" type="terminus">
-  A source of messages.
+  A point of origin for messages.
 
   <link node="target"/>
   <link node="source-options"/>
