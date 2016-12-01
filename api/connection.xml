@@ -1,5 +1,5 @@
 <class name="connection" type="endpoint">
-  A top-level channel for communication.
+  A channel for communication between two peers on a network.
   
   In current implementations, a connection corresponds to a TCP
   connection, represented by a transport.

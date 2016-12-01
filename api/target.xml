@@ -1,5 +1,5 @@
 <class name="target" type="terminus">
-  A destination for messages.
+  A named destination for messages.
   
   <link node="target-options"/>
   <link node="source"/>
