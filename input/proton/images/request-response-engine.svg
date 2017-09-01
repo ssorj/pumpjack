@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="761" height="235.25">
+  <style xmlns="http://www.w3.org/1999/xhtml"/>
+  <defs/>
+  <g transform="translate(0,0)">
+    <g>
+      <rect fill="#ffffff" stroke="none" x="0" y="0" width="761" height="235.25"/>
+    </g>
+    <g transform="translate(0.5,0.5) matrix(1,0,0,1,211,122.75)">
+      <g>
+        <g transform="translate(0,0) scale(3.24,0.925)">
+          <g>
+            <path fill="#ffffff" stroke="none" d="M 0 0 L 100 0 Q 100 0 100 0 L 100 100 Q 100 100 100 100 L 0 100 Q 0 100 0 100 L 0 0 Q 0 0 0 0 Z"/>
+            <g transform="scale(0.30864197530864196,1.081081081081081)">
+              <path fill="none" stroke="none" d="M 0 0 L 324 0 Q 324 0 324 0 L 324 92.5 Q 324 92.5 324 92.5 L 0 92.5 Q 0 92.5 0 92.5 L 0 0 Q 0 0 0 0 Z"/>
+              <path fill="none" stroke="#000000" d="M 0 0 M 0 0 L 324 0 Q 324 0 324 0 L 324 92.5 Q 324 92.5 324 92.5 L 0 92.5 Q 0 92.5 0 92.5 L 0 0 Q 0 0 0 0 Z" stroke-miterlimit="10"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,213,142)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="321" height="55" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="110.49715423583984" y="0" width="101" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="110.90908813476562" y="12">Request-Response</text>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="13.63636302947998" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="96.86079406738281" y="13.63636302947998" width="128" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="97.27272033691406" y="25.63636302947998">bytes out == F(bytes in)</text>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="27.27272605895996" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="55.49715805053711" y="27.27272605895996" width="211" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="italic" font-weight="normal" text-decoration="" line-height="14px" x="55.45454406738281" y="39.27272605895996">Where F is controlled outside the library</text>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="40.909088134765625" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="20.49715805053711" y="40.909088134765625" width="281" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="italic" font-weight="normal" text-decoration="" line-height="14px" x="20.909090042114258" y="52.909088134765625">Applications can inspect requests and edit responses</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,117.5,139)">
+      <image width="123" height="60" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAAA8CAYAAABGmsWrAAAB8ElEQVR4Xu2X0U0DQQxEnQqgAyiBDqAUSqADoAPoADqhBOiADoAOkKWNhFCU3M7tJTfyW+mUH9sZz7vZKJvglHFgU2ZTFg1gF3oJgA3sQg4UWpVkA7uQA4VWJdnALuRAoVVJNrALOVBoVZIN7EIOFFqVZAO7kAOFViXZwC7kQKFVSTawCzlQaFWSDexCDhRalWQDu5ADhVYl2cAu5EChVUn2WNh3EfEVEa9jx46ZBuwxPm6nfEbERUTk58PaoAN7LOzbBjmB50noLxHxHBHfY7+qfxqw+z2b0pHQ87luxQn66dTQ58K+bNfWFAN6as4j4qqnoaP2pqO2pzT1pu5956TQd8HO35r7ni2pnezAT0t4pvzo1/pc2B8Lic7funxGnzT4ffTQNu/tz9y88TIweZVvz2MDfXTIWwFzr/GFfLMduwty/g3L23KJl7fLKGB32XWwOFN71qpWA5lkH+QmFWSCM92rSPL/DUi2xNSzCdie3CTVwJZs82wCtic3STWwJds8m4DtyU1SDWzJNs8mYHtyk1QDW7LNswnYntwk1cCWbPNsArYnN0k1sCXbPJuA7clNUg1syTbPJmB7cpNUA1uyzbMJ2J7cJNXAlmzzbAK2JzdJNbAl2zybgO3JTVINbMk2zyZge3KTVANbss2z6RcSSCc9+mbbaAAAAABJRU5ErkJggg==" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,530.5,140.021)">
+      <image width="133" height="60" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIUAAAA8CAYAAABIH3mBAAACJ0lEQVR4Xu2Y0U3EQAxE5yqADqADKIES6AA6gA6ADqADSqEESoAOoANkKZFOuQjfJVknlt9K9+eNxzMvm1x2YuHAwIEdjuDA0AGggIkDB4ACKIACBnwHOCl8j8pVAEW5yP2BgcL3qFwFUJSL3B8YKHyPylUARbnI/YGBwveoXAVQlIvcHxgofI/KVQBFucj9gYHC96hcBVCUi9wfGCh8j8pVAEW5yP2BgcL3qFwFUJSL3B8YKHyPylUARbnI/YGBwveoXAVQlIvcHxgofI9aVDxLupD0IumrRYM51wSKOe5N3/sj6azb/r41OIBierBzdl5KstPibu8im4FjDAoT+zRhYqP/c8K+U7Z8nFI8odb02xyt1vfgcTEGh/n/1ljHv/MtCUUrIyte18B8XQuOpR8fN40TvJZ03rCH3bn2a7VM+9URF//toDAwWp5co1KWhuKIeSnZc+BW0oOk/mZaFYZeF1Csw+h9997Wn0qbgAEo1oGh72rfJuw7hb142oul/fPYzOKkWCeKx+5dYVMwcFKsA0OKrpwUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6AYUKWKKFQkUsX6n6PYHEnUnPXsDG2EAAAAASUVORK5CYII=" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,591,164)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="48.67897415161133" y="0" width="55" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="49.09090805053711" y="12">bytes out</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,20,162)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="53.67897415161133" y="0" width="45" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="53.63636016845703" y="12">bytes in</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,278,16)">
+      <image width="60" height="111" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAABvCAYAAACw5qMrAAACAUlEQVR4Xu2bUU0kQRRFLwoABzgAB7soAAdrAQeAg5WAhEUBSEACDgAFS15SlXSa7zqVVJ/+mmGS6dxzbr/qTDUnOdhxcrC8MfDqxjWs4cUIWOnFhP6Io2ENL0bASi8m1KFlpa30YgSs9GJCndJW2kovRsBKLybUKW2lrfRiBGZV+nfj+ErznBW4gv5Pcn2EwGX3pQWtwKjlGYYr4K9NpVHLdOCt3d5m1DIdeGu3B66/YZbJwN3uV5LTlra/xiyTgbvdxyT3LXB/jVmmAm/tXiT5aIHPk7w344hlKvC/JDdJyuhDW4Mrc52/3pfx5yS3o9dlKvBZkrskf5N87gLvPxuamQq8D1F3Wd3w0ID7LzcwhFvDEOhpjx5qWMODCDilB4F1HfbGA6qW1zAE2nUYAu2dFgXaSlOkndIQaSsNgXZKU6CtNEXaKQ2Rfkty2XYeoFNO+iG8pesba3jD8BMeNXDtMdXGWe0koscsw7WxVjuGtV2KHrMCPyX5c8ShhWyCbys0y3Cf0gYefUFreDTh3TpspUcDt9KjCVvpAzw+XJJdh6FLadqPeBrW8CACrsODwO6/1msYAu2UpkBbaYq0UxoibaUh0E5pCrSVpkg7pSHSVhoC7ZSmQFtpirRTGiJtpSHQ06Z0PcVz1f5rvB5Sw45Z1zAWcH8iA09DD534cIa/AWQQiHBuEI0zAAAAAElFTkSuQmCC" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,232,27)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="35.49715805053711" y="0" width="81" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="35.45454406738281" y="12">Query Interface</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,407.79999999999995,42.5)">
+      <image width="60" height="110" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAABuCAYAAAB7unCOAAAB/0lEQVR4Xu2b0U0DMRAFXzqACoBKgEqAyoAOKIFSoALoALToLFn371mUG//klEjZvJn1JpJzpxxsnQ6WNwY+d+Ndhh+TXCV5TfJBQu4K/J7kNsl9krrGloEh1BqGQLd9LWlYw4sIOKUXgd2/rXsYAu2UpkDb0hRppzRE2paGQDulKdC2NEXaKQ2RtqUh0E5pCrQtTZF2SkOkbWkItFOaAm1LU6Sd0hDp0dKXSb6hmn9lug3j9fGCm81hGK+PFzxq4LckF0nuyP3bvYfr3zv1bx50dbV0TeavJDdo2sYp/bMFxYHjBbegBqZaW8MQaVsaAt32W1rDGl5EwCm9COz+bd3DEGinNAXalqZIO6Uh0rY0BNopTYG2pSnSTmmItC0NgXZKrwRd50jjXuF9S8+vrfwMmOGXJA9JnpLU9Ry4zpeet7vFl581UVN6hKoDtDpPmgPXc3V7/IBxFoYrxBysjNaqkHX9meR6adKGw6zZ8ghXQTG7lZlq6SFvWJ5lYnY7Ag/Lc2Bk746CtOF5L9c1arfDcNWcLaN2uwIPy/WITOZ5/3S09LBcj/UjBF1dgdGQ/8GwgSkCtjRFuquOhrvIU3U1TJHuqqPhLvJUXQ1TpLvqaLiLPFVXwxTprjoa7iJP1dUwRbqrjoa7yFN1NUyR7qqj4S7yVF0NU6S76hzO8C8E3YRvsIVWdgAAAABJRU5ErkJggg==" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,384,28)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="110" height="31" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="110" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="12.272727012634277" y="0" width="86" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="12.727272033691406" y="12">Control Interface</text>
+      </g>
+    </g>
+  </g>
+</svg>

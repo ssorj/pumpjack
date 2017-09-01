@@ -1,0 +1,49 @@
+<class name="delivery" type="transfer">
+  A received message.
+
+  A delivery attempt can fail.  As a result, a particular
+  message may correspond to multiple deliveries.
+
+  <link node="tracker"/>
+  <link node="receiver"/>
+
+  <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp438000">Conceptual overview</link>
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
+  
+  <group name="basic">
+    <property type="receiver">
+      The receiver on which the delivery was received.
+    </property>
+  </group>
+
+  <group name="delivery-state">
+    <method name="accept">
+      Change the delivery state to ACCEPTED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
+    </method>
+
+    <method name="reject">
+      Change the delivery state to REJECTED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
+    </method>
+
+    <method name="release">
+      Change the delivery state to RELEASED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
+    </method>
+    
+    <method name="modify">
+      Change the delivery state to MODIFIED.
+
+      If the receiver.delivery-mode is AT-MOST-ONCE or AT-LEAST-ONCE,
+      this call will also settle the delivery.
+    </method>
+  </group>
+</class>

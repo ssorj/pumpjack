@@ -1,0 +1,44 @@
+<class name="terminus" internal="true">
+  The base class for source and target.
+
+  <link node="source"/>
+  <link node="target"/>
+
+  <group name="basic">
+    <property name="address" type="string" value="[discovered]" nullable="true">
+      The address of the source or target.
+    </property>
+  </group>
+
+  <group name="reliability">
+    <property name="durability-mode" type="durability-mode" value="[discovered]">
+      The persistence mode of the source or target.
+    </property>
+  </group>
+    
+  <group name="dynamic-nodes" title="Dynamic nodes">
+    <property name="dynamic" type="boolean" value="[discovered]">
+      On-demand creation of a source or target node.
+    </property>
+
+    <property name="node-properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
+      The properties of a dynamic source or target node.
+    </property>
+  </group>
+
+  <group name="resource-limits">
+    <property name="timeout" type="duration" value="[discovered]" nullable="true">
+      The period after which the source or target is discarded.
+    </property>
+
+    <property name="expiry-policy" type="expiry-policy" value="[discovered]">
+      When expiration of the source or target begins.
+    </property>
+  </group>
+
+  <group name="extended-attributes" title="Extended attributes">
+    <property name="capabilities" type="array" item-type="symbol" value="[discovered]">
+      Extensions supported or desired.
+    </property>
+  </group>
+</class>

@@ -1,0 +1,38 @@
+<class name="session-options" type="endpoint-options">
+  Options for new sessions.
+  
+  <link node="/mercury/core/session"/>
+  <link node="/mercury/core/connection/open-session"/>
+
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
+
+  <group name="basic">
+    <method name="constructor" special="true">
+      Create a new session-options instance.
+      
+      <input type="session" optional="true"/>
+      <output type="session-options"/>
+    </method>
+  </group>
+  
+  <group name="flow-control">
+    <property name="incoming-capacity" type="int" mutable="true" nullable="true">
+      Control the number of incoming bytes the session will buffer.
+    </property>
+  </group>
+
+  <group name="resource-limits">
+    <property name="max-links" type="uint" mutable="true" nullable="true">
+      Limit the number of links on this session.
+    </property>
+    
+    <property name="incoming-window" type="uint" mutable="true" nullable="true">
+      Limit the number of incoming transfer frames.
+    </property>
+    
+    <property name="outgoing-window" type="uint" mutable="true" nullable="true">
+      Limit the number of outgoing transfer frames.
+    </property>
+  </group>
+</class>

@@ -1,0 +1,112 @@
+<?xml version="1.0"?>
+<model name="mercury" title="Qpid Mercury API">
+  This document specifies the API for Qpid Mercury.  It is meant to
+  serve as API documentation and as a reference point for concrete
+  implementations.
+
+  <!--
+  Qpid Proton is an event-driven messaging API for building clients,
+  brokers, and more.  It uses the AMQP 1.0 wire protocol, so it can
+  exchange messages with other components that use the same open
+  internet standard.  The Proton API is available in many popular
+  programming languages.
+
+  For more information see the [Proton API overview](overview.html).
+  If you are developing a new implementation, take a look at the
+  [implementation guide](implementation-guide.html).
+  -->
+
+  <annotation name="python-name">qpid_mercury</annotation>
+
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#toc">Transport layer</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#toc">Messaging layer</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#toc">Transactions</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-security-v1.0-os.html#toc">Security layers</link>
+
+  <!--
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C API reference</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++ API reference</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java API reference</link>
+  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python API reference</link>
+  -->
+
+  <!--
+  <link-generator function="gen_amqp_type_link"/>
+  <link-generator function="gen_c_module_link"/>
+  <link-generator function="gen_c_class_link"/>
+  <link-generator function="gen_cpp_module_link"/>
+  <link-generator function="gen_cpp_class_link"/>
+  <link-generator function="gen_java_module_link"/>
+  <link-generator function="gen_java_class_link"/>
+  <link-generator function="gen_python_module_link"/>
+  <link-generator function="gen_python_class_link"/>
+  -->
+
+  @core.xml@
+
+  @types.xml@
+
+  <group-definition name="basic" title="Basic properties and methods">
+  </group-definition>
+
+  <group-definition name="configuration" title="Configuration">
+  </group-definition>
+
+  <group-definition name="network" title="Network">
+  </group-definition>
+
+  <group-definition name="message-operations" title="Message operations">
+  </group-definition>
+
+  <group-definition name="connection-operations" title="Connection operations">
+  </group-definition>
+
+  <group-definition name="link-operations" title="Sender and receiver operations">
+  </group-definition>
+
+  <group-definition name="endpoint-lifecycle" title="Endpoint lifecycle">
+  </group-definition>
+
+  <group-definition name="delivery-state" title="Delivery state">
+  </group-definition>
+
+  <group-definition name="transport-state" title="Transport state">
+  </group-definition>
+
+  <group-definition name="events" title="Event processing">
+  </group-definition>
+
+  <group-definition name="identity" title="Identity">
+  </group-definition>
+
+  <group-definition name="expiration" title="Expiration">
+  </group-definition>
+
+  <group-definition name="reliability" title="Reliability">
+  </group-definition>
+
+  <group-definition name="message-distribution" title="Message distribution">
+  </group-definition>
+  
+  <group-definition name="errors" title="Error handling">
+  </group-definition>
+
+  <group-definition name="flow-control" title="Flow control">
+  </group-definition>
+
+  <group-definition name="security" title="Security">
+  </group-definition>
+
+  <group-definition name="resource-limits" title="Resource limits">
+  </group-definition>
+
+  <group-definition name="transactions" title="Transactions">
+  </group-definition>
+
+  <group-definition name="extended-attributes" title="Extended attributes">
+  </group-definition>
+
+  <group-definition name="codec-group" title="Encoding and decoding">
+  </group-definition>
+</model>

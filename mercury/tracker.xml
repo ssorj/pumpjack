@@ -1,0 +1,17 @@
+<class name="tracker" type="transfer">
+  A tracker for a sent message.  Every tracker exists within
+  the context of a sender.
+
+  A delivery attempt can fail.  As a result, a particular
+  message may correspond to multiple trackers.
+
+  <link node="delivery"/>
+  <link node="sender"/>
+  <link node="/mercury/core/sender/send"/>
+  
+  <group name="basic">
+    <property type="sender">
+      The sender on which the delivery was sent.
+    </property>
+  </group>
+</class>

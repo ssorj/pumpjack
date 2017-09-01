@@ -1,0 +1,65 @@
+<module name="types">
+  Data types.
+
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
+
+  <group name="basic-scalar-types" title="Scalar data types">
+    <class name="null">An empty value.</class>
+    <class name="boolean">A true or false value.</class>
+    <class name="char">A single Unicode character.</class>
+    <class name="string">A sequence of Unicode characters.</class>
+    <class name="binary">A sequence of bytes.</class>
+    <class name="float">A 32-bit floating point number.</class>
+    <class name="double">A 64-bit floating point number.</class>
+    <class name="byte">A signed 8-bit integer.</class>
+    <class name="short">A signed 16-bit integer.</class>
+    <class name="int">A signed 32-bit integer.</class>
+    <class name="long">A signed 64-bit integer.</class>
+    <class name="ubyte">An unsigned 8-bit integer.</class>
+    <class name="ushort">An unsigned 16-bit integer.</class>
+    <class name="uint">An unsigned 32-bit integer.</class>
+    <class name="ulong">An unsigned 64-bit integer.</class>
+  </group>
+
+  <group name="composite-types" title="Composite data types">
+    <class name="array">A sequence of values of a single type.</class>
+    <class name="list">A sequence of values of variable type.</class>
+    <class name="map">A mapping from distinct keys to values.</class>
+  </group>
+
+  <group name="semantic-types" title="Semantic data types">
+    <class name="symbol">A 7-bit ASCII string from a constrained domain.</class>
+    <class name="timestamp">An absolute point in time.</class>
+    <class name="uuid">A universally unique identifier.</class>
+
+    <class name="message-id">
+      A message identifier.  Legal types are ulong, uuid, binary, and
+      string.
+
+      <link node="ulong"/>
+      <link node="uuid"/>
+      <link node="binary"/>
+      <link node="string"/>
+    </class>
+  </group>
+
+  <group name="decimal-types" title="Decimal floating-point data types">
+    <link href="https://en.wikipedia.org/wiki/Decimal_floating_point">Decimal floating point arithmetic</link>
+    
+    <class name="decimal32">A 32-bit decimal floating point number.</class>
+    <class name="decimal64">A 64-bit decimal floating point number.</class>
+    <class name="decimal128">A 128-bit decimal floating point number.</class>
+  </group>
+
+  <group name="api-types" title="API data types">
+    Data types used by this API but not defined by AMQP.
+    
+    <class name="duration">A span of time.</class>
+    <class name="iterator">A traversal of a collection.</class>
+    <class name="object">The most basic type.</class>
+    <class name="function">A user-supplied function.</class>
+    <!--
+      <class name="url">A parsed string that points to a network resource.</class>
+    -->
+  </group>
+</module>

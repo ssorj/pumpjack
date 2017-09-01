@@ -1,0 +1,83 @@
+<class name="link-options" type="endpoint-options" hidden="true">
+  Options for new links.
+  
+  <link node="link"/>
+  <link node="sender-options"/>
+  <link node="receiver-options"/>
+  <link node="source-options"/>
+  <link node="target-options"/>
+
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
+  
+  <group name="basic">
+    <property name="source" type="source-options">
+      Options for the link source.
+    </property>
+    
+    <property name="target" type="target-options">
+      Options for the link target.
+    </property>
+    
+    <property name="name" type="string" value="[generated]" mutable="true">
+      The name of the link.
+    </property>
+  </group>
+
+  <group name="reliability">
+    <property name="auto-settle" type="boolean" value="true" mutable="true">
+      Automatically settle deliveries.
+
+      <link node="/mercury/core/transfer/settle"/>
+    </property>
+
+    <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">
+      Control the message delivery guarantee.
+    </property>
+  </group>
+
+  <group name="resource-limits">
+    <property name="max-message-size" type="ulong" mutable="true" nullable="true">
+      Limit the size of messages on the link.
+    </property>
+  </group>
+</class>
+
+<enumeration name="delivery-mode">
+  <value name="AT-MOST-ONCE">
+    Unreliable delivery.  The sender settles the message as
+    soon as it sends it.  If the connection is lost before the
+    message is received, the message will not be delivered.
+
+    <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  </value>
+
+  <value name="AT-LEAST-ONCE">
+    Reliable delivery.  The receiver accepts and settles the
+    message on receipt.  If the connection is lost before the
+    sender is informed of the settlement, then the delivery is
+    considered in-doubt and will be retried.  This will ensure
+    it eventually gets delivered, provided the connection and
+    link can be reestablished.  It may, however, be delivered
+    multiple times.
+
+    <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  </value>
+
+  <value name="EXACTLY-ONCE">
+    Reliable delivery with no duplicates.  The receiver
+    accepts the message but doesn't settle it.  The sender
+    settles once it is aware that the receiver accepted it.
+    In this way the receiver retains knowledge of an accepted
+    message until it is sure the sender knows it has been
+    accepted.  If the connection is lost before settlement,
+    the receiver informs the sender of all the unsettled
+    deliveries it knows about, and from this the sender can
+    deduce which need to be redelivered. The sender likewise
+    informs the receiver which deliveries it knows about, from
+    which the receiver can deduce which have already been
+    settled.
+
+    <link href="{{{{site_url}}}}/delivery-guarantees.html">Delivery guarantees</link>
+  </value>
+</enumeration>

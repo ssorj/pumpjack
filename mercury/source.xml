@@ -1,0 +1,23 @@
+<class name="source" type="terminus">
+  A named point of origin for messages.
+
+  <link node="target"/>
+  <link node="source-options"/>
+  <link node="/mercury/core/link/source"/> <!-- XXX core/sender/source -->
+
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
+
+  <group name="message-distribution">
+    <property name="distribution-mode" type="distribution-mode" value="[discovered]">
+      The message distribution mode at the remote peer.
+    </property>
+    
+    <property name="filters" type="map" key-type="symbol" item-type="string" value="[discovered]" nullable="true">
+      Filters set by the remote peer.
+      
+      <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-filter-set"/>
+    </property>
+  </group>
+</class>

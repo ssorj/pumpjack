@@ -1,0 +1,22 @@
+<class name="endpoint-options" hidden="true">
+  The base class for connection-options, session-options, and
+  link-options.
+
+  <link node="connection-options"/>
+  <link node="session-options"/>
+  <link node="link-options"/>
+
+  <group name="extended-attributes">
+    <property name="properties" type="map" key-type="symbol" item-type="object" mutable="true" nullable="true">
+      Application-defined properties.
+    </property>
+
+    <property name="offered-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
+      Extensions the endpoint supports.
+    </property>
+    
+    <property name="desired-capabilities" type="array" item-type="symbol" mutable="true" nullable="true">
+      Extensions the endpoint can use.
+    </property>
+  </group>
+</class>

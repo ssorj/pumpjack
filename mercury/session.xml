@@ -1,0 +1,102 @@
+<class name="session" type="endpoint">
+  A container of senders and receivers.
+
+  <link node="session-options"/>
+  <link node="connection"/>
+  <link node="sender"/>
+  <link node="receiver"/>
+  
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-sessions">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
+  
+  <group name="basic">
+    <property type="connection">
+      The containing connection.
+    </property>
+
+    <property name="senders" type="iterator" item-type="sender">
+      The senders contained in this session.
+    </property>
+
+    <property name="receivers" type="iterator" item-type="receiver">
+      The receivers contained in this session.
+    </property>
+
+    <method name="open">
+      Open the session.
+
+      <input type="session-options" optional="true"/>
+    </method>
+
+    <method name="close">
+      Close the session.
+
+      <input type="error-condition" optional="true"/>
+    </method>
+  </group>
+
+  <group name="message-operations">
+    <method name="send" proposed="true">
+      Send a message on a link with the given address.
+
+      <input type="message"/>
+      <output type="tracker"/>
+    </method>
+
+    <method name="send-request" proposed="true">
+      Send a request message.  The message.reply-to property is
+      set automatically.
+
+      <input type="message"/>
+      <output type="tracker"/>
+    </method>
+    
+    <method name="send-response" proposed="true">
+      Send a response message.  The message.to property is set
+      automatically.
+
+      <input name="response-message" type="message"/>
+      <input name="request-message" type="message"/>
+      <output type="tracker"/>
+    </method>
+  </group>
+  
+  <group name="link-operations">
+    <method name="open-sender">
+      Create and open a sending link.
+
+      <input name="address" type="string"/>
+      <input type="sender-options" optional="true"/>
+      <output type="sender"/>
+    </method>
+    
+    <method name="open-receiver">
+      Create and open a receiving link.
+
+      <input name="address" type="string"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="receiver"/>
+    </method>
+  </group>
+
+  <group name="flow-control">
+    <property name="incoming-bytes" type="uint" value="[discovered]">
+      The number of incoming bytes currently buffered.
+    </property>
+    
+    <property name="outgoing-bytes" type="uint" value="[discovered]">
+      The number of outgoing bytes currently buffered.
+    </property>
+  </group>
+  
+  <group name="resource-limits">
+    <property name="incoming-window" type="uint" value="[discovered]">
+      The maximum incoming transfer frames.
+    </property>
+    
+    <property name="outgoing-window" type="uint" value="[discovered]">
+      The maximum outgoing transfer frames.
+    </property>
+  </group>
+</class>

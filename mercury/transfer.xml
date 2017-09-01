@@ -1,0 +1,31 @@
+<class name="transfer" internal="true">
+  The base class for delivery and tracker.
+
+  <link node="delivery"/>
+  <link node="tracker"/>
+  
+  <group name="basic">
+    <property name="id" type="binary" value="[generated]">
+      The delivery identifier.
+    </property>
+    
+    <property type="container">
+      The container holding this delivery or tracker.
+    </property>
+  </group>
+
+  <group name="settlement" title="Settlement">
+    Settlement state governs how long a message transfer is
+    tracked at the local and remote peers, and when each can
+    safely consider the transfer resolved, that is "settled".
+    
+    <property name="settled" type="boolean" value="[discovered]">
+      True if the delivery has been settled.
+    </property>
+
+    <method name="settle">
+      Mark the delivery settled.  A settled delivery can never
+      be used again.
+    </method>
+  </group>
+</class>

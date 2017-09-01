@@ -1,20 +1,28 @@
 export PYTHONPATH = ${PWD}/python
 
-.PHONY: render
-render: clean
-	scripts/pumpjack -r html -i api -o input
-	transom input output
+.PHONY: default
+default: render-mercury render-proton
 
-.PHONY: render-python
-render-python:
-	scripts/pumpjack -r python -i api -o input/python
-	transom input output
+.PHONY: render-mercury
+render-mercury: clean
+	scripts/pumpjack -r html -i mercury -o input/mercury
+	transom input/mercury output/mercury
 
-.PHONY: gen-python-impl
-gen-python-impl: impl_dir := python/_qpid_proton_impl
-gen-python-impl: temp_dir := $(shell mktemp -d)
-gen-python-impl:
-	scripts/pumpjack -r python-impl -i api -o ${temp_dir}/new-impl
+.PHONY: render-proton
+render-proton: clean
+	scripts/pumpjack -r html -i proton -o input/proton
+	transom input/proton output/proton
+
+.PHONY: render-proton-python
+render-proton-python:
+	scripts/pumpjack -r python -i proton -o input/proton/python
+	transom input/proton output/proton
+
+.PHONY: gen-proton-python-impl
+gen-proton-python-impl: impl_dir := python/proton/_qpid_proton_impl
+gen-proton-python-impl: temp_dir := $(shell mktemp -d)
+gen-proton-python-impl:
+	scripts/pumpjack -r python-impl -i proton -o ${temp_dir}/new-impl
 	-mv ${impl_dir} ${temp_dir}/old-impl
 	mv ${temp_dir}/new-impl/qpid_proton ${impl_dir}
 

@@ -1,0 +1,63 @@
+<module name="core">
+  The API entry point.
+  
+  Many applications will import only this module.
+
+  <annotation name="requires">types, codec, io</annotation>
+
+  <group name="model" title="Core model">
+    @container.xml@
+
+    @endpoint.xml@
+
+    @connection.xml@
+
+    @session.xml@
+
+    @link.xml@
+
+    @sender.xml@
+
+    @receiver.xml@
+
+    @terminus.xml@
+
+    @source.xml@
+
+    @target.xml@
+
+    @message.xml@
+
+    @transfer.xml@
+    
+    @delivery.xml@
+
+    @tracker.xml@
+
+    @error-condition.xml@
+  </group>
+
+  <group name="configuration">
+    @endpoint-options.xml@
+
+    @connection-options.xml@
+    
+    @session-options.xml@
+    
+    @link-options.xml@
+
+    @sender-options.xml@
+
+    @receiver-options.xml@
+
+    @terminus-options.xml@
+
+    @source-options.xml@
+
+    @target-options.xml@
+  </group>
+
+  <group name="errors">
+    @errors.xml@
+  </group>
+</module>

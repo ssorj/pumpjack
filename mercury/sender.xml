@@ -1,0 +1,81 @@
+<class name="sender" type="link">
+  A channel for sending messages.  A sender contains an ordered
+  sequence of deliveries.
+
+  <link node="sender-options"/>
+  <link node="session"/>
+  <link node="receiver"/>
+  <link node="delivery"/>
+  <link node="terminus"/>
+
+  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-detach">Detach performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-flow">Flow performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
+  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
+  
+  <group name="basic">
+    <property name="trackers" type="iterator" item-type="tracker">
+      The trackers contained in this sender.
+    </property>
+    
+    <method name="open">
+      Open the sender.
+
+      <input type="sender-options" optional="true"/>
+    </method>
+    
+    <method name="close">
+      Close the sender.
+
+      <input type="error-condition" optional="true"/>
+    </method>
+
+    <method name="detach">
+      Detach the sender without closing it.
+      
+      <input type="error-condition" optional="true"/>
+    </method>
+  </group>
+
+  <group name="flow-control">
+    <property name="draining" type="boolean" value="[discovered]" proposed="true">
+      The sender is being drained.
+
+      <link node="/mercury/core/receiver/drain"/>
+    </property>
+    
+    <property name="sendable" type="boolean" value="[discovered]" proposed="true">
+      A message can be sent.
+    </property>
+  </group>
+    
+  <group name="message-operations">
+    <method name="send">
+      Send a message on the link.
+
+      <input type="message"/>
+      <output type="tracker"/>
+    </method>
+
+<!--
+    <method name="send-request" proposed="true">
+      Send a request message.  The message reply-to property is
+      set automatically.
+
+      <input type="message"/>
+      <output type="tracker"/>
+    </method>
+    
+    <method name="send-response" proposed="true">
+      Send a response message.  The message address and
+      correlation-id properties are set automatically.
+
+      <input name="response" type="message"/>
+      <input name="request" type="message"/>
+      <output type="tracker"/>
+    </method>
+-->      
+  </group>
+</class>
