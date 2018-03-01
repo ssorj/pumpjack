@@ -1,12 +1,12 @@
 export PYTHONPATH = ${PWD}/python
 
 .PHONY: default
-default: render-mercury render-proton
+default: render-gambit render-proton
 
-.PHONY: render-mercury
-render-mercury: clean
-	scripts/pumpjack -r html -i mercury -o input/mercury
-	transom render input/mercury output/mercury
+.PHONY: render-gambit
+render-gambit: clean
+	scripts/pumpjack -r html -i gambit -o input/gambit
+	transom render input/gambit output/gambit
 
 .PHONY: render-proton
 render-proton: clean

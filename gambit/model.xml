@@ -1,22 +1,10 @@
 <?xml version="1.0"?>
-<model name="mercury" title="Qpid Mercury API">
-  This document specifies the API for Qpid Mercury.  It is meant to
+<model name="gambit" title="Qpid Gambit API">
+  This document specifies the API for Qpid gambit.  It is meant to
   serve as API documentation and as a reference point for concrete
   implementations.
 
-  <!--
-  Qpid Proton is an event-driven messaging API for building clients,
-  brokers, and more.  It uses the AMQP 1.0 wire protocol, so it can
-  exchange messages with other components that use the same open
-  internet standard.  The Proton API is available in many popular
-  programming languages.
-
-  For more information see the [Proton API overview](overview.html).
-  If you are developing a new implementation, take a look at the
-  [implementation guide](implementation-guide.html).
-  -->
-
-  <annotation name="python-name">qpid_mercury</annotation>
+  <annotation name="python-name">gambit</annotation>
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-types-v1.0-os.html#toc">Type system</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#toc">Transport layer</link>
