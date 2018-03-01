@@ -6,12 +6,12 @@ default: render-mercury render-proton
 .PHONY: render-mercury
 render-mercury: clean
 	scripts/pumpjack -r html -i mercury -o input/mercury
-	transom input/mercury output/mercury
+	transom render input/mercury output/mercury
 
 .PHONY: render-proton
 render-proton: clean
 	scripts/pumpjack -r html -i proton -o input/proton
-	transom input/proton output/proton
+	transom render input/proton output/proton
 
 .PHONY: render-proton-python
 render-proton-python:
