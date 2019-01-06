@@ -15,35 +15,20 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
   
-  <group name="basic">
-    <property name="deliveries" type="iterator" item-type="delivery">
-      The deliveries contained in this receiver.
-    </property>
-    
-    <method name="open">
-      Open the receiver.
+  <group name="general">
+    <method name="receive">
+      Request 'count' messages from the remote node.
 
-      <input name="options" type="receiver-options" optional="true"/>
-    </method>
-    
-    <method name="close">
-      Close the receiver.
-
-      <input type="error-condition" optional="true"/>
-    </method>
-
-    <method name="detach">
-      Detach the receiver without closing it.  For durable
-      subscriptions this means the subscription is inactive but not
-      canceled.
+      If no 'count' is given, one message is requested.
       
-      <input type="error-condition" optional="true"/>
+      <input name="count" type="uint" optional="true"/>
+      <output type="iterator" item-type="delivery"/>
     </method>
   </group>
     
   <group name="flow-control">
-    <link node="/mercury/core/link/credit"/>
-    <link node="/mercury/core/receiver-options/credit-window"/>
+    <link node="/gambit/core/link/credit"/>
+    <link node="/gambit/core/receiver-options/credit-window"/>
       
     <method name="add-credit">
       Issue credit to the sending end.  This increases the credit

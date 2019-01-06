@@ -2,19 +2,17 @@
   Options for new receivers.
   
   <link node="receiver"/>
-  <link node="/mercury/core/container/open-receiver"/>
-  <link node="/mercury/core/receiver/open"/>
   <link node="terminus-options"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
   
-  <group name="basic">
+  <group name="general">
     <property name="auto-accept" type="boolean" value="true" mutable="true" proposed="true">
       Automatically accept deliveries that are not explicitly
       acknowledged.
 
-      <link node="/mercury/core/delivery/accept"/>
+      <link node="/gambit/core/delivery/accept"/>
     </property>
 
     <method name="constructor" special="true">
@@ -26,8 +24,8 @@
   </group>
 
   <group name="flow-control">
-    <link node="/mercury/core/link/credit"/>
-    <link node="/mercury/core/receiver/add-credit"/>
+    <link node="/gambit/core/link/credit"/>
+    <link node="/gambit/core/receiver/add-credit"/>
 
     <property name="credit-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">
       Maintain credit for the given number of messages.

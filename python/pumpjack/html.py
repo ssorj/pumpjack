@@ -44,7 +44,10 @@ class HtmlRenderer(Renderer):
         return "{}.html".format("/".join(elems))
         
     def get_node_output_path(self, node):
-        return "{}.in".format(self.get_node_path(node, self.output_dir))
+        if node.model is None:
+            return "{}.in".format(self.get_node_path(node, self.output_dir))
+        
+        return "{}.in".format(self.get_node_path(node, _os.path.join(self.output_dir, node.model.name)))
 
     def get_node_href(self, node):
         site_url = "{{{{site_url}}}}" # XXX why doubled?

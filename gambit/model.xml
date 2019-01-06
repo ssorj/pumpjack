@@ -12,30 +12,11 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#toc">Transactions</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-security-v1.0-os.html#toc">Security layers</link>
 
-  <!--
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C API reference</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++ API reference</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java API reference</link>
-  <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python API reference</link>
-  -->
-
-  <!--
-  <link-generator function="gen_amqp_type_link"/>
-  <link-generator function="gen_c_module_link"/>
-  <link-generator function="gen_c_class_link"/>
-  <link-generator function="gen_cpp_module_link"/>
-  <link-generator function="gen_cpp_class_link"/>
-  <link-generator function="gen_java_module_link"/>
-  <link-generator function="gen_java_class_link"/>
-  <link-generator function="gen_python_module_link"/>
-  <link-generator function="gen_python_class_link"/>
-  -->
-
   @core.xml@
 
   @types.xml@
 
-  <group-definition name="basic" title="Basic properties and methods">
+  <group-definition name="general" title="General properties and methods">
   </group-definition>
 
   <group-definition name="configuration" title="Configuration">
@@ -51,9 +32,6 @@
   </group-definition>
 
   <group-definition name="link-operations" title="Sender and receiver operations">
-  </group-definition>
-
-  <group-definition name="endpoint-lifecycle" title="Endpoint lifecycle">
   </group-definition>
 
   <group-definition name="delivery-state" title="Delivery state">

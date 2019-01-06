@@ -2,14 +2,13 @@
   Options for new senders.
   
   <link node="sender"/>
-  <link node="/mercury/core/container/open-sender"/>
   <link node="source-options"/>
   <link node="target-options"/>
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
 
-  <group name="basic">
+  <group name="general">
     <method name="constructor" special="true">
       Create a new sender-options instance.
       

@@ -1,35 +1,22 @@
 <class name="container">
-  A top-level container of connections, sessions, senders, and
-  receivers.
+  A top-level holder of connections, sessions, senders, and receivers.
 
-  A container gives a unique identity to each communicating
-  peer.  It is often a process-level object.
+  A container gives a unique identity to each communicating peer.  It
+  is often a process-level object.
 
-  It serves as an entry point to the API, allowing connections
-  and links to be established.  It can be supplied with an event
-  handler in order to intercept important events, such as newly
-  received messages or newly issued link credit for sending
-  messages.
+  A container enables the creation of network connections.
 
   <link node="connection"/>
   <link node="session"/>
   <link node="sender"/>
   <link node="receiver"/>
   
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">Conceptual overview</link>
-  
-  <group name="basic">
+  <group name="general">
     <property name="id" type="string" value="[generated]">
       A globally unique container identifier.  It is used to
       identify this container in any connections it establishes.
     </property>
 
-    <method name="connections">
-      The connections managed by this container.
-      
-      <output name="connections" type="iterator" item-type="connection"/>
-    </method>
-    
     <method name="constructor" special="true">
       Create a new container.
 
@@ -42,7 +29,7 @@
     </method>
   </group>
 
-  <group name="configuration">
+  <group name="configuration" hidden="true">
     <property name="client-connection-options" value="[instance]" type="connection-options">
       Default options for new outbound connections.
     </property>
@@ -77,7 +64,7 @@
       Send a request message.  The message reply-to property is
       set automatically.
 
-      <link node="/mercury/core/message/reply-to"/>
+      <link node="/gambit/core/message/reply-to"/>
 
       <input type="message"/>
       <input name="address-url" type="string"/>
@@ -88,8 +75,8 @@
       Send a response message.  The message to and
       correlation-id properties are set automatically.
 
-      <link node="/mercury/core/message/to"/>
-      <link node="/mercury/core/message/correlation-id"/>
+      <link node="/gambit/core/message/to"/>
+      <link node="/gambit/core/message/correlation-id"/>
 
       <input name="message" type="message"/>
       <input name="request" type="message"/>
@@ -101,7 +88,8 @@
     <method name="connect">
       Create and open an outbound connection.
 
-      <input name="connection-url" type="string"/>
+      <input name="host" type="string"/>
+      <input name="port" type="string"/>
       <input name="options" type="connection-options" optional="true"/>
       <output name="connection" type="connection"/>
     </method>
@@ -117,25 +105,7 @@
     -->
   </group>
 
-  <group name="link-operations">
-    <method name="open-receiver">
-      Create and open a receiving link.
-      
-      <input name="address-url" type="string"/>
-      <input type="receiver-options" optional="true"/>
-      <output type="receiver"/>
-    </method>
-
-    <method name="open-sender">
-      Create and open a sending link.
-
-      <input name="address-url" type="string"/>
-      <input type="sender-options" optional="true"/>
-      <output type="sender"/>
-    </method>
-  </group>
-
-  <group name="events">
+  <group name="events" hidden="true">
     <method name="schedule">
       Schedule a function call.
 

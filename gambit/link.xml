@@ -12,7 +12,7 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
 
-  <group name="basic">
+  <group name="general">
     <property name="session" type="session">
       The containing session.
     </property>
@@ -28,6 +28,14 @@
     <property name="name" type="string" value="[discovered]">
       The link name.
     </property>
+
+    <method name="detach">
+      Detach the link without closing it.  For durable
+      subscriptions this means the subscription is inactive but not
+      canceled.
+      
+      <input type="error-condition" optional="true"/>
+    </method>
   </group>
     
   <group name="reliability">
@@ -37,8 +45,8 @@
   </group>
   
   <group name="flow-control">
-    <link node="/mercury/core/receiver/add-credit"/>
-    <link node="/mercury/core/receiver-options/credit-window"/>
+    <link node="/gambit/core/receiver/add-credit"/>
+    <link node="/gambit/core/receiver-options/credit-window"/>
       
     <property name="credit" type="long" value="[discovered]">
       The number of messages the receiving end can accept.

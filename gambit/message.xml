@@ -9,7 +9,7 @@
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-message-format">Message format</link>
   
-  <group name="basic">
+  <group name="general">
     <property name="id" type="message-id" mutable="true" nullable="true">
       A unique message identifier.
 

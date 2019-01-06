@@ -1,5 +1,5 @@
 <class name="delivery" type="transfer">
-  A received message.
+  A message transfer.
 
   A delivery attempt can fail.  As a result, a particular
   message may correspond to multiple deliveries.
@@ -11,13 +11,25 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp438000">Conceptual overview</link>
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
   
-  <group name="basic">
+  <group name="general">
     <property type="receiver">
       The receiver on which the delivery was received.
     </property>
-  </group>
 
-  <group name="delivery-state">
+    <property type="message" nullable="true">
+      The message for this delivery.
+
+      The value is initially null.  It is set when the transfer is
+      complete.
+    </property>
+    
+    <method name="wait">
+      Wait until the message is received.
+
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="delivery"/>
+    </method>
+    
     <method name="accept">
       Change the delivery state to ACCEPTED.
 

@@ -10,7 +10,7 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-begin">Begin performative</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-end">End performative</link>
   
-  <group name="basic">
+  <group name="general">
     <property type="connection">
       The containing connection.
     </property>
@@ -23,20 +23,24 @@
       The receivers contained in this session.
     </property>
 
-    <method name="open">
-      Open the session.
+    <method name="open-sender">
+      Create and open a sending link.
 
-      <input type="session-options" optional="true"/>
+      <input name="address" type="string"/>
+      <input type="sender-options" optional="true"/>
+      <output type="sender"/>
     </method>
+    
+    <method name="open-receiver">
+      Create and open a receiving link.
 
-    <method name="close">
-      Close the session.
-
-      <input type="error-condition" optional="true"/>
+      <input name="address" type="string"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="receiver"/>
     </method>
   </group>
 
-  <group name="message-operations">
+  <group name="message-operations" hidden="true">
     <method name="send" proposed="true">
       Send a message on a link with the given address.
 
@@ -62,24 +66,6 @@
     </method>
   </group>
   
-  <group name="link-operations">
-    <method name="open-sender">
-      Create and open a sending link.
-
-      <input name="address" type="string"/>
-      <input type="sender-options" optional="true"/>
-      <output type="sender"/>
-    </method>
-    
-    <method name="open-receiver">
-      Create and open a receiving link.
-
-      <input name="address" type="string"/>
-      <input type="receiver-options" optional="true"/>
-      <output type="receiver"/>
-    </method>
-  </group>
-
   <group name="flow-control">
     <property name="incoming-bytes" type="uint" value="[discovered]">
       The number of incoming bytes currently buffered.

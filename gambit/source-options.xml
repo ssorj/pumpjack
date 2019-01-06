@@ -2,7 +2,7 @@
   Options for new sources.
   
   <link node="source"/>
-  <link node="/mercury/core/link-options/source"/>
+  <link node="/gambit/core/link-options/source"/>
     
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>

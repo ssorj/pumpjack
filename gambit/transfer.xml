@@ -4,11 +4,7 @@
   <link node="delivery"/>
   <link node="tracker"/>
   
-  <group name="basic">
-    <property name="id" type="binary" value="[generated]">
-      The delivery identifier.
-    </property>
-    
+  <group name="general">
     <property type="container">
       The container holding this delivery or tracker.
     </property>

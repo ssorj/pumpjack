@@ -1,9 +1,9 @@
 <class name="listener">
   A context for accepting inbound connections.
 
-  <link node="/mercury/core/container/listen"/>
+  <link node="/gambit/core/container/listen"/>
 
-  <group name="basic">
+  <group name="general">
     <method name="stop">
       Stop listening.
     </method>

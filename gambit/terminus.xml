@@ -4,7 +4,7 @@
   <link node="source"/>
   <link node="target"/>
 
-  <group name="basic">
+  <group name="general">
     <property name="address" type="string" value="[discovered]" nullable="true">
       The address of the source or target.
     </property>

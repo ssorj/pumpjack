@@ -1,14 +1,14 @@
 <class name="connection-options" type="endpoint-options">
   Options for new connections.
   
-  <link node="/mercury/core/connection"/>
-  <link node="/mercury/core/container/connect"/>
-  <!-- <link node="/mercury/core/container/listen"/> -->
+  <link node="/gambit/core/connection"/>
+  <link node="/gambit/core/container/connect"/>
+  <!-- <link node="/gambit/core/container/listen"/> -->
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-open">Open performative</link>
 
-  <group name="basic">
+  <group name="general">
     <method name="constructor" special="true">
       Create a new connection-options instance.
 

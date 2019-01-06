@@ -1,11 +1,11 @@
-<class name="proton-error">
-  The base class for Proton errors.
+<class name="gambit-error">
+  The base class for Gambit errors.
 </class>
 
-<class name="timeout-error" type="proton-error">
+<class name="timeout-error" type="gambit-error">
   An operation timed out.
 </class>
 
-<class name="conversion-error" type="proton-error">
+<class name="conversion-error" type="gambit-error">
   A type conversion failed.
 </class>

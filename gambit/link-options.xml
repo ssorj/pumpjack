@@ -10,7 +10,7 @@
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
   
-  <group name="basic">
+  <group name="general">
     <property name="source" type="source-options">
       Options for the link source.
     </property>
@@ -28,7 +28,7 @@
     <property name="auto-settle" type="boolean" value="true" mutable="true">
       Automatically settle deliveries.
 
-      <link node="/mercury/core/transfer/settle"/>
+      <link node="/gambit/core/transfer/settle"/>
     </property>
 
     <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">

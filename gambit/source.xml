@@ -3,7 +3,7 @@
 
   <link node="target"/>
   <link node="source-options"/>
-  <link node="/mercury/core/link/source"/> <!-- XXX core/sender/source -->
+  <link node="/gambit/core/link/source"/> <!-- XXX core/sender/source -->
 
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>

@@ -2,14 +2,14 @@
   The base class for source-options and target-options.
 
   <link node="terminus"/>
-  <link node="/mercury/core/link-options/source"/>
-  <link node="/mercury/core/link-options/target"/>
+  <link node="/gambit/core/link-options/source"/>
+  <link node="/gambit/core/link-options/target"/>
     
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-source">Source type</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>
 
-  <group name="basic">
+  <group name="general">
     <property name="address" type="string" mutable="true" nullable="true">
       The address of the message source or target.
     </property>

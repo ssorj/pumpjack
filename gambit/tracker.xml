@@ -7,11 +7,18 @@
 
   <link node="delivery"/>
   <link node="sender"/>
-  <link node="/mercury/core/sender/send"/>
+  <link node="/gambit/core/sender/send"/>
   
-  <group name="basic">
+  <group name="general">
     <property type="sender">
       The sender on which the delivery was sent.
     </property>
+
+    <method name="wait">
+      Wait until the message delivery is acknowledged.
+
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="tracker"/>
+    </method>
   </group>
 </class>

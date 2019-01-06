@@ -251,15 +251,11 @@ section {
     display: inline;
 }
 
-#-path-navigation > li {
-    display: inline;
-}
-
-#-path-navigation > li:after {
+#-path-navigation > a:after {
     content: " \00a0\003e\00a0\00a0 ";
 }
 
-#-path-navigation > li:last-child:after {
+#-path-navigation > a:last-child:after {
     content: none;
 }
 

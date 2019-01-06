@@ -3,7 +3,7 @@
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-error">Type definition</link>
 
-  <group name="basic">
+  <group name="general">
     <method name="constructor" special="true">
       Create a new condition.
 

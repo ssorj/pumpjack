@@ -2,7 +2,7 @@
   Options for new targets.
   
   <link node="target"/>
-  <link node="/mercury/core/link-options/target"/>
+  <link node="/gambit/core/link-options/target"/>
     
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#type-target">Target type</link>

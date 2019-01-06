@@ -1,7 +1,13 @@
 export PYTHONPATH = ${PWD}/python
 
 .PHONY: default
-default: render-gambit render-proton
+default: render
+
+.PHONY: render
+render: clean
+	scripts/pumpjack -r html -i gambit -o input/gambit
+	scripts/pumpjack -r html -i proton -o input/proton
+	transom render input output
 
 .PHONY: render-gambit
 render-gambit: clean
@@ -16,7 +22,7 @@ render-proton: clean
 .PHONY: render-proton-python
 render-proton-python:
 	scripts/pumpjack -r python -i proton -o input/proton/python
-	transom input/proton output/proton
+	transom render input/proton output/proton
 
 .PHONY: gen-proton-python-impl
 gen-proton-python-impl: impl_dir := python/proton/_qpid_proton_impl
@@ -38,17 +44,19 @@ clean:
 .PHONY: publish
 publish: temp_dir := $(shell mktemp -d)
 publish: temp_script := $(shell mktemp)
-publish: render
+publish:
 	chmod 755 ${temp_dir}
-	transom input ${temp_dir} --site-url "/~${USER}/pumpjack"
+	transom --site-url "/~${USER}/pumpjack" render input ${temp_dir}
+	rsync -av ${BUILD_DIR}/ file.rdu.redhat.com:public_html/${PUBLISH_DIR}
+
 #	rsync -av ${temp_dir}/ ${USER}@people.apache.org:public_html/pumpjack
 #	rsync -av ${temp_dir}/ ${USER}@home.apache.org::public_html/pumpjack
-	echo 'lcd ${temp_dir}' >> ${temp_script}
-	cd ${temp_dir} && find * -type d -exec echo '-mkdir {}' \; >> ${temp_script}
-	cd ${temp_dir} && find * -type f -exec echo 'put {} {}' \; >> ${temp_script}
-	sftp -b ${temp_script} ${USER}@home.apache.org:public_html/pumpjack
-	rm -rf ${temp_dir}
-	rm ${temp_script}
+#	echo 'lcd ${temp_dir}' >> ${temp_script}
+#	cd ${temp_dir} && find * -type d -exec echo '-mkdir {}' \; >> ${temp_script}
+#	cd ${temp_dir} && find * -type f -exec echo 'put {} {}' \; >> ${temp_script}
+#	sftp -b ${temp_script} ${USER}@home.apache.org:public_html/pumpjack
+#	rm -rf ${temp_dir}
+#	rm ${temp_script}
 
 .PHONY: test-python
 test-python: render-python
