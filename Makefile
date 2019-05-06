@@ -6,7 +6,12 @@ default: render
 .PHONY: render
 render: clean
 	scripts/pumpjack -r html -i xml -o input
-	transom render input docs
+	transom render input output
+
+.PHONY: publish
+publish: clean
+	scripts/pumpjack -r html -i xml -o input
+	transom render --site-url /pumpjack input docs
 
 # .PHONY: render-proton-python
 # render-proton-python:
@@ -23,11 +28,12 @@ render: clean
 
 .PHONY: help
 help:
-	@echo "render, clean"
+	@echo "render, clean, publish"
 
 .PHONY: clean
 clean:
 	find python -type f -name \*.pyc -delete
+	rm -rf output
 
 # .PHONY: publish
 # publish: temp_dir := $(shell mktemp -d)
