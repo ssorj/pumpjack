@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Class target</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
+    <link rel="stylesheet" href="file:/home/jross/code/pumpjack/docs/main.css" type="text/css"/>
+    <link rel="icon" href="" type="image/png"/>
+    <script type="text/javascript" src="file:/home/jross/code/pumpjack/docs/main.js" defer="defer"></script>
+
+
+
+  </head>
+  <body>
+
+<div id="-head">
+  <div id="-head-content">
+    <nav id="-path-navigation"><a href="file:/home/jross/code/pumpjack/docs/client/index.html">Module client</a><a href="file:/home/jross/code/pumpjack/docs/client/target/index.html">Class target</a></nav>
+  </div>
+</div>
+<div id="-body">
+  <div id="-body-content">
+
+<h1 class="pumpjack" id="target">Class <span class="name">target</span> </h1>
+<p>A named destination for messages.</p>
+
+<p>Related: <a href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;target-options&#x2F;index.html">Class target-options</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;source&#x2F;index.html">Class source</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;link&#x2F;index.html#target">Property link.target</a></p>
+<p>AMQP: <a href="http:&#x2F;&#x2F;docs.oasis-open.org&#x2F;amqp&#x2F;core&#x2F;v1.0&#x2F;os&#x2F;amqp-core-messaging-v1.0-os.html#section-addressing">Conceptual overview</a>, <a href="http:&#x2F;&#x2F;docs.oasis-open.org&#x2F;amqp&#x2F;core&#x2F;v1.0&#x2F;os&#x2F;amqp-core-messaging-v1.0-os.html#type-target">Target type</a></p>
+<section>
+<h1 id="basic">Basic properties and methods</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="address" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;address.html">address</a> </td><td>The address of the source or target</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="reliability">Reliability</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="durability-mode" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;durability-mode.html">durability-mode</a> </td><td>The persistence mode of the source or target</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;durability-mode.html">durability-mode</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="dynamic-nodes">Dynamic nodes</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="dynamic" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;dynamic.html">dynamic</a> </td><td>On-demand creation of a source or target node</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="node-properties" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;node-properties.html">node-properties</a> </td><td>The properties of a dynamic source or target node</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;map&#x2F;index.html">map</a> of <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a> &#8658; <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;object&#x2F;index.html">object</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="resource-limits">Resource limits</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="timeout" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;timeout.html">timeout</a> </td><td>The period after which the source or target is discarded</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;duration&#x2F;index.html">duration</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="expiry-policy" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;expiry-policy.html">expiry-policy</a> </td><td>When expiration of the source or target begins</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;expiry-policy.html">expiry-policy</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="extended-attributes">Extended attributes</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="capabilities" href="file:/home/jross/code/pumpjack/docs&#x2F;client&#x2F;terminus&#x2F;capabilities.html">capabilities</a> </td><td>Extensions supported or desired</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;array&#x2F;index.html">array</a> of <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+</tbody></table>
+</section>
+
+
+  </div>
+</div>
+<div id="-foot">
+  <div id="-foot-content">
+  </div>
+</div>
+
+
+
+
+  </body>
+</html>

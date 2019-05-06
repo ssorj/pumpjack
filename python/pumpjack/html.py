@@ -44,10 +44,7 @@ class HtmlRenderer(Renderer):
         return "{}.html".format("/".join(elems))
         
     def get_node_output_path(self, node):
-        if node.model is None:
-            return "{}.in".format(self.get_node_path(node, self.output_dir))
-        
-        return "{}.in".format(self.get_node_path(node, _os.path.join(self.output_dir, node.model.name)))
+        return "{}.in".format(self.get_node_path(node, self.output_dir))
 
     def get_node_href(self, node):
         site_url = "{{{{site_url}}}}" # XXX why doubled?
@@ -209,6 +206,9 @@ class HtmlRenderer(Renderer):
         items.append(("Module", "Content", "Depends on"))
 
         for module in model.modules:
+            if module.hidden or module.internal:
+                continue
+            
             link = self.get_node_table_link(module)
             summary = self.get_node_summary(module)
             requires = module.annotations.get("requires")
@@ -219,6 +219,9 @@ class HtmlRenderer(Renderer):
         out.write(html_close("section"))
         
         for module in model.modules:
+            if module.hidden or module.internal:
+                continue
+            
             self.render_module(out, module)
 
     def render_module(self, out, module):
@@ -250,11 +253,11 @@ class HtmlRenderer(Renderer):
         items.append(("Class", "Summary"))
                         
         for cls in group.classes:
-            link = self.get_node_table_link(cls)
-            summary = first_sentence(cls.text)
-
             if cls.hidden or cls.internal:
                 continue
+
+            link = self.get_node_table_link(cls)
+            summary = first_sentence(cls.text)
 
             items.append((link, summary))
 

@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Delivery guarantees</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
+    <link rel="stylesheet" href="file:/home/jross/code/pumpjack/docs/main.css" type="text/css"/>
+    <link rel="icon" href="" type="image/png"/>
+    <script type="text/javascript" src="file:/home/jross/code/pumpjack/docs/main.js" defer="defer"></script>
+
+
+
+  </head>
+  <body>
+
+<div id="-head">
+  <div id="-head-content">
+    <nav id="-path-navigation"><a href="file:/home/jross/code/pumpjack/docs/index.html">Qpid Proton API</a><a href="file:/home/jross/code/pumpjack/docs/delivery-guarantees.html">Delivery guarantees</a></nav>
+  </div>
+</div>
+<div id="-body">
+  <div id="-body-content">
+
+<h1 id="delivery-guarantees">Delivery guarantees</h1>
+
+<p>The AMQP model for settlement is based on the lifecycle of a delivery
+at an endpoint. At each end of a link, a delivery is created, it
+exists for some period of time, and finally it is forgotten, that is
+"settled".  Note that because this lifecycle happens independently at
+both the sender and the receiver, there are four events of interest in
+the combined lifecycle of a given delivery:</p>
+
+<ul>
+<li>Created at sender</li>
+<li>Created at receiver</li>
+<li>Settled at sender</li>
+<li>Settled at receiver</li>
+</ul>
+
+<p>Because the sender and receiver are operating concurrently, these
+events can occur in various orders, and the order of these events
+impacts the types of failures that may occur when transferring a
+delivery.  Eliminating scenarios where the receiver creates the
+delivery first, we have the following possible sequences of interest.</p>
+
+<h2 id="sender-presettles-at-most-once-delivery">Sender presettles ("at most once" delivery)</h2>
+
+<ol>
+<li>Created at sender</li>
+<li>Settled at sender</li>
+<li>Created at receiver</li>
+<li>Settled at receiver</li>
+</ol>
+
+<p>In this configuration the sender settles (that is, forgets about) the
+delivery before it even reaches the receiver, and if anything should
+happen to the delivery in flight, there is no basis for resending,
+hence the "at most once" semantics.</p>
+
+<h2 id="receiver-settles-first-at-least-once-delivery">Receiver settles first ("at least once" delivery)</h2>
+
+<ol>
+<li>Created at sender</li>
+<li>Created at receiver</li>
+<li>Settled at receiver</li>
+<li>Settled at sender</li>
+</ol>
+
+<p>In this configuration the receiver settles the delivery first, and the
+sender settles once it sees the receiver has settled.  Should anything
+happen to the delivery in flight, the sender can resend.  The
+receiver, however, has already forgotten the delivery, and a resend
+will be interpreted as a new delivery.</p>
+
+<h2 id="receiver-settles-second-exactly-once-delivery">Receiver settles second ("exactly once" delivery)</h2>
+
+<ol>
+<li>Created at sender</li>
+<li>Created at receiver</li>
+<li>Settled at sender</li>
+<li>Settled at receiver</li>
+</ol>
+
+<p>In this configuration the receiver settles only once it has seen that
+the sender has settled. This provides the sender the option to
+retransmit, and the receiver has the option to recognize (and discard)
+duplicates, allowing for "exactly once" semantics.</p>
+
+<p>Note that in the last scenario the sender needs some way to know when
+it is safe to settle. This is where delivery state comes in.  In
+addition to these lifecycle related events surrounding deliveries
+there is also the notion of a delivery state that can change over the
+lifetime of a delivery.</p>
+
+<p>For example, it might start out as nothing, transition to RECEIVED,
+and then transition to ACCEPTED.  In the first two scenarios the
+delivery state isn't required.  In the last scenario, however, the
+sender would trigger settlement based on seeing the delivery state
+transition to a terminal state such as ACCEPTED or REJECTED.</p>
+
+<p>In practice, settlement is controlled by application policy, so there
+are more options for settlement behavior.  For example, a sender might
+not settle strictly based on what has happened at the receiver.  It
+might also choose to impose some time limit and settle after that
+period has expired, or it could simply have a sliding window of the
+last N deliveries and settle the oldest whenever a new one comes
+along.</p>
+
+
+  </div>
+</div>
+<div id="-foot">
+  <div id="-foot-content">
+  </div>
+</div>
+
+
+
+
+  </body>
+</html>

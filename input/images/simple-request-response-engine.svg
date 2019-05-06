@@ -1,0 +1,94 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="760" height="134.25">
+  <style xmlns="http://www.w3.org/1999/xhtml"/>
+  <defs/>
+  <g transform="translate(0,0)">
+    <g>
+      <rect fill="#ffffff" stroke="none" x="0" y="0" width="760" height="134.25"/>
+    </g>
+    <g transform="translate(0.5,0.5) matrix(1,0,0,1,211,21.75)">
+      <g>
+        <g transform="translate(0,0) scale(3.24,0.925)">
+          <g>
+            <path fill="#ffffff" stroke="none" d="M 0 0 L 100 0 Q 100 0 100 0 L 100 100 Q 100 100 100 100 L 0 100 Q 0 100 0 100 L 0 0 Q 0 0 0 0 Z"/>
+            <g transform="scale(0.30864197530864196,1.081081081081081)">
+              <path fill="none" stroke="none" d="M 0 0 L 324 0 Q 324 0 324 0 L 324 92.5 Q 324 92.5 324 92.5 L 0 92.5 Q 0 92.5 0 92.5 L 0 0 Q 0 0 0 0 Z"/>
+              <path fill="none" stroke="#000000" d="M 0 0 M 0 0 L 324 0 Q 324 0 324 0 L 324 92.5 Q 324 92.5 324 92.5 L 0 92.5 Q 0 92.5 0 92.5 L 0 0 Q 0 0 0 0 Z" stroke-miterlimit="10"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,213,55)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="321" height="27" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="90.49715423583984" y="0" width="141" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="90.90908813476562" y="12">Simple Request-Response</text>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="13.63636302947998" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="96.86079406738281" y="13.63636302947998" width="128" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="97.27272033691406" y="25.63636302947998">bytes out == F(bytes in)</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,117.5,38)">
+      <image width="123" height="60" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAAA8CAYAAABGmsWrAAABlElEQVR4Xu3YwU3DUBCE4UkF0BGURAdQAlQIJUAHaCX7gpDmkJfYmvlz8WGlJ818XjvJRXxqGrjUJCWowC66CcAGu6iBoqhsNthFDRRFZbPBLmqgKCqbDXZRA0VR2Wywixooispmg13UQFFUNhvsogaKorLZYBc1UBSVzQa7qIGiqGw22EUNFEVls8EuaqAoKpu9FvtF0oOkD0nfa4++/jSwr+9wP+FR0qekuQ70+9nQwV6HPSc9S3qT9LQdeyp0sNdi76edEv0/7LkzX2/TQf2ph2462Pe9/362d/m8z+/+BY7H+G2w5zE+T8e5zudQ5D0i2GuxT4kM9lrkOW1+cn1tv7NPscl/I7LZa9HnT5VBP+Sd7KKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmv8CtKEkPWqXc20AAAAASUVORK5CYII=" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,530.5,38)">
+      <image width="133" height="60" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIUAAAA8CAYAAABIH3mBAAAB0UlEQVR4Xu2YwU3DUBQENxVAR1ASHUAJUCGUAB2gL5mLQZok3yaWdnLJ4b1vsrMjx+QUXxJYEThJRAJrAkqhE78IKIVSKIUOMAHvFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMxoj42nJHdJ3pJ87vEHZq6pFDP0rjt7n+Q9yXgfQrweTQ6luK7Y2VOPSV6SPCwXOpQcSjFb79z5Q8rxlxTD4Oe5rJ6eJHDTO4dSTLa30/Gv5VljPG/8+4OoXx87tXrmZcfXx7grj/fxuqkMP59ZKc5sb+O1Q8qgFBu3fMHlxr+iH8vvFIe4M6w/u3eKC9rccHX8eDXkuMkzA+VQCiJUOFeKwtIpslIQocK5UhSWTpGVgggVzpWisHSKrBREqHCuFIWlU2SlIEKFc6UoLJ0iKwURKpwrRWHpFFkpiFDhXCkKS6fISkGECudKUVg6RVYKIlQ4V4rC0imyUhChwrlSFJZOkZWCCBXOlaKwdIqsFESocK4UhaVTZKUgQoXzbyV5JD1rnIt2AAAAAElFTkSuQmCC" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,590,63)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="48.67897415161133" y="0" width="55" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="49.09090805053711" y="12">bytes out</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,20,61)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="53.67897415161133" y="0" width="45" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="53.63636016845703" y="12">bytes in</text>
+      </g>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Implementation guide</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
+    <link rel="stylesheet" href="file:/home/jross/code/pumpjack/docs/main.css" type="text/css"/>
+    <link rel="icon" href="" type="image/png"/>
+    <script type="text/javascript" src="file:/home/jross/code/pumpjack/docs/main.js" defer="defer"></script>
+
+
+
+  </head>
+  <body>
+
+<div id="-head">
+  <div id="-head-content">
+    <nav id="-path-navigation"><a href="file:/home/jross/code/pumpjack/docs/index.html">Qpid Proton API</a><a href="file:/home/jross/code/pumpjack/docs/implementation-guide.html">Implementation guide</a></nav>
+  </div>
+</div>
+<div id="-body">
+  <div id="-body-content">
+
+<h1 id="implementation-guide">Implementation guide</h1>
+
+<h2 id="overview">Overview</h2>
+
+<table>
+<thead>
+<tr>
+  <th>Namespace</th>
+  <th>Content</th>
+  <th>Depends on</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td><a href="#namespace-protoncore">proton/core</a></td>
+  <td>AMQP model, event processing</td>
+  <td>proton/types, proton/codec, proton/io</td>
+</tr>
+<tr>
+  <td><a href="#namespace-protontypes">proton/types</a></td>
+  <td>AMQP data types</td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><a href="#namespace-protoncodec">proton/codec</a></td>
+  <td>AMQP data encoding and decoding</td>
+  <td>proton/types</td>
+</tr>
+<tr>
+  <td><a href="#namespace-protonio">proton/io</a></td>
+  <td>An SPI for IO integration</td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><a href="#namespace-protoninternal">proton/internal</a></td>
+  <td>API internals and language extensions</td>
+  <td>-</td>
+</tr>
+<tr>
+  <td><a href="#namespace-protonmessenger">proton/messenger</a></td>
+  <td>Home of the Messenger API</td>
+  <td>proton/core</td>
+</tr>
+</tbody>
+</table>
+
+<h2 id="entity-names">Entity names</h2>
+
+<p>The entity names in this document take the form 'some-entity', lower
+case and hyphenated.  Implementers are meant to translate them into
+language-conventional variants.</p>
+
+<ul>
+<li>value remains <code>*5</code> or becomes <code>*6</code></li>
+<li>event-type becomes <code>*7</code> or <code>*8</code></li>
+<li>url-error becomes <code>*9</code> or <code>_0</code></li>
+</ul>
+
+<h2 id="data-types">Data types</h2>
+
+<p>The API should operate in terms of language-native data types whenever
+possible.  If a type is not available in the language or its standard
+library, the implementer should introduce it in the 'proton/types' (or
+optionally 'proton') namespace.</p>
+
+<h2 id="namespace-protoncore">Namespace 'proton/core'</h2>
+
+<p>This is the primary user entry point for the event-driven API.  Most
+programs will import only this namespace.</p>
+
+<p>Because of their centrality, the APIs here may be placed directly in
+the 'proton' namespace instead.</p>
+
+<h3 id="amqp-model-entities">AMQP model entities</h3>
+
+<div class="four-column">
+
+<ul>
+<li>container</li>
+<li>endpoint</li>
+<li>connection</li>
+<li>session</li>
+<li>link</li>
+<li>receiver</li>
+<li>sender</li>
+<li>terminus</li>
+<li>condition</li>
+<li>delivery</li>
+<li>message</li>
+</ul>
+
+</div>
+
+<h3 id="event-processing">Event processing</h3>
+
+<ul>
+<li>event</li>
+<li>handler</li>
+</ul>
+
+<h3 id="network-and-security">Network and security</h3>
+
+<div class="four-column">
+
+<ul>
+<li>transport</li>
+<li>acceptor</li>
+<li>ssl</li>
+<li>ssl-client-options</li>
+<li>ssl-server-options</li>
+<li>sasl</li>
+</ul>
+
+</div>
+
+<h3 id="error-handling">Error handling</h3>
+
+<ul>
+<li>proton-error or -exception</li>
+<li>timeout-error or -exception</li>
+<li>conversion-error or -exception</li>
+</ul>
+
+<h2 id="namespace-protontypes">Namespace 'proton/types'</h2>
+
+<p>Because of their centrality, the APIs here may be placed directly in
+the 'proton' namespace instead.</p>
+
+<div class="four-column">
+
+<ul>
+<li>binary</li>
+<li>boolean</li>
+<li>byte</li>
+<li>char</li>
+<li>decimal32</li>
+<li>decimal64</li>
+<li>decimal128</li>
+<li>double</li>
+<li>duration</li>
+<li>float</li>
+<li>int</li>
+<li>list</li>
+<li>long</li>
+<li>map</li>
+<li>null</li>
+<li>short</li>
+<li>string</li>
+<li>symbol</li>
+<li>timestamp</li>
+<li>ubyte</li>
+<li>uint</li>
+<li>ulong</li>
+<li>url </li>
+<li>ushort</li>
+<li>uuid</li>
+</ul>
+
+</div>
+
+<h2 id="namespace-protoncodec">Namespace 'proton/codec'</h2>
+
+<p>AMQP data encoding and decoding.  These interfaces are available to
+the user but won't typically be necessary when building a Proton-based
+application.</p>
+
+<ul>
+<li>encoder</li>
+<li>decoder</li>
+</ul>
+
+<h2 id="namespace-protonio">Namespace 'proton/io'</h2>
+
+<p>An SPI for IO integration and a place for standard IO implementations.
+Like 'proton/codec', it is available but not primary.</p>
+
+<ul>
+<li>connection-engine</li>
+<li>io-adapter</li>
+</ul>
+
+<h2 id="namespace-protoninternal">Namespace 'proton/internal'</h2>
+
+<p>A place for anything that you happen to need in your implementation,
+but which you cannot make private.</p>
+
+<p>These interfaces are by definition <em>not</em> central to the API.  They
+should not be rendered into standard API documentation.</p>
+
+<ul>
+<li>API internals</li>
+<li>Language utilities</li>
+</ul>
+
+<h2 id="namespace-protonmessenger">Namespace 'proton/messenger'</h2>
+
+<p>A home for the legacy Messenger API.</p>
+
+<ul>
+<li>messenger</li>
+<li>messenger-error or -exception</li>
+<li>tracker</li>
+<li>subscription</li>
+</ul>
+
+
+  </div>
+</div>
+<div id="-foot">
+  <div id="-foot-content">
+  </div>
+</div>
+
+
+
+
+  </body>
+</html>

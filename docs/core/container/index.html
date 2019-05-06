@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Class container</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
+    <link rel="stylesheet" href="file:/home/jross/code/pumpjack/docs/main.css" type="text/css"/>
+    <link rel="icon" href="" type="image/png"/>
+    <script type="text/javascript" src="file:/home/jross/code/pumpjack/docs/main.js" defer="defer"></script>
+
+
+
+  </head>
+  <body>
+
+<div id="-head">
+  <div id="-head-content">
+    <nav id="-path-navigation"><a href="file:/home/jross/code/pumpjack/docs/core/index.html">Module core</a><a href="file:/home/jross/code/pumpjack/docs/core/container/index.html">Class container</a></nav>
+  </div>
+</div>
+<div id="-body">
+  <div id="-body-content">
+
+<h1 class="pumpjack" id="container">Class <span class="name">container</span> </h1>
+<p>A top-level container of connections, sessions, senders, and
+receivers.</p>
+
+<p>A container gives a unique identity to each communicating
+peer.  It is often a process-level object.</p>
+
+<p>It serves as an entry point to the API, allowing connections
+and links to be established.  It can be supplied with an event
+handler in order to intercept important events, such as newly
+received messages or newly issued link credit for sending
+messages.</p>
+
+<p>Related: <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection&#x2F;index.html">Class connection</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;session&#x2F;index.html">Class session</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;sender&#x2F;index.html">Class sender</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;receiver&#x2F;index.html">Class receiver</a></p>
+<p>Implementations: <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;c&#x2F;api&#x2F;group__container.html">C</a>, <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;cpp&#x2F;api&#x2F;classproton_1_1container.html">C++</a>, <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;python&#x2F;api&#x2F;proton.reactor.Container-class.html">Python</a></p>
+<p>AMQP: <a href="http:&#x2F;&#x2F;docs.oasis-open.org&#x2F;amqp&#x2F;core&#x2F;v1.0&#x2F;os&#x2F;amqp-core-transport-v1.0-os.html#doc-idp2176">Conceptual overview</a></p>
+<section>
+<h1 id="basic">Basic properties and methods</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="id" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;id.html">id</a> </td><td>A globally unique container identifier</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td><span class="special">generated</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="auto-stop" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;auto-stop.html">auto-stop</a> </td><td>Stop when all active connections and listeners are closed</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td>true</td><td>&#x2612;</td><td>&#x2610;</td></tr>
+</tbody></table>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="None" id="connections" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;connections.html">connections</a> </td><td>The connections managed by this container</td><td></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;iterator&#x2F;index.html">iterator</a> of <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection&#x2F;index.html">connection</a></td></tr>
+<tr><td><a class="special" id="constructor" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;constructor.html">constructor</a> </td><td>Create a new container</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;messaging-handler&#x2F;index.html"><span class="optional">[messaging-handler]</span></a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html"><span class="optional">[id]</span></a></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;index.html">container</a></td></tr>
+<tr><td><a class="None" id="run" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;run.html">run</a> </td><td>Start processing events</td><td></td><td></td></tr>
+<tr><td><a class="None" id="stop" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;stop.html">stop</a> </td><td>Shutdown open connections and stop processing events</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;error-condition&#x2F;index.html"><span class="optional">[error-condition]</span></a></td><td></td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="configuration">Configuration</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="client-connection-options" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;client-connection-options.html">client-connection-options</a> </td><td>Default options for new outbound connections</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection-options&#x2F;index.html">connection-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="server-connection-options" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;server-connection-options.html">server-connection-options</a> </td><td>Default options for new inbound connections</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection-options&#x2F;index.html">connection-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="session-options" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;session-options.html">session-options</a> </td><td>Default options for new sessions</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;session-options&#x2F;index.html">session-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="sender-options" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;sender-options.html">sender-options</a> </td><td>Default options for new senders</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;sender-options&#x2F;index.html">sender-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="receiver-options" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;receiver-options.html">receiver-options</a> </td><td>Default options for new receivers</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;receiver-options&#x2F;index.html">receiver-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="connection-operations">Connection operations</h1>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="None" id="connect" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;connect.html">connect</a> </td><td>Create and open an outbound connection</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">connection-url</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection-options&#x2F;index.html"><span class="optional">[options]</span></a></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection&#x2F;index.html">connection</a></td></tr>
+<tr><td><a class="None" id="listen" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;listen.html">listen</a> </td><td>Listen for incoming connections</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">listen-info</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;listen-handler&#x2F;index.html"><span class="optional">[handler]</span></a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;connection-options&#x2F;index.html"><span class="optional">[options]</span></a></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;listener&#x2F;index.html">listener</a></td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="link-operations">Sender and receiver operations</h1>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="None" id="open-receiver" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;open-receiver.html">open-receiver</a> </td><td>Create and open a receiving link</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">address-url</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;receiver-options&#x2F;index.html"><span class="optional">[receiver-options]</span></a></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;receiver&#x2F;index.html">receiver</a></td></tr>
+<tr><td><a class="None" id="open-sender" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;open-sender.html">open-sender</a> </td><td>Create and open a sending link</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">address-url</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;sender-options&#x2F;index.html"><span class="optional">[sender-options]</span></a></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;sender&#x2F;index.html">sender</a></td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="events">Event processing</h1>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="None" id="schedule" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;container&#x2F;schedule.html">schedule</a> </td><td>Schedule a function call</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;duration&#x2F;index.html">delay</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td></td></tr>
+</tbody></table>
+</section>
+
+
+  </div>
+</div>
+<div id="-foot">
+  <div id="-foot-content">
+  </div>
+</div>
+
+
+
+
+  </body>
+</html>

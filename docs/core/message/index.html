@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <title>Class message</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
+    <link rel="stylesheet" href="file:/home/jross/code/pumpjack/docs/main.css" type="text/css"/>
+    <link rel="icon" href="" type="image/png"/>
+    <script type="text/javascript" src="file:/home/jross/code/pumpjack/docs/main.js" defer="defer"></script>
+
+
+
+  </head>
+  <body>
+
+<div id="-head">
+  <div id="-head-content">
+    <nav id="-path-navigation"><a href="file:/home/jross/code/pumpjack/docs/core/index.html">Module core</a><a href="file:/home/jross/code/pumpjack/docs/core/message/index.html">Class message</a></nav>
+  </div>
+</div>
+<div id="-body">
+  <div id="-body-content">
+
+<h1 class="pumpjack" id="message">Class <span class="name">message</span> </h1>
+<p>A mutable holder of application content.</p>
+
+<p>Related: <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;sender&#x2F;index.html">Class sender</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;receiver&#x2F;index.html">Class receiver</a>, <a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;delivery&#x2F;index.html">Class delivery</a></p>
+<p>Implementations: <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;c&#x2F;api&#x2F;group__message.html">C</a>, <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;cpp&#x2F;api&#x2F;classproton_1_1message.html">C++</a>, <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;java&#x2F;api&#x2F;org&#x2F;apache&#x2F;qpid&#x2F;proton&#x2F;message&#x2F;Message.html">Java</a>, <a href="https:&#x2F;&#x2F;qpid.apache.org&#x2F;releases&#x2F;qpid-proton-master&#x2F;proton&#x2F;python&#x2F;api&#x2F;proton.Message-class.html">Python</a></p>
+<p>AMQP: <a href="https:&#x2F;&#x2F;docs.oasis-open.org&#x2F;amqp&#x2F;core&#x2F;v1.0&#x2F;os&#x2F;amqp-core-messaging-v1.0-os.html#section-message-format">Message format</a></p>
+<section>
+<h1 id="basic">Basic properties and methods</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="id" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;id.html">id</a> </td><td>A unique message identifier</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;message-id&#x2F;index.html">message-id</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="user" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;user.html">user</a> </td><td>The identity of the user producing the message</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+</tbody></table>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="special" id="constructor" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;constructor.html">constructor</a> </td><td>Create a new message</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;object&#x2F;index.html"><span class="optional">[body]</span></a></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;index.html">message</a></td></tr>
+<tr><td><a class="None" id="clear" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;clear.html">clear</a> </td><td>Delete the content of the message</td><td></td><td></td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="routing">Routing</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="to" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;to.html">to</a> </td><td>The destination address</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="reply-to" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;reply-to.html">reply-to</a> </td><td>The address for replies</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="correlation-id" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;correlation-id.html">correlation-id</a> </td><td>An identifier for matching related messages</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;message-id&#x2F;index.html">message-id</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="content">Content</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="subject" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;subject.html">subject</a> </td><td>Summary information</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="body" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;body.html">body</a> </td><td>The main message content</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;object&#x2F;index.html">object</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="content-type" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;content-type.html">content-type</a> </td><td>The MIME type of the body</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="expiry-time" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;expiry-time.html">expiry-time</a> </td><td>The absolute time past which the message should be discarded</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;timestamp&#x2F;index.html">timestamp</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="creation-time" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;creation-time.html">creation-time</a> </td><td>The absolute time of message creation</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;timestamp&#x2F;index.html">timestamp</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="inferred" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;inferred.html">inferred</a> </td><td>Determine the AMQP section type from the body type</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td>false</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="transfer-headers">Transfer headers</h1>
+<p>Related: <a href="http:&#x2F;&#x2F;docs.oasis-open.org&#x2F;amqp&#x2F;core&#x2F;v1.0&#x2F;os&#x2F;amqp-core-messaging-v1.0-os.html#type-header">AMQP definition</a></p>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="durable" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;durable.html">durable</a> </td><td>Durability requirement</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td>false</td><td>&#x2612;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="priority" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;priority.html">priority</a> </td><td>Relative message priority</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;ubyte&#x2F;index.html">ubyte</a></td><td>4</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="ttl" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;ttl.html">ttl</a> </td><td>The time to live</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;duration&#x2F;index.html">duration</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="first-acquirer" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;first-acquirer.html">first-acquirer</a> </td><td>The recipient is first to acquire the message</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td>true</td><td>&#x2612;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="delivery-count" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;delivery-count.html">delivery-count</a> </td><td>The number of prior unsuccessful delivery attempts</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;uint&#x2F;index.html">uint</a></td><td>0</td><td>&#x2612;</td><td>&#x2610;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="message-groups">Message groups</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="group-id" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;group-id.html">group-id</a> </td><td>The identifier of the group the message belongs to</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="group-sequence" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;group-sequence.html">group-sequence</a> </td><td>The relative position of this message within its group</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;uint&#x2F;index.html">uint</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="reply-to-group-id" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;reply-to-group-id.html">reply-to-group-id</a> </td><td>The group a reply message belongs to</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="extended-attributes">Extended attributes</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="properties" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;properties.html">properties</a> </td><td>Application-defined message attributes</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;map&#x2F;index.html">map</a> of <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;string&#x2F;index.html">string</a> &#8658; <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;object&#x2F;index.html">object</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="delivery-annotations" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;delivery-annotations.html">delivery-annotations</a> </td><td>Delivery-specific transport attributes</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;map&#x2F;index.html">map</a> of <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a> &#8658; <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;object&#x2F;index.html">object</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="message-annotations" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;message-annotations.html">message-annotations</a> </td><td>Message-specific transport attributes</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;map&#x2F;index.html">map</a> of <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a> &#8658; <a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;object&#x2F;index.html">object</a></td><td>null</td><td>&#x2612;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="codec-group">Encoding and decoding</h1>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="None" id="encode" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;encode.html">encode</a> </td><td>Encode the message to bytes</td><td></td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;binary&#x2F;index.html">binary</a></td></tr>
+<tr><td><a class="None" id="decode" href="file:/home/jross/code/pumpjack/docs&#x2F;core&#x2F;message&#x2F;decode.html">decode</a> </td><td>Decode the message from bytes</td><td><a href="file:/home/jross/code/pumpjack/docs&#x2F;types&#x2F;binary&#x2F;index.html">bytes</a></td><td></td></tr>
+</tbody></table>
+</section>
+
+
+  </div>
+</div>
+<div id="-foot">
+  <div id="-foot-content">
+  </div>
+</div>
+
+
+
+
+  </body>
+</html>

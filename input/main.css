@@ -319,3 +319,100 @@ section {
         padding: 0;
     }
 }
+
+#-head-content,
+#-body-content,
+#-foot-content {
+    max-width: 1600px;
+}
+
+h1.pumpjack {
+    font-weight: 300;
+}
+
+h1.pumpjack span.name {
+    font-weight: 400;
+}
+
+a.special {
+    font-style: italic;
+}
+
+a.selected {
+    font-weight: bold;
+    color: rgb(0, 0, 0);
+    background-color: rgba(255, 255, 25, 0.3);
+}
+    
+span.flag {
+    font-size: 0.8em;
+    background-color: rgba(255, 255, 25, 0.3);
+    color: rgba(0, 0, 0, 0.6);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0.1em 0.3em;
+}
+
+span.optional {
+    font-style: italic;
+}
+
+table.pumpjack {
+    width: 100%;
+    table-layout: fixed;
+}
+
+table.pumpjack span.special {
+    font-style: italic;
+}
+
+table.pumpjack th {
+    font-size: 0.9em;
+}
+
+table.pumpjack th,
+table.pumpjack td {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+table.pumpjack.modules th:nth-child(1) {
+    width: 20%;
+}
+
+table.pumpjack.modules th:nth-child(3) {
+    width: 20%;
+}
+
+table.pumpjack.classes th:nth-child(1) {
+    width: 30%;
+}
+
+table.pumpjack.properties th:nth-child(1) {
+    width: 20%;
+}
+
+table.pumpjack.properties th:nth-child(3) {
+    width: 16.5%;
+}
+
+table.pumpjack.properties th:nth-child(4) {
+    width: 11%;
+}
+
+table.pumpjack.properties th:nth-child(5),
+table.pumpjack.properties th:nth-child(6) {
+    width: 7.5%;
+}
+
+table.pumpjack.methods th:nth-child(1) {
+    width: 20%;
+}
+
+table.pumpjack.methods th:nth-child(3) {
+    width: 27.5%;
+}
+
+table.pumpjack.methods th:nth-child(4) {
+    width: 15%;
+}

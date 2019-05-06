@@ -1,0 +1,127 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="759" height="233.25">
+  <style xmlns="http://www.w3.org/1999/xhtml"/>
+  <defs/>
+  <g transform="translate(0,0)">
+    <g>
+      <rect fill="#ffffff" stroke="none" x="0" y="0" width="759" height="233.25"/>
+    </g>
+    <g transform="translate(0.5,0.5) matrix(1,0,0,1,210,120.75)">
+      <g>
+        <g transform="translate(0,0) scale(3.24,0.925)">
+          <g>
+            <path fill="#ffffff" stroke="none" d="M 0 0 L 100 0 Q 100 0 100 0 L 100 100 Q 100 100 100 100 L 0 100 Q 0 100 0 100 L 0 0 Q 0 0 0 0 Z"/>
+            <g transform="scale(0.30864197530864196,1.081081081081081)">
+              <path fill="none" stroke="none" d="M 0 0 L 324 0 Q 324 0 324 0 L 324 92.5 Q 324 92.5 324 92.5 L 0 92.5 Q 0 92.5 0 92.5 L 0 0 Q 0 0 0 0 Z"/>
+              <path fill="none" stroke="#000000" d="M 0 0 M 0 0 L 324 0 Q 324 0 324 0 L 324 92.5 Q 324 92.5 324 92.5 L 0 92.5 Q 0 92.5 0 92.5 L 0 0 Q 0 0 0 0 Z" stroke-miterlimit="10"/>
+            </g>
+          </g>
+        </g>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,212,140)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="321" height="55" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="36.40625" y="0" width="249" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="36.3636360168457" y="12">Simple Request-Response with Query Interface</text>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="13.63636302947998" width="321" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="96.86079406738281" y="13.63636302947998" width="128" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="97.27272033691406" y="25.63636302947998">bytes out == F(bytes in)</text>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="27.27272605895996" width="321" height="27" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="19.133522033691406" y="27.27272605895996" width="284" height="27" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="italic" font-weight="normal" text-decoration="" line-height="14px" x="19.09090805053711" y="39.27272605895996">F is predefined by the library, but the library can</text>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="italic" font-weight="normal" text-decoration="" line-height="14px" x="117.27272033691406" y="52.909088134765625">inspect requests</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,116.5,137)">
+      <image width="123" height="60" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHsAAAA8CAYAAABGmsWrAAABlElEQVR4Xu3YwU3DUBCE4UkF0BGURAdQAlQIJUAHaCX7gpDmkJfYmvlz8WGlJ818XjvJRXxqGrjUJCWowC66CcAGu6iBoqhsNthFDRRFZbPBLmqgKCqbDXZRA0VR2Wywixooispmg13UQFFUNhvsogaKorLZYBc1UBSVzQa7qIGiqGw22EUNFEVls8EuaqAoKpu9FvtF0oOkD0nfa4++/jSwr+9wP+FR0qekuQ70+9nQwV6HPSc9S3qT9LQdeyp0sNdi76edEv0/7LkzX2/TQf2ph2462Pe9/362d/m8z+/+BY7H+G2w5zE+T8e5zudQ5D0i2GuxT4kM9lrkOW1+cn1tv7NPscl/I7LZa9HnT5VBP+Sd7KKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmoMdhOmigO0aCpqDHYTpooDtGgqagx2E6aKA7RoKmv8CtKEkPWqXc20AAAAASUVORK5CYII=" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,529.5,137)">
+      <image width="133" height="60" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIUAAAA8CAYAAABIH3mBAAAB0UlEQVR4Xu2YwU3DUBQENxVAR1ASHUAJUCGUAB2gL5mLQZok3yaWdnLJ4b1vsrMjx+QUXxJYEThJRAJrAkqhE78IKIVSKIUOMAHvFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMyobkMp6irnwErBjOo2lKKucg6sFMxoj42nJHdJ3pJ87vEHZq6pFDP0rjt7n+Q9yXgfQrweTQ6luK7Y2VOPSV6SPCwXOpQcSjFb79z5Q8rxlxTD4Oe5rJ6eJHDTO4dSTLa30/Gv5VljPG/8+4OoXx87tXrmZcfXx7grj/fxuqkMP59ZKc5sb+O1Q8qgFBu3fMHlxr+iH8vvFIe4M6w/u3eKC9rccHX8eDXkuMkzA+VQCiJUOFeKwtIpslIQocK5UhSWTpGVgggVzpWisHSKrBREqHCuFIWlU2SlIEKFc6UoLJ0iKwURKpwrRWHpFFkpiFDhXCkKS6fISkGECudKUVg6RVYKIlQ4V4rC0imyUhChwrlSFJZOkZWCCBXOlaKwdIqsFESocK4UhaVTZKUgQoXzbyV5JD1rnIt2AAAAAElFTkSuQmCC" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,589,162)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="48.67897415161133" y="0" width="55" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="49.09090805053711" y="12">bytes out</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,19,160)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="53.67897415161133" y="0" width="45" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="53.63636016845703" y="12">bytes in</text>
+      </g>
+    </g>
+    <g transform="matrix(1,0,0,1,342,19.25)">
+      <image width="60" height="106" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADwAAABqCAYAAADgKzKYAAABqklEQVR4Xu2b203DUBQENxUAHdAJUAGUQgdAB5QCFUApdABUADriXsky3x5Lx+OfvKREO7NZ+yM55WDH6WB5Y+DuxjWs4WYErHQzof/iaFjDzQhY6WZCHS0rbaWbEbDSzYS60lbaSjcjYKWbCXWlrbSVbkZgr0pfD47vNM+9AlfQnyQ3Rwhcdt9G0AqMWt7DcAW8WlQatUwHXtqdbUYt04GXdmfgeg6zTAaedr+TnI208z5mmQw87T4leRiB533MMhV4afcyyecIfJHkYxhHLFOBX5LcJimjj+McXJnr8+txGX9Ncrf1eZkKfJ7kPslzkq9V4PVrm2amAq9D1FXWNLxpwPWbGxjCrWEI9G4/PdSwhjci4EpvBNbzsBceULX8DkOgPQ9DoL3SokBbaYq0Kw2RttIQaFeaAm2lKdKuNETaSkOgXWkKtJWmSLvSEGkrDYF2pSnQVpoi7UpDpK00BNqVpkBbaYq0Kw2RttIQaFeaAm2lKdKuNETaSkOgXWkKtJWmSLvSEGkrDYF2pSnQVpoi7UpDpOsfpXXMW+hj//7OeqjDwN11H87wL10SX2uDLM3iAAAAAElFTkSuQmCC" transform="translate(0,0)"/>
+    </g>
+    <g transform="matrix(1,0,0,1,297,27)">
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="25" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="0" y="0" width="151" height="14" fill-opacity="0"/>
+        </g>
+      </g>
+      <g>
+        <g>
+          <rect fill="rgb(0,0,0)" stroke="none" x="35.49715805053711" y="0" width="81" height="14" fill-opacity="0"/>
+        </g>
+        <text fill="rgb(0, 0, 0)" stroke="none" font-family="Arial" font-size="12px" font-style="normal" font-weight="normal" text-decoration="" line-height="14px" x="35.45454406738281" y="12">Query Interface</text>
+      </g>
+    </g>
+  </g>
+</svg>
