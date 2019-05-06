@@ -22,63 +22,38 @@
   <div id="-body-content">
 
 <h1 class="pumpjack" id="client">Module <span class="name">client</span> </h1>
-<p>XXX</p>
+<p>An imperative client API.</p>
+
+<p><strong>Blocking</strong></p>
+
+<p>Blocking operations take optional timeout arguments.  If the timeout
+is exceeded, they raise a timeout error.</p>
+
+<p>The endpoint-lifecycle methods <code>connect()</code>, <code>open_&lt;endpoint&gt;()</code>, and
+<code>close()</code> start their respective operations but do not complete them.
+Use <code>await_open()</code> and <code>await_close()</code> to block until they are
+confirmed by the remote peer.</p>
+
+<p>There is one exception, <code>open_dynamic_receiver()</code>.  It blocks until
+the remote peer provides the dynamic source address.</p>
+
+<p>Sender <code>send()</code> blocks until there is credit to send the message.
+It does not wait until the message is acknowledged.  The <code>send()</code>
+method returns a tracker, on which you can call <code>await_delivery()</code> to
+block until acknowledgment.</p>
+
+<p>Receiver <code>receive()</code> blocks until a message is available to return.</p>
+
+<p><code>send()</code> and <code>receive()</code> have non-blocking variants called
+<code>try_send()</code> and <code>try_receive()</code>.  The former returns <code>None</code> if there
+is no credit to send.  The latter returns <code>None</code> if there is no
+delivery already present.</p>
 
 <section>
 <h1 id="model">Core model</h1>
 <table class="pumpjack classes"><tbody>
 <tr><th>Class</th><th>Summary</th></tr>
-<tr><td><a class="None" id="container" href="/pumpjack&#x2F;client&#x2F;container&#x2F;index.html">container</a> </td><td>A top-level container of connections, sessions, senders, and
-  receivers</td></tr>
-<tr><td><a class="None" id="connection" href="/pumpjack&#x2F;client&#x2F;connection&#x2F;index.html">connection</a> </td><td>A channel for communication between two peers on a network</td></tr>
-<tr><td><a class="None" id="session" href="/pumpjack&#x2F;client&#x2F;session&#x2F;index.html">session</a> </td><td>A container of senders and receivers</td></tr>
-<tr><td><a class="None" id="sender" href="/pumpjack&#x2F;client&#x2F;sender&#x2F;index.html">sender</a> </td><td>A channel for sending messages</td></tr>
-<tr><td><a class="None" id="receiver" href="/pumpjack&#x2F;client&#x2F;receiver&#x2F;index.html">receiver</a> </td><td>A channel for receiving messages</td></tr>
-<tr><td><a class="None" id="source" href="/pumpjack&#x2F;client&#x2F;source&#x2F;index.html">source</a> </td><td>A named point of origin for messages</td></tr>
-<tr><td><a class="None" id="target" href="/pumpjack&#x2F;client&#x2F;target&#x2F;index.html">target</a> </td><td>A named destination for messages</td></tr>
-<tr><td><a class="None" id="message" href="/pumpjack&#x2F;client&#x2F;message&#x2F;index.html">message</a> </td><td>A mutable holder of application content</td></tr>
-<tr><td><a class="None" id="delivery" href="/pumpjack&#x2F;client&#x2F;delivery&#x2F;index.html">delivery</a> </td><td>A received message</td></tr>
-<tr><td><a class="None" id="tracker" href="/pumpjack&#x2F;client&#x2F;tracker&#x2F;index.html">tracker</a> </td><td>A tracker for a sent message</td></tr>
-<tr><td><a class="None" id="error-condition" href="/pumpjack&#x2F;client&#x2F;error-condition&#x2F;index.html">error-condition</a> </td><td>An endpoint error state</td></tr>
-</tbody></table>
-</section>
-<section>
-<h1 id="events">Event processing</h1>
-<table class="pumpjack classes"><tbody>
-<tr><th>Class</th><th>Summary</th></tr>
-<tr><td><a class="None" id="messaging-handler" href="/pumpjack&#x2F;client&#x2F;messaging-handler&#x2F;index.html">messaging-handler</a> </td><td>The primary messaging event handler</td></tr>
-<tr><td><a class="None" id="listen-handler" href="/pumpjack&#x2F;client&#x2F;listen-handler&#x2F;index.html">listen-handler</a> </td><td>Events for incoming connections</td></tr>
-</tbody></table>
-</section>
-<section>
-<h1 id="configuration">Configuration</h1>
-<table class="pumpjack classes"><tbody>
-<tr><th>Class</th><th>Summary</th></tr>
-<tr><td><a class="None" id="connection-options" href="/pumpjack&#x2F;client&#x2F;connection-options&#x2F;index.html">connection-options</a> </td><td>Options for new connections</td></tr>
-<tr><td><a class="None" id="session-options" href="/pumpjack&#x2F;client&#x2F;session-options&#x2F;index.html">session-options</a> </td><td>Options for new sessions</td></tr>
-<tr><td><a class="None" id="sender-options" href="/pumpjack&#x2F;client&#x2F;sender-options&#x2F;index.html">sender-options</a> </td><td>Options for new senders</td></tr>
-<tr><td><a class="None" id="receiver-options" href="/pumpjack&#x2F;client&#x2F;receiver-options&#x2F;index.html">receiver-options</a> </td><td>Options for new receivers</td></tr>
-<tr><td><a class="None" id="source-options" href="/pumpjack&#x2F;client&#x2F;source-options&#x2F;index.html">source-options</a> </td><td>Options for new sources</td></tr>
-<tr><td><a class="None" id="target-options" href="/pumpjack&#x2F;client&#x2F;target-options&#x2F;index.html">target-options</a> </td><td>Options for new targets</td></tr>
-</tbody></table>
-</section>
-<section>
-<h1 id="network">Network</h1>
-<table class="pumpjack classes"><tbody>
-<tr><th>Class</th><th>Summary</th></tr>
-<tr><td><a class="None" id="transport" href="/pumpjack&#x2F;client&#x2F;transport&#x2F;index.html">transport</a> </td><td>A network channel supporting an AMQP connection</td></tr>
-<tr><td><a class="None" id="listener" href="/pumpjack&#x2F;client&#x2F;listener&#x2F;index.html">listener</a> </td><td>A context for accepting inbound connections</td></tr>
-<tr><td><a class="None" id="sasl" href="/pumpjack&#x2F;client&#x2F;sasl&#x2F;index.html">sasl</a> </td><td>SASL properties for a connection</td></tr>
-<tr><td><a class="None" id="ssl" href="/pumpjack&#x2F;client&#x2F;ssl&#x2F;index.html">ssl</a> </td><td>SSL properties for a connection</td></tr>
-</tbody></table>
-</section>
-<section>
-<h1 id="errors">Error handling</h1>
-<table class="pumpjack classes"><tbody>
-<tr><th>Class</th><th>Summary</th></tr>
-<tr><td><a class="None" id="proton-error" href="/pumpjack&#x2F;client&#x2F;proton-error&#x2F;index.html">proton-error</a> </td><td>The base class for Proton errors</td></tr>
-<tr><td><a class="None" id="timeout-error" href="/pumpjack&#x2F;client&#x2F;timeout-error&#x2F;index.html">timeout-error</a> </td><td>An operation timed out</td></tr>
-<tr><td><a class="None" id="conversion-error" href="/pumpjack&#x2F;client&#x2F;conversion-error&#x2F;index.html">conversion-error</a> </td><td>A type conversion failed</td></tr>
+<tr><td><a class="None" id="client" href="/pumpjack&#x2F;client&#x2F;client&#x2F;index.html">client</a> </td><td></td></tr>
 </tbody></table>
 </section>
 
