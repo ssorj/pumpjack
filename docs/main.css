@@ -416,3 +416,21 @@ table.pumpjack.methods th:nth-child(3) {
 table.pumpjack.methods th:nth-child(4) {
     width: 15%;
 }
+
+#-path-navigation {
+    margin: 0;
+    padding: 0;
+    display: inline;
+}
+
+#-path-navigation > a {
+    display: inline;
+}
+
+#-path-navigation > a:after {
+    content: " \00a0\003e\00a0\00a0 ";
+}
+
+#-path-navigation > a:last-child:after {
+    content: none;
+}
