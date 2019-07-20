@@ -22,6 +22,17 @@ import re as _re
 import time as _time
 
 from pprint import pformat as _pformat
+
+try:
+    from urllib.parse import quote_plus as _url_escape
+except ImportError:
+    from urllib import quote_plus as _url_escape
+
+try:
+    from urllib.parse import unquote_plus as _url_unescape
+except ImportError:
+    from urllib import unquote_plus as _url_unescape
+
 from xml.sax.saxutils import escape as _xml_escape
 from xml.sax.saxutils import unescape as _xml_unescape
 
@@ -149,6 +160,33 @@ def format_datetime(dtime):
 
     return dtime.strftime(_date_format)
 
+_duration_units = (
+    (86400 * 365, 2, "year", "yr"),
+    (86400 * 30,  2, "month", "mo"),
+    (86400 * 7,   2, "week", "w"),
+    (86400,       2, "day", "d"),
+    (3600,        1, "hour", "h"),
+    (60,          1, "minute", "m"),
+)
+
+def format_duration_coarse(seconds):
+    for duration, threshold, name, abbrev in _duration_units:
+        count = int(seconds / duration)
+
+        if count >= threshold:
+            return "{:2} {}".format(count, plural(name, count))
+
+    return "{:2} {}".format(count, plural(name, count))
+
+def format_duration_coarse_brief(seconds):
+    for duration, threshold, name, abbrev in _duration_units:
+        count = int(seconds / duration)
+
+        if count >= threshold:
+            return "{:2}{}".format(count, abbrev)
+
+    return "{:2}{}".format(count, abbrev)
+
 # String-related utilities
 
 class StringCatalog(dict):
@@ -190,6 +228,18 @@ class StringCatalog(dict):
 
 # HTML functions
 
+def url_escape(string):
+    if string is None:
+        return
+
+    return _url_escape(string)
+
+def url_unescape(string):
+    if string is None:
+        return
+
+    return _url_unescape(string)
+
 _extra_entities = {
     '"': "&quot;",
     "'": "&#x27;",
@@ -214,7 +264,7 @@ def strip_tags(string):
     if string is None:
         return
 
-    return re.sub(_strip_tags_regex, "", string)
+    return _re.sub(_strip_tags_regex, "", string)
 
 def _html_elem(tag, content, attrs):
     attrs = _html_attrs(attrs)

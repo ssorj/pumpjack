@@ -1,6 +1,6 @@
 <module name="client">
   An imperative client API.
-  
+
   **Blocking**
 
   Blocking operations take optional timeout arguments.  If the timeout
@@ -25,10 +25,15 @@
   `try_send()` and `try_receive()`.  The former returns `None` if there
   is no credit to send.  The latter returns `None` if there is no
   delivery already present.
-  
+
   <annotation name="requires">core</annotation>
 
   <group name="model" title="Core model">
     @client-class.xml@
+    @client-endpoint.xml@
+    @client-connection.xml@
+    @client-session.xml@
+    @client-sender.xml@
+    @client-receiver.xml@
   </group>
 </module>

@@ -1,0 +1,39 @@
+<class name="connection" type="/proton/client/endpoint">
+  XXX
+
+  <group name="basic">
+    <method name="get">
+      Block until the remote peer opens the connection.
+
+      <input name="timeout" type="duration"/>
+      <output type="/proton/client/connection"/>
+    </method>
+  </group>
+
+  <group name="link-operations">
+    <method name="open-sender">
+      Create and open a sender using the default session.
+
+      <input name="address" type="string"/>
+      <input type="sender-options" optional="true"/>
+      <output type="/proton/client/sender"/>
+    </method>
+
+    <method name="open-receiver">
+      Create and open a receiver using the default session.
+
+      <input name="address" type="string"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="/proton/client/receiver"/>
+    </method>
+  </group>
+
+  <group name="session-operations" title="Session operations">
+    <method name="open-session">
+      Create and open a session.
+
+      <input type="session-options" optional="true"/>
+      <output type="/proton/client/session"/>
+    </method>
+  </group>
+</class>

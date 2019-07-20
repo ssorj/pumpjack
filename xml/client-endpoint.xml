@@ -1,0 +1,24 @@
+<class name="endpoint" hidden="true">
+  <group name="basic">
+    <property type="client">
+      The client holding this endpoint object.
+    </property>
+
+    <method name="close">
+      Initiate closing.  Use await-close to block until the operation
+      is complete.
+    </method>
+    
+    <method name="await-open">
+      Block until the remote peer opens the endpoint.
+
+      <input name="timeout" type="duration"/>
+    </method>
+
+    <method name="await-close">
+      Block until the remote peer closes the endpoint.
+
+      <input name="timeout" type="duration"/>
+    </method>
+  </group>
+</class>

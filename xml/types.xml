@@ -58,8 +58,6 @@
     <class name="iterator">A traversal of a collection.</class>
     <class name="object">The most basic type.</class>
     <class name="function">A user-supplied function.</class>
-    <!--
-      <class name="url">A parsed string that points to a network resource.</class>
-    -->
+    <class name="future">XXX</class>
   </group>
 </module>

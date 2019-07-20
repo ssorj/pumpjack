@@ -44,12 +44,12 @@
   </group>
 
   <group name="events">
-    <method name="inject" experimental="true">
+    <method name="add-work">
       Register a function to be called.
 
-      It is safe to call inject from another thread.
+      It is safe to call add-work from another thread.
       
-      The injected function will be invoked in the thread-safe
+      The work function will be invoked in the thread-safe
       execution context of the endpoint.
 
       <input type="function"/>

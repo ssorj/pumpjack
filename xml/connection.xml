@@ -24,7 +24,6 @@
       The sessions contained in this connection.
     </property>
 
-    <!--
     <property name="senders" type="iterator" item-type="sender">
       The senders contained in this connection.
     </property>
@@ -32,7 +31,10 @@
     <property name="receivers" type="iterator" item-type="receiver">
       The receivers contained in this connection.
     </property>
-    -->
+
+    <property name="default-session" type="session" value="[instance]">
+      The session used by open-sender and open-receiver.
+    </property>
 
     <method name="open">
       Open the connection.
@@ -56,8 +58,8 @@
   </group>
   
   <group name="message-operations">
-    <method name="send" experimental="true">
-      Send a message on the default session.
+    <method name="send">
+      Send a message on the default session using an anonymous sender.
 
       <input type="message"/>
       <output type="tracker"/>
@@ -115,10 +117,6 @@
   </group>
 
   <group name="session-operations" title="Session operations">
-    <property name="default-session" type="session" value="[instance]">
-      The session used by open-sender and open-receiver.
-    </property>
-
     <method name="open-session">
       Create and open a session.
 

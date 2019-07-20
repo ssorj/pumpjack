@@ -6,25 +6,25 @@ default: render
 .PHONY: render
 render: clean
 	scripts/pumpjack -r html -i xml -o input
-	transom render input output
+	python3 -m transom render --quiet input output
 
 .PHONY: publish
 publish: clean
 	scripts/pumpjack -r html -i xml -o input
-	transom render --site-url /pumpjack input docs
+	python3 -m transom render --site-url /pumpjack input docs
 
 # .PHONY: render-proton-python
 # render-proton-python:
-# 	scripts/pumpjack -r python -i proton -o input/proton/python
-# 	transom render input/proton output/proton
+#	scripts/pumpjack -r python -i proton -o input/proton/python
+#	transom render input/proton output/proton
 
 # .PHONY: gen-proton-python-impl
 # gen-proton-python-impl: impl_dir := python/proton/_qpid_proton_impl
 # gen-proton-python-impl: temp_dir := $(shell mktemp -d)
 # gen-proton-python-impl:
-# 	scripts/pumpjack -r python-impl -i proton -o ${temp_dir}/new-impl
-# 	-mv ${impl_dir} ${temp_dir}/old-impl
-# 	mv ${temp_dir}/new-impl/qpid_proton ${impl_dir}
+#	scripts/pumpjack -r python-impl -i proton -o ${temp_dir}/new-impl
+#	-mv ${impl_dir} ${temp_dir}/old-impl
+#	mv ${temp_dir}/new-impl/qpid_proton ${impl_dir}
 
 .PHONY: help
 help:
@@ -39,9 +39,9 @@ clean:
 # publish: temp_dir := $(shell mktemp -d)
 # publish: temp_script := $(shell mktemp)
 # publish:
-# 	chmod 755 ${temp_dir}
-# 	transom --site-url "/~${USER}/pumpjack" render input ${temp_dir}
-# 	rsync -av ${BUILD_DIR}/ file.rdu.redhat.com:public_html/${PUBLISH_DIR}
+#	chmod 755 ${temp_dir}
+#	transom --site-url "/~${USER}/pumpjack" render input ${temp_dir}
+#	rsync -av ${BUILD_DIR}/ file.rdu.redhat.com:public_html/${PUBLISH_DIR}
 
 #	rsync -av ${temp_dir}/ ${USER}@people.apache.org:public_html/pumpjack
 #	rsync -av ${temp_dir}/ ${USER}@home.apache.org::public_html/pumpjack
@@ -54,12 +54,13 @@ clean:
 
 # .PHONY: test-python
 # test-python: render-python
-# 	PN_TRACE_FRM=1 PYTHONPATH=output/python:${PYTHONPATH} scripts/test-python
+#	PN_TRACE_FRM=1 PYTHONPATH=output/python:${PYTHONPATH} scripts/test-python
 
-.PHONY: update-markdown2
-update-markdown2:
-	curl "https://raw.githubusercontent.com/ssorj/transom/master/python/markdown2.py" -o python/markdown2.py
+.PHONY: update-transom
+update-transom:
+	curl -sfo python/markdown2.py "https://raw.githubusercontent.com/ssorj/transom/master/python/markdown2.py"
+	curl -sfo python/transom.py "https://raw.githubusercontent.com/ssorj/transom/master/python/transom.py"
 
-.PHONY: update-pencil
-update-pencil:
-	curl "https://raw.githubusercontent.com/ssorj/pencil/master/python/pencil.py" -o python/pencil.py
+.PHONY: update-%
+update-%:
+	curl -sfo python/$*.py "https://raw.githubusercontent.com/ssorj/$*/master/python/$*.py"
