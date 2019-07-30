@@ -6,24 +6,23 @@
   Blocking operations take optional timeout arguments.  If the timeout
   is exceeded, they raise a timeout error.
 
-  The endpoint-lifecycle methods `connect()`, `open_&lt;endpoint&gt;()`, and
-  `close()` start their respective operations but do not complete them.
-  Use `await_open()` and `await_close()` to block until they are
-  confirmed by the remote peer.
+  The endpoint-lifecycle methods `connect()`,
+  `open_&lt;endpoint&gt;()`, and `close()` start their respective
+  operations but do not complete them.  Use `wait()` to block until
+  the open operation completes.  `close()` returns an awaitable task.
 
   There is one exception, `open_dynamic_receiver()`.  It blocks until
   the remote peer provides the dynamic source address.
 
   Sender `send()` blocks until there is credit to send the message.
   It does not wait until the message is acknowledged.  The `send()`
-  method returns a tracker, on which you can call `await_delivery()` to
-  block until acknowledgment.
+  method returns an awaitable task.
 
   Receiver `receive()` blocks until a message is available to return.
 
   `send()` and `receive()` have non-blocking variants called
-  `try_send()` and `try_receive()`.  The former returns `None` if there
-  is no credit to send.  The latter returns `None` if there is no
+  `try_send()` and `try_receive()`.  The former returns null if there
+  is no credit to send.  The latter returns null if there is no
   delivery already present.
 
   <annotation name="requires">core</annotation>
@@ -33,6 +32,7 @@
     @client-endpoint.xml@
     @client-connection.xml@
     @client-session.xml@
+    @client-link.xml@
     @client-sender.xml@
     @client-receiver.xml@
   </group>

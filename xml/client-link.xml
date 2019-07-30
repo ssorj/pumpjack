@@ -1,0 +1,40 @@
+<class name="link" type="/proton/client/endpoint" internal="true">
+  The base class for sender and receiver.
+
+  <group name="basic">
+    <property name="session" type="session">
+      The containing session.
+    </property>
+
+    <property name="source" type="source">
+      The source end of the link.
+    </property>
+
+    <property name="target" type="target">
+      The target end of the link.
+    </property>
+
+    <property name="name" type="string" value="[discovered]">
+      The link name.
+    </property>
+
+    <method name="detach">
+      Detach the link without closing it.
+
+      <input type="error-condition" optional="true"/>
+      <output type="task"/>
+    </method>
+  </group>
+
+  <group name="reliability">
+    <property name="delivery-mode" type="delivery-mode" value="[discovered]">
+      The message delivery guarantee.
+    </property>
+  </group>
+
+  <group name="resource-limits">
+    <property name="max-message-size" type="ulong" value="[discovered]" nullable="true">
+      The maximum message size.
+    </property>
+  </group>
+</class>

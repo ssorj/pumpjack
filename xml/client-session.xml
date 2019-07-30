@@ -1,6 +1,34 @@
 <class name="session" type="/proton/client/endpoint">
-  XXX
+  A container of senders and receivers.
 
   <group name="basic">
+    <property type="connection">
+      The containing connection.
+    </property>
+
+    <method name="wait">
+      Block until the remote peer confirms the open operation.
+
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="/proton/client/session"/>
+    </method>
+  </group>
+
+  <group name="link-operations">
+    <method name="open-sender">
+      Create and open a sending link.
+
+      <input name="address" type="string"/>
+      <input type="sender-options" optional="true"/>
+      <output type="/proton/client/sender"/>
+    </method>
+
+    <method name="open-receiver">
+      Create and open a receiving link.
+
+      <input name="address" type="string"/>
+      <input type="receiver-options" optional="true"/>
+      <output type="/proton/client/receiver"/>
+    </method>
   </group>
 </class>

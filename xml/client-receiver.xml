@@ -1,40 +1,13 @@
-<class name="receiver" type="/proton/core/receiver">
-  XXX
-
-  <link node="receiver-options"/>
-  <link node="session"/>
-  <link node="sender"/>
-  <link node="delivery"/>
-  <link node="terminus"/>
-
-  <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-detach">Detach performative</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-flow">Flow performative</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-transfer">Transfer performative</link>
-  <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-disposition">Disposition performative</link>
+<class name="receiver" type="/proton/client/link">
+  A channel for receiving messages.  A receiver contains an ordered
+  sequence of deliveries.
 
   <group name="basic">
-    <property name="deliveries" type="iterator" item-type="delivery">
-      The deliveries contained in this receiver.
-    </property>
+    <method name="wait">
+      Block until the remote peer confirms the open operation.
 
-    <method name="open">
-      Open the receiver.
-
-      <link node="/proton/core/messaging-handler/on-receiver-open"/>
-
-      <input name="options" type="receiver-options" optional="true"/>
-    </method>
-
-    <method name="close">
-      Close the receiver.
-
-      The operation is complete when on-receiver-close fires.
-
-      <link node="/proton/core/messaging-handler/on-receiver-close"/>
-
-      <input type="error-condition" optional="true"/>
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="/proton/client/receiver"/>
     </method>
 
     <method name="detach">
@@ -42,36 +15,27 @@
       subscriptions this means the subscription is inactive but not
       canceled.
 
-      The operation is complete when on-receiver-detach fires.
-
-      <link node="/proton/core/messaging-handler/on-receiver-detach"/>
-
       <input type="error-condition" optional="true"/>
+      <output type="task"/>
     </method>
   </group>
 
-  <group name="flow-control">
-    <link node="/proton/core/link/credit"/>
-    <link node="/proton/core/receiver-options/credit-window"/>
+  <group name="message-operations">
+    <method name="receive">
+      Receive a message on the link.
 
-    <method name="add-credit">
-      Issue credit to the sending end.  This increases the credit
-      issued to the remote sender by the specified number of messages.
+      **Blocking**
 
-      <input name="count" type="uint"/>
+      This method blocks until a delivery is available.
+
+      <output type="delivery"/>
     </method>
 
-    <method name="drain">
-      Request any messages available at the sending end.  This tells
-      the sender to use all existing credit immediately to send
-      deliveries and then discard any excess credit.
+    <method name="try-receive">
+      Receive a message on the link.  If no delivery is available, it
+      returns null.
 
-      The sending end is notified of the drain request by the
-      *on-sender-drain-start* event.  The operation is complete when
-      *on-receiver-drain-finish* fires.
-
-      <link node="/proton/core/messaging-handler/on-sender-drain-start"/>
-      <link node="/proton/core/messaging-handler/on-receiver-drain-finish"/>
+      <output type="delivery"/>
     </method>
   </group>
 </class>

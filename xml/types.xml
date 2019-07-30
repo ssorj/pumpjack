@@ -45,7 +45,7 @@
 
   <group name="decimal-types" title="Decimal floating-point data types">
     <link href="https://en.wikipedia.org/wiki/Decimal_floating_point">Decimal floating point arithmetic</link>
-    
+
     <class name="decimal32">A 32-bit decimal floating point number.</class>
     <class name="decimal64">A 64-bit decimal floating point number.</class>
     <class name="decimal128">A 128-bit decimal floating point number.</class>
@@ -53,11 +53,12 @@
 
   <group name="api-types" title="API data types">
     Data types used by this API but not defined by AMQP.
-    
+
     <class name="duration">A span of time.</class>
     <class name="iterator">A traversal of a collection.</class>
     <class name="object">The most basic type.</class>
     <class name="function">A user-supplied function.</class>
     <class name="future">XXX</class>
+    <class name="task">XXX</class>
   </group>
 </module>

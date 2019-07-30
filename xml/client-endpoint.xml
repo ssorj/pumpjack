@@ -4,21 +4,18 @@
       The client holding this endpoint object.
     </property>
 
+    <method name="wait">
+      Block until the remote peer confirms the open operation.
+
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="endpoint"/>
+    </method>
+
     <method name="close">
-      Initiate closing.  Use await-close to block until the operation
-      is complete.
-    </method>
-    
-    <method name="await-open">
-      Block until the remote peer opens the endpoint.
+      Close the endpoint.
 
-      <input name="timeout" type="duration"/>
-    </method>
-
-    <method name="await-close">
-      Block until the remote peer closes the endpoint.
-
-      <input name="timeout" type="duration"/>
+      <input type="error-condition" optional="true"/>
+      <output type="task"/>
     </method>
   </group>
 </class>

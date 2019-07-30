@@ -1,13 +1,23 @@
 <class name="connection" type="/proton/client/endpoint">
-  XXX
+  A channel for communication between two peers on a network.
+
+  In current implementations, a connection corresponds to a TCP
+  connection, represented by a transport.
+
+  A connection object contains zero or more session objects, which in
+  turn contain zero or more senders and zero or more receivers.
 
   <group name="basic">
-    <method name="get">
-      Block until the remote peer opens the connection.
+    <method name="wait">
+      Block until the remote peer confirms the open operation.
 
-      <input name="timeout" type="duration"/>
+      <input name="timeout" type="duration" optional="true"/>
       <output type="/proton/client/connection"/>
     </method>
+
+    <property name="default-session" type="session" value="[instance]">
+      The session used by open-sender and open-receiver.
+    </property>
   </group>
 
   <group name="link-operations">

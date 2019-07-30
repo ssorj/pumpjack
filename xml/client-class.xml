@@ -1,11 +1,15 @@
 <class name="client">
+  A top-level container of connections, sessions, senders, and
+  receivers.  It serves as an entry point to the API, allowing
+  connections and links to be established.
+
   <link node="connection"/>
   <link node="session"/>
   <link node="sender"/>
   <link node="receiver"/>
-  
+
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#doc-idp2176">Conceptual overview</link>
-  
+
   <group name="basic">
     <property name="id" type="string" value="[generated]">
       A globally unique container identifier.  It is used to
@@ -15,10 +19,6 @@
     <method name="constructor" special="true">
       Create a new client.
 
-      <input type="messaging-handler" optional="true">
-        The main event handler for this container.
-      </input>
-      
       <input name="id" type="string" value="[generated]" optional="true">
         Identifiers should be unique.  By default a UUID will be
         used.
@@ -27,14 +27,14 @@
       <output name="client" type="client"/>
     </method>
 
-    <method name="start">
-      Start processing events.  It returns when all connections
-      and listeners are closed or the container is stopped.
+    <!-- <method name="start"> -->
+    <!--   Start processing events.  It returns when all connections -->
+    <!--   and listeners are closed or the container is stopped. -->
 
-      <link node="/proton/core/messaging-handler/on-container-start"/>
-      <link node="/proton/core/connection/close"/>
-      <link node="listener"/>
-    </method>
+    <!--   <link node="/proton/core/messaging-handler/on-container-start"/> -->
+    <!--   <link node="/proton/core/connection/close"/> -->
+    <!--   <link node="listener"/> -->
+    <!-- </method> -->
 
     <method name="stop">
       Close any open connections and stop the container. Blocks until all connections are closed.
@@ -50,7 +50,7 @@
       The operation is complete when on-connection-open fires.
 
       <link node="/proton/core/messaging-handler/on-connection-open"/>
-      
+
       <input name="connection-url" type="string"/>
       <input name="options" type="connection-options" optional="true"/>
       <output name="connection" type="connection"/>
