@@ -15,7 +15,7 @@
 
 <div id="-head">
   <div id="-head-content">
-    <a href="/pumpjack/">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/core/index.html">Module core</a><a href="/pumpjack/core/connection/index.html">Class connection</a></nav>
+    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/core/index.html">Module core</a><a href="/pumpjack/core/connection/index.html">Class connection</a></nav>
   </div>
 </div>
 <div id="-body">
@@ -40,6 +40,9 @@ turn contain zero or more senders and zero or more receivers.</p>
 <tr><td><a class="None" id="container" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;container.html">container</a> </td><td>The container holding this endpoint object</td><td><a href="/pumpjack&#x2F;core&#x2F;container&#x2F;index.html">container</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
 <tr><td><a class="None" id="transport" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;transport.html">transport</a> </td><td>The associated transport</td><td><a href="/pumpjack&#x2F;core&#x2F;transport&#x2F;index.html">transport</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
 <tr><td><a class="None" id="sessions" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;sessions.html">sessions</a> </td><td>The sessions contained in this connection</td><td><a href="/pumpjack&#x2F;types&#x2F;iterator&#x2F;index.html">iterator</a> of <a href="/pumpjack&#x2F;core&#x2F;session&#x2F;index.html">session</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="senders" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;senders.html">senders</a> </td><td>The senders contained in this connection</td><td><a href="/pumpjack&#x2F;types&#x2F;iterator&#x2F;index.html">iterator</a> of <a href="/pumpjack&#x2F;core&#x2F;sender&#x2F;index.html">sender</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="receivers" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;receivers.html">receivers</a> </td><td>The receivers contained in this connection</td><td><a href="/pumpjack&#x2F;types&#x2F;iterator&#x2F;index.html">iterator</a> of <a href="/pumpjack&#x2F;core&#x2F;receiver&#x2F;index.html">receiver</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="default-session" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;default-session.html">default-session</a> </td><td>The session used by open-sender and open-receiver</td><td><a href="/pumpjack&#x2F;core&#x2F;session&#x2F;index.html">session</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
 </tbody></table>
 <table class="pumpjack methods"><tbody>
 <tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
@@ -61,7 +64,7 @@ turn contain zero or more senders and zero or more receivers.</p>
 <h1 id="events">Event processing</h1>
 <table class="pumpjack methods"><tbody>
 <tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
-<tr><td><a class="None" id="inject" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;inject.html">inject</a> <span class="flag">experimental</span></td><td>Register a function to be called</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td></td></tr>
+<tr><td><a class="None" id="add-work" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;add-work.html">add-work</a> </td><td>Register a function to be called</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td></td></tr>
 </tbody></table>
 </section>
 <section>
@@ -77,7 +80,7 @@ turn contain zero or more senders and zero or more receivers.</p>
 <h1 id="message-operations">Message operations</h1>
 <table class="pumpjack methods"><tbody>
 <tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
-<tr><td><a class="None" id="send" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;send.html">send</a> <span class="flag">experimental</span></td><td>Send a message on the default session</td><td><a href="/pumpjack&#x2F;core&#x2F;message&#x2F;index.html">message</a></td><td><a href="/pumpjack&#x2F;core&#x2F;tracker&#x2F;index.html">tracker</a></td></tr>
+<tr><td><a class="None" id="send" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;send.html">send</a> </td><td>Send a message on the default session using an anonymous sender</td><td><a href="/pumpjack&#x2F;core&#x2F;message&#x2F;index.html">message</a></td><td><a href="/pumpjack&#x2F;core&#x2F;tracker&#x2F;index.html">tracker</a></td></tr>
 </tbody></table>
 </section>
 <section>
@@ -90,10 +93,6 @@ turn contain zero or more senders and zero or more receivers.</p>
 </section>
 <section>
 <h1 id="session-operations">Session operations</h1>
-<table class="pumpjack properties"><tbody>
-<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
-<tr><td><a class="None" id="default-session" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;default-session.html">default-session</a> </td><td>The session used by open-sender and open-receiver</td><td><a href="/pumpjack&#x2F;core&#x2F;session&#x2F;index.html">session</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
-</tbody></table>
 <table class="pumpjack methods"><tbody>
 <tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
 <tr><td><a class="None" id="open-session" href="/pumpjack&#x2F;core&#x2F;connection&#x2F;open-session.html">open-session</a> </td><td>Create and open a session</td><td><a href="/pumpjack&#x2F;core&#x2F;session-options&#x2F;index.html"><span class="optional">[session-options]</span></a></td><td><a href="/pumpjack&#x2F;core&#x2F;session&#x2F;index.html">session</a></td></tr>

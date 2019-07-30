@@ -15,7 +15,7 @@
 
 <div id="-head">
   <div id="-head-content">
-    <a href="/pumpjack/">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/sender/index.html">Class sender</a><a href="/pumpjack/client/sender/send.html">Method sender.send</a></nav>
+    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/sender/index.html">Class sender</a><a href="/pumpjack/client/sender/send.html">Method sender.send</a></nav>
   </div>
 </div>
 <div id="-body">
@@ -24,13 +24,17 @@
 <h1 class="pumpjack" id="send">Method <span class="name">sender.send</span> </h1>
 <p>Send a message on the link.</p>
 
+<p><strong>Blocking</strong></p>
+
+<p>This method blocks until the link has credit.</p>
+
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
-<tr><td>message</td><td><a href="/pumpjack&#x2F;client&#x2F;message&#x2F;index.html">message</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td>message</td><td><a href="/pumpjack&#x2F;core&#x2F;message&#x2F;index.html">message</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>
-<tr><td>tracker</td><td><a href="/pumpjack&#x2F;client&#x2F;tracker&#x2F;index.html">tracker</a></td><td>&#x2610;</td></tr>
+<tr><td>task</td><td><a href="/pumpjack&#x2F;types&#x2F;task&#x2F;index.html">task</a> of <a href="/pumpjack&#x2F;core&#x2F;tracker&#x2F;index.html">tracker</a></td><td>&#x2610;</td></tr>
 </tbody></table>
 
 
