@@ -8,14 +8,14 @@ For now, I'm using it to document just one API, the
 messaging API.
 
 See the
-[current published results](http://home.apache.org/~jross/pumpjack/).
+[current published results](http://www.ssorj.net/pumpjack/client/index.html).
 
 ## Project layout
 
     Makefile              # Defines the make targets
     python/               # Python library code
     scripts/              # Scripts called by Makefile rules
-    api/                  # API definition files
+    xml/                  # API definition files
     input/                # Markdown and HTML input files
     output/               # HTML output
 
@@ -23,5 +23,5 @@ See the
 
     make render           # Generate content under output/
     make clean            # Removes output/
-    make publish          # Publish the output to home.apache.org
+    make publish          # Publish the output to ssorj.net/pumpjack
     make help             # Print help for make targets
