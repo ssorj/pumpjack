@@ -12,11 +12,10 @@
   task.
 
   The sender `send()` method returns an awaitable task that resolves
-  to a `tracker` when the delivery is complete.
+  to a `tracker` object when the delivery is complete.
 
   The receiver `receive()` method returns an awaitable task that
-  resolves to a `delivery` object as soons as a delivery becomes
-  available.
+  resolves to a `delivery` object as soon as a delivery is available.
   
   Blocking operations take optional timeout arguments.  If the timeout
   is exceeded, they raise a timeout error.

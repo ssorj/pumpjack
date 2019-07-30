@@ -35,11 +35,10 @@ to block until the connect or open operation completes.</p>
 task.</p>
 
 <p>The sender <code>send()</code> method returns an awaitable task that resolves
-to a <code>tracker</code> when the delivery is complete.</p>
+to a <code>tracker</code> object when the delivery is complete.</p>
 
 <p>The receiver <code>receive()</code> method returns an awaitable task that
-resolves to a <code>delivery</code> object as soons as a delivery becomes
-available.</p>
+resolves to a <code>delivery</code> object as soon as a delivery is available.</p>
 
 <p>Blocking operations take optional timeout arguments.  If the timeout
 is exceeded, they raise a timeout error.</p>
