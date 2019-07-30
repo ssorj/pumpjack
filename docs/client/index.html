@@ -29,24 +29,17 @@
 <p>The endpoint-lifecycle methods <code>connect()</code>, <code>open-session()</code>,
 <code>open-sender()</code>, and <code>open-receiver()</code> start their respective
 operations but do not complete them.  Use <code>&lt;endpoint&gt;.wait()</code>
-to block until a connect or open operation completes.
-<code>&lt;endpoint&gt;.close()</code> returns an awaitable task.</p>
+to block until the connect or open operation completes.</p>
 
-<p>Sender <code>send()</code> blocks until there is credit to send the message.
-It does not wait until the message is acknowledged.  The <code>send()</code>
-method returns an awaitable task that resolves to a <code>tracker</code> for a
-completed delivery.</p>
+<p>All endpoints have a <code>close()</code> method that returns an awaitable
+task.</p>
 
-<p>Receiver <code>next()</code> is designed to work with automatic credit
-management (which is enabled by default).  It blocks until a message
-is available to return.  Receiver <code>receive()</code>, by contrast, is for
-explicit credit management.  It issues a single credit and returns
-a task representing the completed delivery.</p>
+<p>The sender <code>send()</code> method returns an awaitable task that resolves
+to a <code>tracker</code> when the delivery is complete.</p>
 
-<p><code>send()</code> and <code>next()</code> have non-blocking variants called
-<code>try-send()</code> and <code>try-next()</code>.  The former returns null if there
-is no credit to send.  The latter returns null if there is no
-delivery already present.</p>
+<p>The receiver <code>receive()</code> method returns an awaitable task that
+resolves to a <code>delivery</code> object as soons as a delivery becomes
+available.</p>
 
 <p>Blocking operations take optional timeout arguments.  If the timeout
 is exceeded, they raise a timeout error.</p>
