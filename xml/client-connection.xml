@@ -26,6 +26,15 @@
 
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
+      <input name="on-delivery" type="function" optional="true"/>
+      <output type="/proton/client/sender"/>
+    </method>
+
+    <method name="open-anonymous-sender">
+      Create and open an unnamed sender using the default session.
+
+      <input type="sender-options" optional="true"/>
+      <input name="on-delivery" type="function" optional="true"/>
       <output type="/proton/client/sender"/>
     </method>
 
@@ -34,6 +43,19 @@
 
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
+      <input name="on-delivery" type="function" optional="true"/>
+      <output type="/proton/client/receiver"/>
+    </method>
+
+    <method name="open-dynamic-receiver">
+      Create and open a dynamic receiver using the default session.
+
+      **Blocking**
+
+      This method blocks until the open operation is complete.
+      
+      <input type="receiver-options" optional="true"/>
+      <input name="on-delivery" type="function" optional="true"/>
       <output type="/proton/client/receiver"/>
     </method>
   </group>

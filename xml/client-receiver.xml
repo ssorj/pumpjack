@@ -24,18 +24,15 @@
     <method name="receive">
       Receive a message on the link.
 
-      **Blocking**
-
-      This method blocks until a delivery is available.
-
-      <output type="delivery"/>
+      <input name="on-delivery" type="function" optional="true"/>
+      <output type="task" item-type="delivery"/>
     </method>
 
-    <method name="try-receive">
-      Receive a message on the link.  If no delivery is available, it
-      returns null.
+    <!-- <method name="receive-wait"> -->
+    <!--   Receive a message on the link. -->
 
-      <output type="delivery"/>
-    </method>
+    <!--   <input name="timeout" type="duration" optional="true"/> -->
+    <!--   <output type="delivery"/> -->
+    <!-- </method> -->
   </group>
 </class>

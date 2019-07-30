@@ -15,20 +15,17 @@
     <method name="send">
       Send a message on the link.
 
-      **Blocking**
-
-      This method blocks until the link has credit.
-
       <input type="message"/>
+      <input name="on-delivery" type="function" optional="true"/>
       <output type="task" item-type="tracker"/>
     </method>
 
-    <method name="try-send">
-      Send a message on the link.  If no credit is available, it
-      returns null.
+    <!-- <method name="send-wait"> -->
+    <!--   Send a message on the link. -->
 
-      <input type="message"/>
-      <output type="task" item-type="tracker"/>
-    </method>
+    <!--   <input type="message"/> -->
+    <!--   <input name="timeout" type="duration" optional="true"/> -->
+    <!--   <output type="tracker"/> -->
+    <!-- </method> -->
   </group>
 </class>

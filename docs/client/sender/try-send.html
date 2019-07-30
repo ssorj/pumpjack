@@ -22,12 +22,13 @@
   <div id="-body-content">
 
 <h1 class="pumpjack" id="try-send">Method <span class="name">sender.try-send</span> </h1>
-<p>Send a message on the link.  If no credit is available, it
-returns null.</p>
+<p>Send a message on the link, returning null if the link has no
+credit.</p>
 
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
 <tr><td>message</td><td><a href="/pumpjack&#x2F;core&#x2F;message&#x2F;index.html">message</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td>on-delivery</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>

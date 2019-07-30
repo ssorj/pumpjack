@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>Method receiver.receive</title>
+    <title>Method receiver.receive-wait</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
     <link rel="stylesheet" href="/pumpjack/main.css" type="text/css"/>
@@ -15,22 +15,22 @@
 
 <div id="-head">
   <div id="-head-content">
-    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/receiver/index.html">Class receiver</a><a href="/pumpjack/client/receiver/receive.html">Method receiver.receive</a></nav>
+    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/receiver/index.html">Class receiver</a><a href="/pumpjack/client/receiver/receive-wait.html">Method receiver.receive-wait</a></nav>
   </div>
 </div>
 <div id="-body">
   <div id="-body-content">
 
-<h1 class="pumpjack" id="receive">Method <span class="name">receiver.receive</span> </h1>
+<h1 class="pumpjack" id="receive-wait">Method <span class="name">receiver.receive-wait</span> </h1>
 <p>Receive a message on the link.</p>
 
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
-<tr><td>on-delivery</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+<tr><td>timeout</td><td><a href="/pumpjack&#x2F;types&#x2F;duration&#x2F;index.html">duration</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>
-<tr><td>task</td><td><a href="/pumpjack&#x2F;types&#x2F;task&#x2F;index.html">task</a> of <a href="/pumpjack&#x2F;core&#x2F;delivery&#x2F;index.html">delivery</a></td><td>&#x2610;</td></tr>
+<tr><td>delivery</td><td><a href="/pumpjack&#x2F;core&#x2F;delivery&#x2F;index.html">delivery</a></td><td>&#x2610;</td></tr>
 </tbody></table>
 
 
