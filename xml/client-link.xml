@@ -22,7 +22,14 @@
       Detach the link without closing it.
 
       <input type="error-condition" optional="true"/>
-      <output type="task"/>
+      <output type="future" item-type="/proton/client/link"/>
+    </method>
+
+    <method name="async-detach">
+      Detach the link without closing it.
+
+      <input type="error-condition" optional="true"/>
+      <output type="task" item-type="/proton/client/link"/>
     </method>
   </group>
 

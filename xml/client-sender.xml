@@ -2,30 +2,31 @@
   A channel for sending messages.  A sender contains an ordered
   sequence of deliveries.
 
-  <group name="basic">
-    <method name="wait">
-      Block until the remote peer confirms the open operation.
-
-      <input name="timeout" type="duration" optional="true"/>
-      <output type="/proton/client/sender"/>
-    </method>
-  </group>
-
   <group name="message-operations">
     <method name="send">
       Send a message on the link.
 
+      **Blocking**
+
+      Blocks until there is credit for sending.
+
       <input type="message"/>
-      <input name="on-delivery" type="function" optional="true"/>
-      <output type="task" item-type="tracker"/>
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="future" item-type="tracker"/>
     </method>
 
-    <!-- <method name="send-wait"> -->
-    <!--   Send a message on the link. -->
+    <method name="try-send">
+      Send a message on the link or return null if there is no credit.
 
-    <!--   <input type="message"/> -->
-    <!--   <input name="timeout" type="duration" optional="true"/> -->
-    <!--   <output type="tracker"/> -->
-    <!-- </method> -->
+      <input type="message"/>
+      <output type="future" item-type="tracker"/>
+    </method>
+
+    <method name="async-send">
+      Send a message on the link.
+
+      <input type="message"/>
+      <output type="task" item-type="tracker"/>
+    </method>
   </group>
 </class>

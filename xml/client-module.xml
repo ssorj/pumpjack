@@ -5,20 +5,60 @@
 
   The endpoint-lifecycle methods `connect()`, `open-session()`,
   `open-sender()`, and `open-receiver()` start their respective
-  operations but do not complete them.  Use `&lt;endpoint&gt;.wait()`
-  to block until the connect or open operation completes.
+  operations but do not complete them.
 
-  All endpoints have a `close()` method that returns an awaitable
-  task.
+  Under normal circumstances, you won't need to wait for these to
+  complete since subsequent operations will internally wait as needed.
+  If you do need to wait explicitly, you can use
+  `&lt;endpoint&gt;.wait()` to block until the connect or open
+  operation completes.
 
-  The sender `send()` method returns an awaitable task that resolves
-  to a `tracker` object when the delivery is complete.
+  All endpoints have a `close()` method that returns a waitable future
+  resolving to the endpoint object itself.
 
-  The receiver `receive()` method returns an awaitable task that
-  resolves to a `delivery` object as soon as a delivery is available.
-  
+  The sender `send()` method blocks until there is credit for sending.
+  It then sends the message and returns a future that resolves to a
+  `tracker` object when the delivery at the remote peer is confirmed.
+  `try_send()` is a variant that instead of blocking returns null if
+  there is no credit.
+
+  The receiver `receive()` method blocks until a delivery is available
+  to return.  `try-receive()` is a variant that instead returns null
+  if no deliveries have been received.
+
   Blocking operations take optional timeout arguments.  If the timeout
   is exceeded, they raise a timeout error.
+
+  **Differences for languages with coroutines**
+
+  As we've described it above, a language without coroutines has
+  blocking of two kinds: first, the blocking the library performs
+  inside some API calls, and second, the blocking the API user
+  performs when using futures.  For example, `send()` blocks
+  internally for credit and then returns a future which the API user
+  can use to block until delivery.
+
+  For languages that do support coroutines, this somewhat tactical
+  division is not needed.  Here we outline the differences we would
+  expect to see in a rendering of this API in a language with
+  coroutines.
+
+  In general, any operation that returns a future instead returns an
+  awaitable coroutine.  This applies to the endpoint `wait()` and
+  `close()` operations.
+
+  The sender `send()` method does not block the API thread for credit.
+  Instead, it returns an awaitable task that itself waits asynchronously
+  for both credit and the ultimate delivery.  There is no `try-send()`
+  variant.
+
+  The receiver `receive()` method does not block the API thread until
+  a delivery arrives.  Instead, it returns an awaitable task that gets
+  the next delivery.  There is no `try-receive()` variant.
+
+  Alternative method definitions for coroutines are prefixed with
+  `async` in the API reference.  In an implementation, the prefixes
+  would be omitted.
 
   <annotation name="requires">core</annotation>
 

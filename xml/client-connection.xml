@@ -8,42 +8,45 @@
   turn contain zero or more senders and zero or more receivers.
 
   <group name="basic">
-    <method name="wait">
-      Block until the remote peer confirms the open operation.
-
-      <input name="timeout" type="duration" optional="true"/>
-      <output type="/proton/client/connection"/>
-    </method>
-
     <property name="default-session" type="session" value="[instance]">
-      The session used by open-sender and open-receiver.
+      The session used by `open-sender()` and `open-receiver()`.
     </property>
-  </group>
+
+    <property name="default-sender" type="session" value="[instance]">
+      The sender used by `connection.send()`.
+    </property>
+</group>
 
   <group name="link-operations">
     <method name="open-sender">
       Create and open a sender using the default session.
 
+      Use `wait()` to block until the remote peer confirms the open.
+
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/sender"/>
     </method>
 
     <method name="open-anonymous-sender">
-      Create and open an unnamed sender using the default session.
+      Create and open a sender with no target address using the default session.
+
+      Use `wait()` to block until the remote peer confirms the open.
 
       <input type="sender-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/sender"/>
     </method>
 
     <method name="open-receiver">
       Create and open a receiver using the default session.
 
+      Use `wait()` to block until the remote peer confirms the open.
+
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/receiver"/>
     </method>
 
@@ -53,10 +56,18 @@
       **Blocking**
 
       This method blocks until the open operation is complete.
-      
+
       <input type="receiver-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/receiver"/>
+    </method>
+
+    <method name="async-open-dynamic-receiver">
+      Create and open a dynamic receiver using the default session.
+
+      <input type="receiver-options" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
+      <output type="task" item-type="/proton/client/receiver"/>
     </method>
   </group>
 
@@ -64,8 +75,30 @@
     <method name="open-session">
       Create and open a session.
 
+      Use `wait()` to block until the remote peer confirms the open.
+
       <input type="session-options" optional="true"/>
       <output type="/proton/client/session"/>
+    </method>
+  </group>
+
+  <group name="message-operations">
+    <method name="send">
+      Send a message using the default session and default sender.
+      The message 'to' field must be set.
+
+      <input type="message"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
+      <output type="future" item-type="tracker"/>
+    </method>
+
+    <method name="async-send">
+      Send a message using the default session and default sender.
+      The message 'to' field must be set.
+
+      <input type="message"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
+      <output type="task" item-type="tracker"/>
     </method>
   </group>
 </class>

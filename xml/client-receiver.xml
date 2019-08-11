@@ -3,20 +3,22 @@
   sequence of deliveries.
 
   <group name="basic">
-    <method name="wait">
-      Block until the remote peer confirms the open operation.
-
-      <input name="timeout" type="duration" optional="true"/>
-      <output type="/proton/client/receiver"/>
-    </method>
-
     <method name="detach">
       Detach the receiver without closing it.  For durable
       subscriptions this means the subscription is inactive but not
       canceled.
 
       <input type="error-condition" optional="true"/>
-      <output type="task"/>
+      <output type="future" item-type="/proton/client/receiver"/>
+    </method>
+
+    <method name="async-detach">
+      Detach the receiver without closing it.  For durable
+      subscriptions this means the subscription is inactive but not
+      canceled.
+
+      <input type="error-condition" optional="true"/>
+      <output type="task" item-type="/proton/client/receiver"/>
     </method>
   </group>
 
@@ -24,15 +26,25 @@
     <method name="receive">
       Receive a message on the link.
 
-      <input name="on-delivery" type="function" optional="true"/>
-      <output type="task" item-type="delivery"/>
+      **Blocking**
+
+      Blocks until a delivery is available.
+
+      <input name="timeout" type="duration" optional="true"/>
+      <output type="delivery"/>
     </method>
 
-    <!-- <method name="receive-wait"> -->
-    <!--   Receive a message on the link. -->
+    <method name="try-receive">
+      Receive a message on the link or return null if no delivery is
+      available.
 
-    <!--   <input name="timeout" type="duration" optional="true"/> -->
-    <!--   <output type="delivery"/> -->
-    <!-- </method> -->
+      <output type="delivery"/>
+    </method>
+
+    <method name="async-receive">
+      Receive a message on the link.
+
+      <output type="task" item-type="delivery"/>
+    </method>
   </group>
 </class>

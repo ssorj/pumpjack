@@ -5,13 +5,6 @@
     <property type="connection">
       The containing connection.
     </property>
-
-    <method name="wait">
-      Block until the remote peer confirms the open operation.
-
-      <input name="timeout" type="duration" optional="true"/>
-      <output type="/proton/client/session"/>
-    </method>
   </group>
 
   <group name="link-operations">
@@ -20,15 +13,15 @@
 
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/sender"/>
     </method>
 
     <method name="open-anonymous-sender">
-      Create and open an unnamed sender.
+      Create and open a sender with no target address.
 
       <input type="sender-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/sender"/>
     </method>
 
@@ -37,10 +30,9 @@
 
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/receiver"/>
     </method>
-
 
     <method name="open-dynamic-receiver">
       Create and open a dynamic receiver.
@@ -49,10 +41,17 @@
 
       This method blocks until the open operation is complete.
 
-      <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
-      <input name="on-delivery" type="function" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/receiver"/>
+    </method>
+
+    <method name="async-open-dynamic-receiver">
+      Create and open a dynamic receiver.
+
+      <input type="receiver-options" optional="true"/>
+      <!-- <input name="on-delivery" type="function" optional="true"/> -->
+      <output type="task" item-type="/proton/client/receiver"/>
     </method>
   </group>
 </class>

@@ -27,19 +27,10 @@
       <output name="client" type="client"/>
     </method>
 
-    <!-- <method name="start"> -->
-    <!--   Start processing events.  It returns when all connections -->
-    <!--   and listeners are closed or the container is stopped. -->
-
-    <!--   <link node="/proton/core/messaging-handler/on-container-start"/> -->
-    <!--   <link node="/proton/core/connection/close"/> -->
-    <!--   <link node="listener"/> -->
-    <!-- </method> -->
-
     <method name="stop">
-      Close any open connections and stop the container. Blocks until all connections are closed.
+      Close any open connections and stop the client. Blocks until all connections are closed.
 
-      <input name="timeout" type="int" optional="true"/>
+      <input name="timeout" type="duration" optional="true"/>
     </method>
   </group>
 
@@ -47,12 +38,10 @@
     <method name="connect">
       Create and open an outbound connection.
 
-      The operation is complete when on-connection-open fires.
-
-      <link node="/proton/core/messaging-handler/on-connection-open"/>
+      Use `wait()` to block until the remote peer confirms the open.
 
       <input name="connection-url" type="string"/>
-      <input name="options" type="connection-options" optional="true"/>
+      <input type="connection-options" optional="true"/>
       <output name="connection" type="connection"/>
     </method>
   </group>
