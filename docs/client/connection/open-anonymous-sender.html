@@ -22,12 +22,13 @@
   <div id="-body-content">
 
 <h1 class="pumpjack" id="open-anonymous-sender">Method <span class="name">connection.open-anonymous-sender</span> </h1>
-<p>Create and open an unnamed sender using the default session.</p>
+<p>Create and open a sender with no target address using the default session.</p>
+
+<p>Use <code>wait()</code> to block until the remote peer confirms the open.</p>
 
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
 <tr><td>sender-options</td><td><a href="/pumpjack&#x2F;core&#x2F;sender-options&#x2F;index.html">sender-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
-<tr><td>on-delivery</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>

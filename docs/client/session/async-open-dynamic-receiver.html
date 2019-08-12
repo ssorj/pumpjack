@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>Method sender.send-wait</title>
+    <title>Method session.async-open-dynamic-receiver</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
     <link rel="stylesheet" href="/pumpjack/main.css" type="text/css"/>
@@ -15,23 +15,22 @@
 
 <div id="-head">
   <div id="-head-content">
-    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/sender/index.html">Class sender</a><a href="/pumpjack/client/sender/send-wait.html">Method sender.send-wait</a></nav>
+    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/session/index.html">Class session</a><a href="/pumpjack/client/session/async-open-dynamic-receiver.html">Method session.async-open-dynamic-receiver</a></nav>
   </div>
 </div>
 <div id="-body">
   <div id="-body-content">
 
-<h1 class="pumpjack" id="send-wait">Method <span class="name">sender.send-wait</span> </h1>
-<p>Send a message on the link.</p>
+<h1 class="pumpjack" id="async-open-dynamic-receiver">Method <span class="name">session.async-open-dynamic-receiver</span> </h1>
+<p>Create and open a dynamic receiver.</p>
 
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
-<tr><td>message</td><td><a href="/pumpjack&#x2F;core&#x2F;message&#x2F;index.html">message</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
-<tr><td>timeout</td><td><a href="/pumpjack&#x2F;types&#x2F;duration&#x2F;index.html">duration</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+<tr><td>receiver-options</td><td><a href="/pumpjack&#x2F;core&#x2F;receiver-options&#x2F;index.html">receiver-options</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>
-<tr><td>tracker</td><td><a href="/pumpjack&#x2F;core&#x2F;tracker&#x2F;index.html">tracker</a></td><td>&#x2610;</td></tr>
+<tr><td>task</td><td><a href="/pumpjack&#x2F;types&#x2F;task&#x2F;index.html">task</a> of <a href="/pumpjack&#x2F;client&#x2F;receiver&#x2F;index.html">receiver</a></td><td>&#x2610;</td></tr>
 </tbody></table>
 
 

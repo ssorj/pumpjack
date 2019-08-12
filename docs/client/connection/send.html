@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>Method connection.send experimental</title>
+    <title>Method connection.send</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,300italic,400,400italic,600,600italic|Ubuntu+Mono:400" type="text/css"/>
     <link rel="stylesheet" href="/pumpjack/main.css" type="text/css"/>
@@ -15,14 +15,15 @@
 
 <div id="-head">
   <div id="-head-content">
-    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/connection/index.html">Class connection</a><a href="/pumpjack/client/connection/send.html">Method connection.send experimental</a></nav>
+    <a href="/pumpjack/index.html">Home</a> &nbsp;&gt;&nbsp; <nav id="-path-navigation"><a href="/pumpjack/client/index.html">Module client</a><a href="/pumpjack/client/connection/index.html">Class connection</a><a href="/pumpjack/client/connection/send.html">Method connection.send</a></nav>
   </div>
 </div>
 <div id="-body">
   <div id="-body-content">
 
-<h1 class="pumpjack" id="send">Method <span class="name">connection.send</span> <span class="flag">experimental</span></h1>
-<p>Send a message on the default session.</p>
+<h1 class="pumpjack" id="send">Method <span class="name">connection.send</span> </h1>
+<p>Send a message using the default session and default sender.
+The message 'to' field must be set.</p>
 
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
@@ -30,7 +31,7 @@
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>
-<tr><td>tracker</td><td><a href="/pumpjack&#x2F;core&#x2F;tracker&#x2F;index.html">tracker</a></td><td>&#x2610;</td></tr>
+<tr><td>future</td><td><a href="/pumpjack&#x2F;types&#x2F;future&#x2F;index.html">future</a> of <a href="/pumpjack&#x2F;core&#x2F;tracker&#x2F;index.html">tracker</a></td><td>&#x2610;</td></tr>
 </tbody></table>
 
 

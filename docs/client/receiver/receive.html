@@ -24,13 +24,17 @@
 <h1 class="pumpjack" id="receive">Method <span class="name">receiver.receive</span> </h1>
 <p>Receive a message on the link.</p>
 
+<p><strong>Blocking</strong></p>
+
+<p>Blocks until a delivery is available.</p>
+
 <table class="parameters"><tbody>
 <tr><th>Input</th><th>Type</th><th>Default value</th><th>Nullable</th><th>Optional</th></tr>
-<tr><td>on-delivery</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+<tr><td>timeout</td><td><a href="/pumpjack&#x2F;types&#x2F;duration&#x2F;index.html">duration</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
 </tbody></table>
 <table class="parameters"><tbody>
 <tr><th>Output</th><th>Type</th><th>Nullable</th></tr>
-<tr><td>task</td><td><a href="/pumpjack&#x2F;types&#x2F;task&#x2F;index.html">task</a> of <a href="/pumpjack&#x2F;core&#x2F;delivery&#x2F;index.html">delivery</a></td><td>&#x2610;</td></tr>
+<tr><td>delivery</td><td><a href="/pumpjack&#x2F;core&#x2F;delivery&#x2F;index.html">delivery</a></td><td>&#x2610;</td></tr>
 </tbody></table>
 
 

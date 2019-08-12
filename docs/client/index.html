@@ -24,24 +24,64 @@
 <h1 class="pumpjack" id="client">Module <span class="name">client</span> </h1>
 <p>An imperative client API.</p>
 
-<p><strong>Blocking</strong></p>
+<p><strong>Synchronous waiting (blocking) in languages without coroutines</strong></p>
 
 <p>The endpoint-lifecycle methods <code>connect()</code>, <code>open-session()</code>,
 <code>open-sender()</code>, and <code>open-receiver()</code> start their respective
-operations but do not complete them.  Use <code>&lt;endpoint&gt;.wait()</code>
-to block until the connect or open operation completes.</p>
+operations but do not complete them.</p>
 
-<p>All endpoints have a <code>close()</code> method that returns an awaitable
-task.</p>
+<p>Under normal circumstances, you won't need to wait for these to
+complete since subsequent operations will internally wait as needed.
+If you do need to wait explicitly, you can use
+<code>&lt;endpoint&gt;.wait()</code> to block until the connect or open
+operation completes.</p>
 
-<p>The sender <code>send()</code> method returns an awaitable task that resolves
-to a <code>tracker</code> object when the delivery is complete.</p>
+<p>All endpoints have a <code>close()</code> method that returns a waitable future
+resolving to the endpoint object itself.</p>
 
-<p>The receiver <code>receive()</code> method returns an awaitable task that
-resolves to a <code>delivery</code> object as soon as a delivery is available.</p>
+<p>The sender <code>send()</code> method blocks until there is credit for sending.
+It then sends the message and returns a future that resolves to a
+<code>tracker</code> object when the delivery at the remote peer is confirmed.
+<code>try-send()</code> is a variant that instead of blocking returns null if
+there is no credit.</p>
+
+<p>The receiver <code>receive()</code> method blocks until a delivery is available
+to return.  <code>try-receive()</code> is a variant that instead returns null
+if no deliveries have been received.</p>
 
 <p>Blocking operations take optional timeout arguments.  If the timeout
 is exceeded, they raise a timeout error.</p>
+
+<p><strong>Asynchronous waiting in languages with coroutines</strong></p>
+
+<p>As described above, a language without coroutines has blocking of
+two kinds: first, the blocking the library performs inside some API
+calls, and second, the blocking the API user performs when using
+futures returned by the API.  For example, <code>send()</code> blocks
+internally for credit and then returns a future which the API user
+can use to block until delivery is confirmed.</p>
+
+<p>For languages that do support coroutines, this somewhat tactical
+division is not desirable.  Here we outline the differences we would
+expect to see in a rendering of this API in a language with
+coroutines.</p>
+
+<p>In general, any operation that returns a future instead returns an
+awaitable task.  This applies to the endpoint <code>wait()</code> and
+<code>close()</code> operations.</p>
+
+<p>The sender <code>send()</code> method does not block the API thread for credit.
+Instead, it returns an awaitable task that itself waits
+asynchronously for both credit and confirmation of delivery.  There
+is no <code>try-send()</code> variant.</p>
+
+<p>The receiver <code>receive()</code> method does not block the API thread until
+a delivery arrives.  Instead, it returns an awaitable task that gets
+the next delivery.  There is no <code>try-receive()</code> variant.</p>
+
+<p>Alternative method definitions for languages with coroutines are
+prefixed with <code>(async)</code> in the API reference.  In an implementation,
+the prefixes would be omitted.</p>
 
 <section>
 <h1 id="model">Core model</h1>
