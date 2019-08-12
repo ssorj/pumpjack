@@ -46,7 +46,7 @@
       <output type="/proton/client/receiver"/>
     </method>
 
-    <method name="async-open-dynamic-receiver">
+    <method name="(async) open-dynamic-receiver">
       Create and open a dynamic receiver.
 
       <input type="receiver-options" optional="true"/>

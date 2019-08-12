@@ -22,7 +22,7 @@
       <output type="future" item-type="tracker"/>
     </method>
 
-    <method name="async-send">
+    <method name="(async) send">
       Send a message on the link.
 
       <input type="message"/>

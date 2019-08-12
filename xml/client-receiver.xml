@@ -41,7 +41,7 @@
       <output type="delivery"/>
     </method>
 
-    <method name="async-receive">
+    <method name="(async) receive">
       Receive a message on the link.
 
       <output type="task" item-type="delivery"/>

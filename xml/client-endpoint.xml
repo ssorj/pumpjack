@@ -11,7 +11,7 @@
       <output type="future" item-type="/proton/client/endpoint"/>
     </method>
 
-    <method name="async-wait">
+    <method name="(async) wait">
       Wait until the remote peer confirms the open operation.
 
       <output type="task" item-type="/proton/client/endpoint"/>
@@ -24,7 +24,7 @@
       <output type="future" item-type="/proton/client/endpoint"/>
     </method>
 
-    <method name="async-close">
+    <method name="(async) close">
       Start closing the endpoint.
 
       <input type="error-condition" optional="true"/>

@@ -62,7 +62,7 @@
       <output type="/proton/client/receiver"/>
     </method>
 
-    <method name="async-open-dynamic-receiver">
+    <method name="(async) open-dynamic-receiver">
       Create and open a dynamic receiver using the default session.
 
       <input type="receiver-options" optional="true"/>
@@ -92,7 +92,7 @@
       <output type="future" item-type="tracker"/>
     </method>
 
-    <method name="async-send">
+    <method name="(async) send">
       Send a message using the default session and default sender.
       The message 'to' field must be set.
 
