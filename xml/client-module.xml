@@ -1,7 +1,7 @@
 <module name="client">
   An imperative client API.
 
-  **Synchronous waiting (blocking) in languages without coroutines**
+  **Synchronous waiting (blocking) in languages with futures but not coroutines**
 
   The endpoint-lifecycle methods `connect()`, `open-session()`,
   `open-sender()`, and `open-receiver()` start their respective
