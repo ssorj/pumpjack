@@ -32,9 +32,8 @@ operations but do not complete them.</p>
 
 <p>Under normal circumstances, you won't need to wait for these to
 complete since subsequent operations will internally wait as needed.
-If you do need to wait explicitly, you can use
-<code>&lt;endpoint&gt;.wait()</code> to block until the connect or open
-operation completes.</p>
+If you do need to wait explicitly, you can use the endpoint <code>wait()</code>
+method to block until the connect or open operation completes.</p>
 
 <p>All endpoints have a <code>close()</code> method that returns a waitable future
 resolving to the endpoint object itself.</p>
@@ -42,7 +41,7 @@ resolving to the endpoint object itself.</p>
 <p>The sender <code>send()</code> method blocks until there is credit for sending.
 It then sends the message and returns a future that resolves to a
 <code>tracker</code> object when the delivery at the remote peer is confirmed.
-<code>try-send()</code> is a variant that instead of blocking returns null if
+<code>try-send()</code> is a variant that returns null instead of blocking if
 there is no credit.</p>
 
 <p>The receiver <code>receive()</code> method blocks until a delivery is available
@@ -66,9 +65,9 @@ division is not desirable.  Here we outline the differences we would
 expect to see in a rendering of this API in a language with
 coroutines.</p>
 
-<p>In general, any operation that returns a future instead returns an
-awaitable task.  This applies to the endpoint <code>wait()</code> and
-<code>close()</code> operations.</p>
+<p>In general, any operation that blocks or returns a future instead
+returns an awaitable task.  This applies to the endpoint <code>wait()</code>
+and <code>close()</code> operations.</p>
 
 <p>The sender <code>send()</code> method does not block the API thread for credit.
 Instead, it returns an awaitable task that itself waits
@@ -89,6 +88,7 @@ the prefixes would be omitted.</p>
 <tr><th>Class</th><th>Summary</th></tr>
 <tr><td><a class="None" id="client" href="/pumpjack&#x2F;client&#x2F;client&#x2F;index.html">client</a> </td><td>A top-level container of connections, sessions, senders, and
   receivers</td></tr>
+<tr><td><a class="None" id="client-options" href="/pumpjack&#x2F;client&#x2F;client-options&#x2F;index.html">client-options</a> </td><td>Options for new clients</td></tr>
 <tr><td><a class="None" id="connection" href="/pumpjack&#x2F;client&#x2F;connection&#x2F;index.html">connection</a> </td><td>A channel for communication between two peers on a network</td></tr>
 <tr><td><a class="None" id="session" href="/pumpjack&#x2F;client&#x2F;session&#x2F;index.html">session</a> </td><td>A container of senders and receivers</td></tr>
 <tr><td><a class="None" id="sender" href="/pumpjack&#x2F;client&#x2F;sender&#x2F;index.html">sender</a> </td><td>A channel for sending messages</td></tr>

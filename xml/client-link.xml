@@ -2,7 +2,7 @@
   The base class for sender and receiver.
 
   <group name="basic">
-    <property name="session" type="session">
+    <property name="session" type="/proton/client/session">
       The containing session.
     </property>
 
@@ -14,9 +14,9 @@
       The target end of the link.
     </property>
 
-    <property name="name" type="string" value="[discovered]">
-      The link name.
-    </property>
+    <!-- <property name="name" type="string" value="[discovered]"> -->
+    <!--   The link name. -->
+    <!-- </property> -->
 
     <method name="detach">
       Detach the link without closing it.

@@ -1,4 +1,4 @@
-<class name="endpoint" hidden="true">
+<class name="endpoint" type="/proton/core/endpoint" hidden="true">
   <group name="basic">
     <property type="client">
       The client holding this endpoint object.

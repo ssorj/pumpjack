@@ -12,18 +12,14 @@
 
   <group name="basic">
     <property name="id" type="string" value="[generated]">
-      A globally unique container identifier.  It is used to
-      identify this container in any connections it establishes.
+      A globally unique client identifier.  It is used to
+      identify this client in any connections it establishes.
     </property>
 
     <method name="constructor" special="true">
       Create a new client.
 
-      <input name="id" type="string" value="[generated]" optional="true">
-        Identifiers should be unique.  By default a UUID will be
-        used.
-      </input>
-
+      <input type="client-options" optional="true"/>
       <output name="client" type="client"/>
     </method>
 
@@ -31,6 +27,13 @@
       Close any open connections and stop the client. Blocks until all connections are closed.
 
       <input name="timeout" type="duration" optional="true"/>
+      <output type="/proton/client/client"/>
+    </method>
+
+    <method name="(await) stop">
+      Close any open connections and stop the client.
+
+      <output type="task" item-type="/proton/client/client"/>
     </method>
   </group>
 
@@ -38,7 +41,8 @@
     <method name="connect">
       Create and open an outbound connection.
 
-      Use `wait()` to block until the remote peer confirms the open.
+      Use connection `wait()` to block until the remote peer confirms
+      the open.
 
       <input name="connection-url" type="string"/>
       <input type="connection-options" optional="true"/>

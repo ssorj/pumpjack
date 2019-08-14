@@ -9,9 +9,8 @@
 
   Under normal circumstances, you won't need to wait for these to
   complete since subsequent operations will internally wait as needed.
-  If you do need to wait explicitly, you can use
-  `&lt;endpoint&gt;.wait()` to block until the connect or open
-  operation completes.
+  If you do need to wait explicitly, you can use the endpoint `wait()`
+  method to block until the connect or open operation completes.
 
   All endpoints have a `close()` method that returns a waitable future
   resolving to the endpoint object itself.
@@ -19,7 +18,7 @@
   The sender `send()` method blocks until there is credit for sending.
   It then sends the message and returns a future that resolves to a
   `tracker` object when the delivery at the remote peer is confirmed.
-  `try-send()` is a variant that instead of blocking returns null if
+  `try-send()` is a variant that returns null instead of blocking if
   there is no credit.
 
   The receiver `receive()` method blocks until a delivery is available
@@ -43,9 +42,9 @@
   expect to see in a rendering of this API in a language with
   coroutines.
 
-  In general, any operation that returns a future instead returns an
-  awaitable task.  This applies to the endpoint `wait()` and
-  `close()` operations.
+  In general, any operation that blocks or returns a future instead
+  returns an awaitable task.  This applies to the endpoint `wait()`
+  and `close()` operations.
 
   The sender `send()` method does not block the API thread for credit.
   Instead, it returns an awaitable task that itself waits
@@ -64,6 +63,7 @@
 
   <group name="model" title="Core model">
     @client-class.xml@
+    @client-options.xml@
     @client-endpoint.xml@
     @client-connection.xml@
     @client-session.xml@

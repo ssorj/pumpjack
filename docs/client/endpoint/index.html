@@ -26,6 +26,7 @@
 <h1 id="basic">Basic properties and methods</h1>
 <table class="pumpjack properties"><tbody>
 <tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="container" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;container.html">container</a> </td><td>The container holding this endpoint object</td><td><a href="/pumpjack&#x2F;core&#x2F;container&#x2F;index.html">container</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
 <tr><td><a class="None" id="client" href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;client.html">client</a> </td><td>The client holding this endpoint object</td><td><a href="/pumpjack&#x2F;client&#x2F;client&#x2F;index.html">client</a></td><td><span class="special">instance</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
 </tbody></table>
 <table class="pumpjack methods"><tbody>
@@ -34,6 +35,32 @@
 <tr><td><a class="None" id="(async) wait" href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;(async) wait.html">(async) wait</a> </td><td>Wait until the remote peer confirms the open operation</td><td></td><td><a href="/pumpjack&#x2F;types&#x2F;task&#x2F;index.html">task</a> of <a href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;index.html">endpoint</a></td></tr>
 <tr><td><a class="None" id="close" href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;close.html">close</a> </td><td>Start closing the endpoint</td><td><a href="/pumpjack&#x2F;core&#x2F;error-condition&#x2F;index.html"><span class="optional">[error-condition]</span></a></td><td><a href="/pumpjack&#x2F;types&#x2F;future&#x2F;index.html">future</a> of <a href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;index.html">endpoint</a></td></tr>
 <tr><td><a class="None" id="(async) close" href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;(async) close.html">(async) close</a> </td><td>Start closing the endpoint</td><td><a href="/pumpjack&#x2F;core&#x2F;error-condition&#x2F;index.html"><span class="optional">[error-condition]</span></a></td><td><a href="/pumpjack&#x2F;types&#x2F;task&#x2F;index.html">task</a> of <a href="/pumpjack&#x2F;client&#x2F;endpoint&#x2F;index.html">endpoint</a></td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="endpoint-lifecycle">Endpoint lifecycle</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="uninitialized" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;uninitialized.html">uninitialized</a> </td><td>The endpoint is uninitialized</td><td><a href="/pumpjack&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="active" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;active.html">active</a> </td><td>The endpoint is active</td><td><a href="/pumpjack&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="closed" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;closed.html">closed</a> </td><td>The endpoint is closed</td><td><a href="/pumpjack&#x2F;types&#x2F;boolean&#x2F;index.html">boolean</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2610;</td></tr>
+<tr><td><a class="None" id="error" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;error.html">error</a> </td><td>The endpoint error condition</td><td><a href="/pumpjack&#x2F;core&#x2F;error-condition&#x2F;index.html">error-condition</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="events">Event processing</h1>
+<table class="pumpjack methods"><tbody>
+<tr><th>Method</th><th>Summary</th><th>Inputs</th><th>Outputs</th></tr>
+<tr><td><a class="None" id="add-work" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;add-work.html">add-work</a> </td><td>Register a function to be called</td><td><a href="/pumpjack&#x2F;types&#x2F;function&#x2F;index.html">function</a></td><td></td></tr>
+</tbody></table>
+</section>
+<section>
+<h1 id="extended-attributes">Extended attributes</h1>
+<table class="pumpjack properties"><tbody>
+<tr><th>Property</th><th>Summary</th><th>Type</th><th>Default value</th><th>Mutable</th><th>Nullable</th></tr>
+<tr><td><a class="None" id="properties" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;properties.html">properties</a> </td><td>Application-defined properties</td><td><a href="/pumpjack&#x2F;types&#x2F;map&#x2F;index.html">map</a> of <a href="/pumpjack&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a> &#8658; <a href="/pumpjack&#x2F;types&#x2F;object&#x2F;index.html">object</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="offered-capabilities" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;offered-capabilities.html">offered-capabilities</a> </td><td>Extensions the endpoint supports</td><td><a href="/pumpjack&#x2F;types&#x2F;array&#x2F;index.html">array</a> of <a href="/pumpjack&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
+<tr><td><a class="None" id="desired-capabilities" href="/pumpjack&#x2F;core&#x2F;endpoint&#x2F;desired-capabilities.html">desired-capabilities</a> </td><td>Extensions the endpoint can use</td><td><a href="/pumpjack&#x2F;types&#x2F;array&#x2F;index.html">array</a> of <a href="/pumpjack&#x2F;types&#x2F;symbol&#x2F;index.html">symbol</a></td><td><span class="special">discovered</span></td><td>&#x2610;</td><td>&#x2612;</td></tr>
 </tbody></table>
 </section>
 

@@ -14,7 +14,7 @@
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
-      <output type="/proton/client/sender"/>
+      <output type="future" item-type="/proton/client/sender"/>
     </method>
 
     <method name="open-anonymous-sender">
@@ -22,7 +22,7 @@
 
       <input type="sender-options" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
-      <output type="/proton/client/sender"/>
+      <output type="future" item-type="/proton/client/sender"/>
     </method>
 
     <method name="open-receiver">
@@ -31,7 +31,7 @@
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
-      <output type="/proton/client/receiver"/>
+      <output type="future" item-type="/proton/client/receiver"/>
     </method>
 
     <method name="open-dynamic-receiver">
