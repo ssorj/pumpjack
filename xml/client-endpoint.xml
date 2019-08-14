@@ -8,7 +8,7 @@
       Block until the remote peer confirms the open operation.
 
       <input name="timeout" type="duration" optional="true"/>
-      <output type="future" item-type="/proton/client/endpoint"/>
+      <output type="/proton/client/endpoint"/>
     </method>
 
     <method name="(async) wait">
