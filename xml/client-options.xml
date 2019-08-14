@@ -1,0 +1,23 @@
+<class name="client-options">
+  Options for new clients.
+
+  <link node="/proton/client/client"/>
+
+  <group name="basic">
+    <method name="constructor" special="true">
+      Create a new client-options instance.
+
+      <input type="client" optional="true"/>
+      <output type="client-options"/>
+    </method>
+  </group>
+
+  <group name="identity">
+    <property name="id" type="string" value="[generated]" mutable="true">
+      A globally unique client identifier.  It is used to
+      identify this client in any connections it establishes.
+
+      By default a UUID is used.
+    </property>
+  </group>
+</class>
