@@ -24,7 +24,7 @@
 
   <group name="message-operations">
     <method name="receive">
-      Receive a message on the link.
+      Receive a delivery on the link.
 
       **Blocking**
 
@@ -35,14 +35,14 @@
     </method>
 
     <method name="try-receive">
-      Receive a message on the link or return null if no delivery is
+      Receive a delivery on the link or return null if none is
       available.
 
       <output type="delivery"/>
     </method>
 
     <method name="(async) receive">
-      Receive a message on the link.
+      Receive a delivery on the link.
 
       <output type="task" item-type="delivery"/>
     </method>

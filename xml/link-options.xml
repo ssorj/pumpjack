@@ -1,6 +1,6 @@
 <class name="link-options" type="endpoint-options" hidden="true">
   Options for new links.
-  
+
   <link node="link"/>
   <link node="sender-options"/>
   <link node="receiver-options"/>
@@ -9,16 +9,16 @@
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
-  
+
   <group name="basic">
     <property name="source" type="source-options">
       Options for the link source.
     </property>
-    
+
     <property name="target" type="target-options">
       Options for the link target.
     </property>
-    
+
     <property name="name" type="string" value="[generated]" mutable="true">
       The name of the link.
     </property>
@@ -31,7 +31,7 @@
       <link node="/proton/core/transfer/settle"/>
     </property>
 
-    <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true" proposed="true">
+    <property name="delivery-mode" type="delivery-mode" value="AT-LEAST-ONCE" mutable="true">
       Control the message delivery guarantee.
     </property>
   </group>

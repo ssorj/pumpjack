@@ -42,6 +42,7 @@
       This method blocks until the open operation is complete.
 
       <input type="receiver-options" optional="true"/>
+      <input name="timeout" type="duration" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/receiver"/>
     </method>

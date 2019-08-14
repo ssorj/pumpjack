@@ -1,6 +1,6 @@
 <class name="receiver-options" type="link-options">
   Options for new receivers.
-  
+
   <link node="receiver"/>
   <link node="/proton/core/container/open-receiver"/>
   <link node="/proton/core/receiver/open"/>
@@ -8,9 +8,9 @@
 
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-links">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-attach">Attach performative</link>
-  
+
   <group name="basic">
-    <property name="auto-accept" type="boolean" value="true" mutable="true" proposed="true">
+    <property name="auto-accept" type="boolean" value="true" mutable="true">
       Automatically accept deliveries that are not explicitly
       acknowledged.
 
@@ -19,7 +19,7 @@
 
     <method name="constructor" special="true">
       Create a new receiver-options instance.
-      
+
       <input type="receiver" optional="true"/>
       <output type="receiver-options"/>
     </method>
@@ -29,7 +29,7 @@
     <link node="/proton/core/link/credit"/>
     <link node="/proton/core/receiver/add-credit"/>
 
-    <property name="credit-window" type="uint" value="10" mutable="true" proposed="true" nullable="true">
+    <property name="credit-window" type="uint" value="10" mutable="true" nullable="true">
       Maintain credit for the given number of messages.
 
       If the value is null (or 0 in some implementations), automatic
