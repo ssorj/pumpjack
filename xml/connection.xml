@@ -1,6 +1,6 @@
 <class name="connection" type="endpoint">
   A channel for communication between two peers on a network.
-  
+
   In current implementations, a connection corresponds to a TCP
   connection, represented by a transport.
 
@@ -10,26 +10,18 @@
   <link node="connection-options"/>
   <link node="transport"/>
   <link node="session"/>
-  
+
   <link relation="amqp" href="https://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#section-connections">Conceptual overview</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-open">Open performative</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transport-v1.0-os.html#type-close">Close performative</link>
 
   <group name="basic">
     <property type="transport">
-      The associated transport.
+      The associated network transport.
     </property>
 
     <property name="sessions" type="iterator" item-type="session">
       The sessions contained in this connection.
-    </property>
-
-    <property name="senders" type="iterator" item-type="sender">
-      The senders contained in this connection.
-    </property>
-
-    <property name="receivers" type="iterator" item-type="receiver">
-      The receivers contained in this connection.
     </property>
 
     <property name="default-session" type="session" value="[instance]">
@@ -50,13 +42,13 @@
       Close the connection.
 
       The operation is complete when on-connection-close fires.
-      
+
       <link node="/proton/core/messaging-handler/on-connection-close"/>
-    
+
       <input type="error-condition" optional="true"/>
     </method>
   </group>
-  
+
   <group name="message-operations">
     <method name="send">
       Send a message on the default session using an anonymous sender.
@@ -87,7 +79,7 @@
       <input name="request-message" type="message"/>
       <output type="tracker"/>
     </method>
--->      
+-->
   </group>
 
   <group name="link-operations">
@@ -129,7 +121,7 @@
     <property name="container-id" type="string" value="[discovered]">
       The unique identity of the container.
     </property>
-    
+
     <property name="virtual-host" type="string" value="[discovered]">
       The virtual host name.
 
@@ -141,7 +133,7 @@
       The identity of the user associated with the connection.
     </property>
   </group>
-    
+
   <group name="resource-limits">
     <property name="idle-timeout" type="duration" value="[discovered]">
       The time after which an idle connection expires.
@@ -150,7 +142,7 @@
     <property name="max-sessions" type="ushort" value="[discovered]">
       The maximum active sessions allowed.
     </property>
-    
+
     <property name="max-frame-size" type="uint" value="[discovered]">
       The maximum frame size allowed.
     </property>

@@ -2,26 +2,6 @@
   A channel for receiving messages.  A receiver contains an ordered
   sequence of deliveries.
 
-  <group name="basic">
-    <method name="detach">
-      Detach the receiver without closing it.  For durable
-      subscriptions this means the subscription is inactive but not
-      canceled.
-
-      <input type="error-condition" optional="true"/>
-      <output type="future" item-type="/proton/client/receiver"/>
-    </method>
-
-    <method name="async-detach">
-      Detach the receiver without closing it.  For durable
-      subscriptions this means the subscription is inactive but not
-      canceled.
-
-      <input type="error-condition" optional="true"/>
-      <output type="task" item-type="/proton/client/receiver"/>
-    </method>
-  </group>
-
   <group name="message-operations">
     <method name="receive">
       Receive a delivery on the link.

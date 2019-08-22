@@ -1,6 +1,6 @@
 <module name="core">
   The API entry point.
-  
+
   Many applications will import only this module.
 
   <annotation name="requires">types</annotation>
@@ -29,7 +29,7 @@
     @message.xml@
 
     @transfer.xml@
-    
+
     @delivery.xml@
 
     @tracker.xml@
@@ -47,9 +47,9 @@
     @endpoint-options.xml@
 
     @connection-options.xml@
-    
+
     @session-options.xml@
-    
+
     @link-options.xml@
 
     @sender-options.xml@
@@ -65,12 +65,10 @@
 
   <group name="network">
     @transport.xml@
-    
+
     @listener.xml@
-    
+
     @sasl.xml@
-    
-    @ssl.xml@
   </group>
 
   <group name="errors">

@@ -17,16 +17,28 @@
     <!-- <property name="name" type="string" value="[discovered]"> -->
     <!--   The link name. -->
     <!-- </property> -->
+  </group>
+
+  <group name="endpoint-lifecycle">
+    <property name="detached" type="boolean" value="[discovered]">
+      True if the link was detached, not permanently closed.
+    </property>
 
     <method name="detach">
-      Detach the link without closing it.
+      Detach the link without permanently closing it.
+
+      For durable subscriptions this means the subscription is
+      inactive but not canceled.
 
       <input type="error-condition" optional="true"/>
       <output type="future" item-type="/proton/client/link"/>
     </method>
 
     <method name="(async) detach">
-      Detach the link without closing it.
+      Detach the link without permanently closing it.
+
+      For durable subscriptions this means the subscription is
+      inactive but not canceled.
 
       <input type="error-condition" optional="true"/>
       <output type="task" item-type="/proton/client/link"/>

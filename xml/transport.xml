@@ -2,18 +2,8 @@
   A network channel supporting an AMQP connection.
 
   <group name="basic">
-    <property name="ssl" type="ssl">
-      Get SSL connection information.
-    </property>
-    
     <property name="sasl" type="sasl">
       Get SASL connection information.
     </property>
-    
-    <property name="error" type="error-condition" value="[discovered]" nullable="true">
-      Get the error condition.
-    </property>
-
-    <!-- local-port? -->
   </group>
 </class>

@@ -26,20 +26,12 @@
   </group>
 
   <group name="endpoint-lifecycle">
-    <property name="uninitialized" type="boolean" value="[discovered]">
-      The endpoint is uninitialized.
-    </property>
-
-    <property name="active" type="boolean" value="[discovered]">
-      The endpoint is active.
-    </property>
-
-    <property name="closed" type="boolean" value="[discovered]">
-      The endpoint is closed.
+    <property name="state" type="endpoint-state" value="[discovered]">
+      The remote endpoint state.
     </property>
 
     <property name="error" type="error-condition" value="[discovered]" nullable="true">
-      The endpoint error condition.
+      The remote endpoint error condition.
     </property>
   </group>
 
@@ -48,7 +40,7 @@
       Register a function to be called.
 
       It is safe to call add-work from another thread.
-      
+
       The work function will be invoked in the thread-safe
       execution context of the endpoint.
 
@@ -64,9 +56,15 @@
     <property name="offered-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
       Extensions the endpoint supports.
     </property>
-    
+
     <property name="desired-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
       Extensions the endpoint can use.
     </property>
   </group>
 </class>
+
+<enumeration name="endpoint-state">
+  <value name="UNINITIALIZED"/>
+  <value name="ACTIVE"/>
+  <value name="CLOSED"/>
+</enumeration>

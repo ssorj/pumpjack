@@ -1,4 +1,4 @@
-<class name="delivery" type="transfer">
+<class name="delivery" type="/proton/client/transfer">
   A received message.
 
   A delivery attempt can fail.  As a result, a particular

@@ -12,21 +12,21 @@
 
       <input type="message"/>
       <input name="timeout" type="duration" optional="true"/>
-      <output type="future" item-type="tracker"/>
+      <output type="tracker"/>
     </method>
 
     <method name="try-send">
       Send a message on the link or return null if there is no credit.
 
       <input type="message"/>
-      <output type="future" item-type="tracker"/>
+      <output type="/proton/client/tracker"/>
     </method>
 
     <method name="(async) send">
       Send a message on the link.
 
       <input type="message"/>
-      <output type="task" item-type="tracker"/>
+      <output type="task" item-type="/proton/client/tracker"/>
     </method>
   </group>
 </class>

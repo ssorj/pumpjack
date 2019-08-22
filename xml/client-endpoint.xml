@@ -1,4 +1,4 @@
-<class name="endpoint" type="/proton/core/endpoint" hidden="true">
+<class name="endpoint" hidden="true">
   <group name="basic">
     <property type="client">
       The client holding this endpoint object.
@@ -16,6 +16,16 @@
 
       <output type="task" item-type="/proton/client/endpoint"/>
     </method>
+  </group>
+
+  <group name="endpoint-lifecycle">
+    <property name="state" type="endpoint-state" value="[discovered]">
+      The remote endpoint state.
+    </property>
+
+    <property name="error" type="error-condition" value="[discovered]" nullable="true">
+      The remote endpoint error condition.
+    </property>
 
     <method name="close">
       Start closing the endpoint.
@@ -30,5 +40,19 @@
       <input type="error-condition" optional="true"/>
       <output type="task" item-type="/proton/client/endpoint"/>
     </method>
+  </group>
+
+  <group name="extended-attributes">
+    <property name="properties" type="map" key-type="symbol" item-type="object" value="[discovered]" nullable="true">
+      Application-defined properties.
+    </property>
+
+    <property name="offered-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
+      Extensions the endpoint supports.
+    </property>
+
+    <property name="desired-capabilities" type="array" item-type="symbol" value="[discovered]" nullable="true">
+      Extensions the endpoint can use.
+    </property>
   </group>
 </class>

@@ -9,11 +9,11 @@
 
   <group name="basic">
     <property name="default-session" type="session" value="[instance]">
-      The session used by `open-sender()` and `open-receiver()`.
+      The session used by `open-sender` and `open-receiver`.
     </property>
 
     <property name="default-sender" type="session" value="[instance]">
-      The sender used by `connection.send()`.
+      The sender used by `connection.send`.
     </property>
 </group>
 
@@ -21,7 +21,7 @@
     <method name="open-sender">
       Create and open a sender using the default session.
 
-      Use `wait()` to block until the remote peer confirms the open.
+      Use `wait` to block until the remote peer confirms the open.
 
       <input name="address" type="string"/>
       <input type="sender-options" optional="true"/>
@@ -32,7 +32,7 @@
     <method name="open-anonymous-sender">
       Create and open a sender with no target address using the default session.
 
-      Use `wait()` to block until the remote peer confirms the open.
+      Use `wait` to block until the remote peer confirms the open.
 
       <input type="sender-options" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
@@ -42,7 +42,7 @@
     <method name="open-receiver">
       Create and open a receiver using the default session.
 
-      Use `wait()` to block until the remote peer confirms the open.
+      Use `wait` to block until the remote peer confirms the open.
 
       <input name="address" type="string"/>
       <input type="receiver-options" optional="true"/>
@@ -76,7 +76,7 @@
     <method name="open-session">
       Create and open a session.
 
-      Use `wait()` to block until the remote peer confirms the open.
+      Use `wait` to block until the remote peer confirms the open.
 
       <input type="session-options" optional="true"/>
       <output type="/proton/client/session"/>
@@ -90,7 +90,7 @@
 
       <input type="message"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
-      <output type="future" item-type="tracker"/>
+      <output type="/proton/client/tracker"/>
     </method>
 
     <method name="(async) send">
@@ -100,7 +100,7 @@
       <input type="message"/>
       <input name="timeout" type="duration" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
-      <output type="task" item-type="tracker"/>
+      <output type="task" item-type="/proton/client/tracker"/>
     </method>
   </group>
 </class>

@@ -3,26 +3,26 @@
 
   **Synchronous waiting (blocking) in languages with futures but not coroutines**
 
-  The endpoint-lifecycle methods `connect()`, `open-session()`,
-  `open-sender()`, and `open-receiver()` start their respective
-  operations but do not complete them.
+  The endpoint lifecycle methods `connect`, `open-session`,
+  `open-sender`, and `open-receiver` start their respective operations
+  but do not complete them.
 
   Under normal circumstances, you won't need to wait for these to
-  complete since subsequent operations will internally wait as needed.
-  If you do need to wait explicitly, you can use the endpoint `wait()`
+  complete because subsequent operations will internally wait as needed.
+  If you do need to wait explicitly, you can use the endpoint `wait`
   method to block until the connect or open operation completes.
 
-  All endpoints have a `close()` method that returns a waitable future
+  All endpoints have a `close` method that returns a waitable future
   resolving to the endpoint object itself.
 
-  The sender `send()` method blocks until there is credit for sending.
-  It then sends the message and returns a future that resolves to a
-  `tracker` object when the delivery at the remote peer is confirmed.
-  `try-send()` is a variant that returns null instead of blocking if
-  there is no credit.
+  The sender `send` method blocks until there is credit for sending.
+  It then sends the message and returns a `tracker` object.  Use the
+  tracker `wait` method to block until delivery at the remote peer is
+  acknowledged.  `try-send` is a variant that returns null instead of
+  blocking if there is no credit.
 
-  The receiver `receive()` method blocks until a delivery is available
-  to return.  `try-receive()` is a variant that instead returns null
+  The receiver `receive` method blocks until a delivery is available
+  to return.  `try-receive` is a variant that instead returns null
   if no deliveries have been received.
 
   Blocking operations take optional timeout arguments.  If the timeout
@@ -33,9 +33,9 @@
   As described above, a language without coroutines has blocking of
   two kinds: first, the blocking the library performs inside some API
   calls, and second, the blocking the API user performs when using
-  futures returned by the API.  For example, `send()` blocks
-  internally for credit and then returns a future which the API user
-  can use to block until delivery is confirmed.
+  `wait` methods or futures offered by the API.  For example, `send`
+  blocks internally for credit and then exposes a `wait` method which
+  the API user can use to block until delivery is confirmed.
 
   For languages that do support coroutines, this somewhat tactical
   division is not desirable.  Here we outline the differences we would
@@ -43,17 +43,17 @@
   coroutines.
 
   In general, any operation that blocks or returns a future instead
-  returns an awaitable task.  This applies to the endpoint `wait()`
-  and `close()` operations.
+  returns an awaitable task.  This applies to the endpoint `wait`
+  and `close` operations.
 
-  The sender `send()` method does not block the API thread for credit.
+  The sender `send` method does not block the API thread for credit.
   Instead, it returns an awaitable task that itself waits
   asynchronously for both credit and confirmation of delivery.  There
-  is no `try-send()` variant.
+  is no `try-send` variant.
 
-  The receiver `receive()` method does not block the API thread until
+  The receiver `receive` method does not block the API thread until
   a delivery arrives.  Instead, it returns an awaitable task that gets
-  the next delivery.  There is no `try-receive()` variant.
+  the next delivery.  There is no `try-receive` variant.
 
   Alternative method definitions for languages with coroutines are
   prefixed with `(async)` in the API reference.  In an implementation,
@@ -70,5 +70,8 @@
     @client-link.xml@
     @client-sender.xml@
     @client-receiver.xml@
+    @client-transfer.xml@
+    @client-tracker.xml@
+    @client-delivery.xml@
   </group>
 </module>
