@@ -26,26 +26,26 @@
 
 <p><strong>Synchronous waiting (blocking) in languages with futures but not coroutines</strong></p>
 
-<p>The endpoint-lifecycle methods <code>connect()</code>, <code>open-session()</code>,
-<code>open-sender()</code>, and <code>open-receiver()</code> start their respective
-operations but do not complete them.</p>
+<p>The endpoint lifecycle methods <code>connect</code>, <code>open-session</code>,
+<code>open-sender</code>, and <code>open-receiver</code> start their respective operations
+but do not complete them.</p>
 
 <p>Under normal circumstances, you won't need to wait for these to
-complete since subsequent operations will internally wait as needed.
-If you do need to wait explicitly, you can use the endpoint <code>wait()</code>
+complete because subsequent operations will internally wait as needed.
+If you do need to wait explicitly, you can use the endpoint <code>wait</code>
 method to block until the connect or open operation completes.</p>
 
-<p>All endpoints have a <code>close()</code> method that returns a waitable future
+<p>All endpoints have a <code>close</code> method that returns a waitable future
 resolving to the endpoint object itself.</p>
 
-<p>The sender <code>send()</code> method blocks until there is credit for sending.
-It then sends the message and returns a future that resolves to a
-<code>tracker</code> object when the delivery at the remote peer is confirmed.
-<code>try-send()</code> is a variant that returns null instead of blocking if
-there is no credit.</p>
+<p>The sender <code>send</code> method blocks until there is credit for sending.
+It then sends the message and returns a <code>tracker</code> object.  Use the
+tracker <code>wait</code> method to block until delivery at the remote peer is
+acknowledged.  <code>try-send</code> is a variant that returns null instead of
+blocking if there is no credit.</p>
 
-<p>The receiver <code>receive()</code> method blocks until a delivery is available
-to return.  <code>try-receive()</code> is a variant that instead returns null
+<p>The receiver <code>receive</code> method blocks until a delivery is available
+to return.  <code>try-receive</code> is a variant that instead returns null
 if no deliveries have been received.</p>
 
 <p>Blocking operations take optional timeout arguments.  If the timeout
@@ -56,9 +56,9 @@ is exceeded, they raise a timeout error.</p>
 <p>As described above, a language without coroutines has blocking of
 two kinds: first, the blocking the library performs inside some API
 calls, and second, the blocking the API user performs when using
-futures returned by the API.  For example, <code>send()</code> blocks
-internally for credit and then returns a future which the API user
-can use to block until delivery is confirmed.</p>
+<code>wait</code> methods or futures offered by the API.  For example, <code>send</code>
+blocks internally for credit and then exposes a <code>wait</code> method which
+the API user can use to block until delivery is confirmed.</p>
 
 <p>For languages that do support coroutines, this somewhat tactical
 division is not desirable.  Here we outline the differences we would
@@ -66,17 +66,17 @@ expect to see in a rendering of this API in a language with
 coroutines.</p>
 
 <p>In general, any operation that blocks or returns a future instead
-returns an awaitable task.  This applies to the endpoint <code>wait()</code>
-and <code>close()</code> operations.</p>
+returns an awaitable task.  This applies to the endpoint <code>wait</code>
+and <code>close</code> operations.</p>
 
-<p>The sender <code>send()</code> method does not block the API thread for credit.
+<p>The sender <code>send</code> method does not block the API thread for credit.
 Instead, it returns an awaitable task that itself waits
 asynchronously for both credit and confirmation of delivery.  There
-is no <code>try-send()</code> variant.</p>
+is no <code>try-send</code> variant.</p>
 
-<p>The receiver <code>receive()</code> method does not block the API thread until
+<p>The receiver <code>receive</code> method does not block the API thread until
 a delivery arrives.  Instead, it returns an awaitable task that gets
-the next delivery.  There is no <code>try-receive()</code> variant.</p>
+the next delivery.  There is no <code>try-receive</code> variant.</p>
 
 <p>Alternative method definitions for languages with coroutines are
 prefixed with <code>(async)</code> in the API reference.  In an implementation,
@@ -93,6 +93,8 @@ the prefixes would be omitted.</p>
 <tr><td><a class="None" id="session" href="/pumpjack&#x2F;client&#x2F;session&#x2F;index.html">session</a> </td><td>A container of senders and receivers</td></tr>
 <tr><td><a class="None" id="sender" href="/pumpjack&#x2F;client&#x2F;sender&#x2F;index.html">sender</a> </td><td>A channel for sending messages</td></tr>
 <tr><td><a class="None" id="receiver" href="/pumpjack&#x2F;client&#x2F;receiver&#x2F;index.html">receiver</a> </td><td>A channel for receiving messages</td></tr>
+<tr><td><a class="None" id="tracker" href="/pumpjack&#x2F;client&#x2F;tracker&#x2F;index.html">tracker</a> </td><td>A tracker for a sent message</td></tr>
+<tr><td><a class="None" id="delivery" href="/pumpjack&#x2F;client&#x2F;delivery&#x2F;index.html">delivery</a> </td><td>A received message</td></tr>
 </tbody></table>
 </section>
 
