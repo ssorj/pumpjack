@@ -23,16 +23,19 @@
       <output name="client" type="client"/>
     </method>
 
-    <method name="close-all">
+    <method name="close">
       Close any open connections, sessions, senders, and
-      receivers. Blocks until all connections are closed.
+      receivers. Once closed, a client object cannnot be used again to
+      open connections.
 
-      <input name="timeout" type="duration" optional="true"/>
-      <output type="/proton/client/client"/>
+      <!-- <input name="timeout" type="duration" optional="true"/> -->
+      <output type="future" item-type="/proton/client/endpoint"/>
     </method>
 
-    <method name="(await) close-all">
+    <method name="(await) close">
       Close any open connections, sessions, senders, and receivers.
+      Once closed, a client object cannot be used again to open
+      connections.
 
       <output type="task" item-type="/proton/client/client"/>
     </method>
@@ -45,7 +48,8 @@
       Use connection `wait` to block until the remote peer confirms
       the open.
 
-      <input name="connection-url" type="string"/>
+      <input name="host" type="string"/>
+      <input name="port" type="int" value="[discovered]" optional="true"/>
       <input type="connection-options" optional="true"/>
       <output name="connection" type="connection"/>
     </method>

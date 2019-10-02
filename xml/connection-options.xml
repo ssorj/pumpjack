@@ -43,13 +43,13 @@
       Enable or disable the SASL security layer.
     </property>
 
-    <property name="sasl-allow-insecure-mechs" type="boolean" value="false" mutable="true">
-      Allow or deny clear-text authentication mechanisms.
-    </property>
-
     <property name="sasl-allowed-mechs" type="string" mutable="true" nullable="true">
       The SASL mechanisms the local peer permits.  The value is a
       space-separated string of mechanism names.
+    </property>
+
+    <property name="tls-enabled" type="boolean" value="true" mutable="true">
+      Enable or disable TLS.
     </property>
 
     <!--
