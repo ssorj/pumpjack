@@ -2,6 +2,17 @@
   A channel for sending messages.  A sender contains an ordered
   sequence of deliveries.
 
+  <link node="sender-options"/>
+  <link node="session"/>
+  <link node="receiver"/>
+  <link node="delivery"/>
+
+  <group name="basic">
+    <property name="address" type="string" nullable="true">
+      The target address of the sender.
+    </property>
+  </group>
+
   <group name="message-operations">
     <method name="send">
       Send a message on the link.

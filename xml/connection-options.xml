@@ -43,31 +43,19 @@
       Enable or disable the SASL security layer.
     </property>
 
-    <property name="sasl-allowed-mechs" type="string" mutable="true" nullable="true">
-      The SASL mechanisms the local peer permits.  The value is a
-      space-separated string of mechanism names.
+    <property name="allowed-sasl-mechanisms" type="array" item-type="string" nullable="true">
+      The SASL mechanisms the local peer permits.
     </property>
 
     <property name="tls-enabled" type="boolean" value="true" mutable="true">
       Enable or disable TLS.
     </property>
 
-    <!--
-    XXX These seem very implementation specific.
-    <property name="sasl-config-name" type="string" value="[?]" mutable="true">
-    </property>
+    <method name="add-allowed-sasl-mechanism">
+      Add a mechanism to the set of allowed SASL mechanisms.
 
-    <property name="sasl-config-path" type="string" value="[?]" mutable="true">
-    </property>
-    -->
-
-    <!--
-    <property name="ssl-client-options" type="ssl-client-options" value="[instance]">
-    </property>
-
-    <property name="ssl-server-options" type="ssl-server-options" value="[instance]">
-    </property>
-    -->
+      <input type="string"/>
+    </method>
   </group>
 
   <group name="resource-limits">

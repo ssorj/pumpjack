@@ -1,7 +1,7 @@
 <class name="client">
   A top-level container of connections, sessions, senders, and
   receivers.  It serves as an entry point to the API, allowing
-  connections and links to be established.
+  connections to be established.
 
   <link node="connection"/>
   <link node="session"/>
@@ -24,19 +24,18 @@
     </method>
 
     <method name="close">
-      Close any open connections, sessions, senders, and
-      receivers. Once closed, a client object cannnot be used again to
-      open connections.
+      Close all currently open connections. Once closed, a client
+      object cannnot be used again to open connections.
 
-      <!-- <input name="timeout" type="duration" optional="true"/> -->
-      <output type="future" item-type="/proton/client/endpoint"/>
+      <input type="error-condition" optional="true"/>
+      <output type="future" item-type="/proton/client/client"/>
     </method>
 
     <method name="(await) close">
-      Close any open connections, sessions, senders, and receivers.
-      Once closed, a client object cannot be used again to open
-      connections.
+      Close all currently open connections. Once closed, a client
+      object cannnot be used again to open connections.
 
+      <input type="error-condition" optional="true"/>
       <output type="task" item-type="/proton/client/client"/>
     </method>
   </group>

@@ -10,13 +10,27 @@
     </property>
   </group>
 
-  <group name="settlement" title="Settlement">
+  <group name="delivery-state">
+    <property name="state" type="delivery-state" value="[discovered]">
+      The current delivery state.
+    </property>
+
+    <property name="remote-state" type="delivery-state" value="[discovered]">
+      The current delivery state at the remote peer.
+    </property>
+  </group>
+
+  <group name="settlement">
     Settlement state governs how long a message transfer is
     tracked at the local and remote peers, and when each can
     safely consider the transfer resolved ("settled").
 
     <property name="settled" type="boolean" value="[discovered]">
-      True if the delivery has been settled.
+      True if the delivery is settled.
+    </property>
+
+    <property name="remote-settled" type="boolean" value="[discovered]">
+      True if the delivery is settled at the remote peer.
     </property>
 
     <method name="settle">

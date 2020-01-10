@@ -8,9 +8,10 @@
   but do not complete them.
 
   Under normal circumstances, you won't need to wait for these to
-  complete because subsequent operations will internally wait as needed.
-  If you do need to wait explicitly, you can use the endpoint `wait`
-  method to block until the connect or open operation completes.
+  complete because subsequent operations will internally wait as
+  needed.  If you do need to wait explicitly, you can use the endpoint
+  `wait` method (or `get`, depending on the language) to block until
+  the connect or open operation completes.
 
   All endpoints have a `close` method that returns a waitable future
   resolving to the endpoint object itself.

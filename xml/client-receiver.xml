@@ -2,6 +2,22 @@
   A channel for receiving messages.  A receiver contains an ordered
   sequence of deliveries.
 
+  <link node="receiver-options"/>
+  <link node="session"/>
+  <link node="sender"/>
+  <link node="delivery"/>
+
+  <group name="basic">
+    <property name="address" type="string" nullable="true">
+      The source address of the receiver.
+
+      **Blocking**
+
+      If the receiver is dynamic and the source address is not set,
+      this method blocks until it is set.
+    </property>
+  </group>
+
   <group name="message-operations">
     <method name="receive">
       Receive a delivery on the link.
@@ -25,6 +41,31 @@
       Receive a delivery on the link.
 
       <output type="task" item-type="delivery"/>
+    </method>
+  </group>
+
+  <group name="flow-control">
+    <method name="add-credit">
+      Issue credit to the sending end.  This increases the credit
+      issued to the remote sender by the specified number of messages.
+
+      <input name="count" type="uint"/>
+    </method>
+
+    <method name="drain">
+      Request any messages available at the sending end.  This tells
+      the sender to use all existing credit immediately to send
+      deliveries and then discard any excess credit.
+
+      <output type="future" item-type="receiver"/>
+    </method>
+
+    <method name="(async) drain">
+      Request any messages available at the sending end.  This tells
+      the sender to use all existing credit immediately to send
+      deliveries and then discard any excess credit.
+
+      <output type="task" item-type="receiver"/>
     </method>
   </group>
 </class>

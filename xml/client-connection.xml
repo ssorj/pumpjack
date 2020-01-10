@@ -53,12 +53,10 @@
     <method name="open-dynamic-receiver">
       Create and open a dynamic receiver using the default session.
 
-      **Blocking**
+      Use `wait` to block until the remote peer confirms the open.
 
-      This method blocks until the open operation is complete.
-
+      <input name="dynamic-node-properties" type="map" optional="true"/>
       <input type="receiver-options" optional="true"/>
-      <input name="timeout" type="duration" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="/proton/client/receiver"/>
     </method>
@@ -66,6 +64,7 @@
     <method name="(async) open-dynamic-receiver">
       Create and open a dynamic receiver using the default session.
 
+      <input name="dynamic-node-properties" type="map" optional="true"/>
       <input type="receiver-options" optional="true"/>
       <!-- <input name="on-delivery" type="function" optional="true"/> -->
       <output type="task" item-type="/proton/client/receiver"/>

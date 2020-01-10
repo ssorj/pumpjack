@@ -19,3 +19,29 @@
     </property>
   </group>
 </class>
+
+<enumeration name="delivery-state">
+  <value name="ACCEPTED">
+    XXX
+  </value>
+
+  <value name="REJECTED">
+    XXX
+  </value>
+
+  <value name="MODIFIED">
+    XXX
+  </value>
+
+  <value name="RELEASED">
+    XXX
+  </value>
+
+  <value name="RECEIVED">
+    XXX
+  </value>
+
+  <value name="TRANSACTIONAL">
+    XXX
+  </value>
+</enumeration>

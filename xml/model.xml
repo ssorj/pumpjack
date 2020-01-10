@@ -3,7 +3,7 @@
   This document specifies the API for Qpid Proton.  It is meant to
   serve as API documentation and as a reference point for concrete
   implementations.
-  
+
   Qpid Proton is an event-driven messaging API for building clients,
   brokers, and more.  It uses the AMQP 1.0 wire protocol, so it can
   exchange messages with other components that use the same open
@@ -21,12 +21,12 @@
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-messaging-v1.0-os.html#toc">Messaging layer</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-transactions-v1.0-os.html#toc">Transactions</link>
   <link relation="amqp" href="http://docs.oasis-open.org/amqp/core/v1.0/os/amqp-core-security-v1.0-os.html#toc">Security layers</link>
-  
+
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/c/api/">C API reference</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/cpp/api/">C++ API reference</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/java/api/">Java API reference</link>
   <link relation="impl" href="https://qpid.apache.org/releases/qpid-proton-master/proton/python/api/">Python API reference</link>
-  
+
   <link-generator function="gen_amqp_type_link"/>
   <link-generator function="gen_c_module_link"/>
   <link-generator function="gen_c_class_link"/>
@@ -36,15 +36,15 @@
   <link-generator function="gen_java_class_link"/>
   <link-generator function="gen_python_module_link"/>
   <link-generator function="gen_python_class_link"/>
-  
+
   @client-module.xml@
-  
+
   @core.xml@
 
   @types.xml@
 
   @codec.xml@
-  
+
   @io.xml@
 
   <group-definition name="basic" title="Basic properties and methods">
@@ -71,6 +71,9 @@
   <group-definition name="delivery-state" title="Delivery state">
   </group-definition>
 
+  <group-definition name="settlement" title="Settlement">
+  </group-definition>
+
   <group-definition name="transport-state" title="Transport state">
   </group-definition>
 
@@ -88,7 +91,7 @@
 
   <group-definition name="message-distribution" title="Message distribution">
   </group-definition>
-  
+
   <group-definition name="errors" title="Error handling">
   </group-definition>
 
